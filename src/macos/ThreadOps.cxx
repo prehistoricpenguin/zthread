@@ -25,7 +25,6 @@
 #include "ThreadOps.h"
 #include "zthread/Exceptions.h"
 #include "zthread/Runnable.h"
-#include "../Debug.h"
 
 namespace ZThread {
 
@@ -56,7 +55,7 @@ bool ThreadOps::join(ThreadOps* ops) {
   assert(ops->_tid != 0);
 
   OSStatus status = MPWaitOnQueue(ops->_queue, NULL, NULL, NULL, kDurationForever);
-  ZTDEBUG(":%d:\n", status);
+
   return status == noErr;
  
 }
@@ -81,7 +80,7 @@ bool ThreadOps::spawn(Runnable* task) {
 
   OSStatus status =
     MPCreateTask(&_dispatch, task, 0UL, _queue, NULL, NULL, 0UL, &_tid);
-  ZTDEBUG(">>>>>>>>>>>>>:%d:%d\n", status, _tid);
+
   return status == noErr;
 
 }
@@ -90,7 +89,7 @@ OSStatus ThreadOps::_dispatch(void *arg) {
 
   Runnable* task = reinterpret_cast<Runnable*>(arg);
   assert(task);
-  ZTDEBUG("TASK\n");  
+
   // Run the task from the correct context
   task->run();
   

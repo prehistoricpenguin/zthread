@@ -27,7 +27,6 @@
 
 #include "zthread/NonCopyable.h"
 #include "zthread/Exceptions.h"
-#include "../Debug.h"
 
 #include <assert.h>
 #include <CoreServices/CoreServices.h>
@@ -39,7 +38,7 @@ namespace ZThread {
  * @class FastLock
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-29T07:03:38-0700>
+ * @date <2002-06-29T07:53:56-0700>
  * @version 2.1.6
  *
  */ 
@@ -60,7 +59,6 @@ class FastLock : private NonCopyable {
     static bool init = MPLibraryIsLoaded();
     
     if(!init || MPCreateCriticalRegion(&_mtx) != noErr) {
-      ZTDEBUG("OK1\n");
       assert(0);
       throw Initialization_Exception();
     }

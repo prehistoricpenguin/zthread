@@ -33,11 +33,14 @@ namespace ZThread {
  * @class SynchronousExecutor
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-04T07:51:29-0400>
+ * @date <2002-06-29T07:57:31-0700>
  * @version 2.2.2
  *
  * A SynchronousExecutor runs tasks in the current thread, but 
  * allows only one thread to do so at any given time.
+ *
+ * Submitting a NullTask will allow you to wait() for all real tasks 
+ * being executed to complete; and not just to be serviced (started).
  *
  * @see Executor.
  */

@@ -34,10 +34,13 @@ namespace ZThread {
  * @class ThreadedExecutor
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-04T07:14:49-0400>
+ * @date <2002-06-29T07:58:00-0700>
  * @version 2.2.2
  *
  * A ThreadedExecutor runs each task in a different thread.
+ *
+ * Submitting a NullTask will allow you to wait() for all real tasks 
+ * being executed to complete; and not just to be serviced (started).
  *
  * @see Executor.
  */

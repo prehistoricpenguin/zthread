@@ -37,11 +37,14 @@ namespace ZThread {
  * @class PoolExecutor
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-19T08:46:20-0400>
+ * @date <2002-06-29T07:57:47-0700>
  * @version 2.2.2
  *
  * This is an Executor that will run submitted tasks using a group 
  * of threads.
+ *
+ * Submitting a NullTask will allow you to wait() for all real tasks 
+ * being executed to complete; and not just to be serviced (started).
  *
  * @see Executor
  */

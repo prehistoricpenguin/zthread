@@ -33,8 +33,8 @@ namespace ZThread {
 /**
  * @class BlockingQueue
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-02T10:39:17-0400>
- * @version 2.2.1
+ * @date <2002-06-29T07:52:35-0700>
+ * @version 2.2.8
  *
  * Like a LockedQueue, a BlockingQueue is a Queue implementation that provides 
  * serialized access to the items added to it. It differs by causing threads
@@ -58,7 +58,7 @@ class BlockingQueue : public Queue<T> {
 public:
 
   //! Create a new BlockingQueue
-  BlockingQueue() /* throw(Synchronization_Exception) */ : _canceled(false) {}
+  BlockingQueue() : _notEmpty(_lock), _canceled(false) {}
 
   //! Destroy this BlockingQueue, delete remaining items
   virtual ~BlockingQueue() throw() {
@@ -159,7 +159,7 @@ public:
     Guard<LockType> g(_lock);
 
     while(_queue.size() == 0 && !_canceled)
-      _notEmpty.wait(_lock);
+      _notEmpty.wait();
 
     if(_queue.size() == 0 )
       throw Cancellation_Exception();
@@ -196,7 +196,7 @@ public:
     Guard<LockType> g(_lock, timeout);
 
     while(_queue.size() == 0 && !_canceled) {
-      if(!_notEmpty.wait(_lock, timeout))
+      if(!_notEmpty.wait(timeout))
         throw Timeout_Exception();
     }
 
