@@ -39,6 +39,7 @@ dist-hook: dist-hook-clean
 	find $(distdir)/include -type f -exec chmod --reference=README {} \;
 	find $(distdir)/src     -type f -exec chmod --reference=README {} \;
 	find $(distdir)/        -type d -exec chmod a+rx {} \;
+	find $(distdir)/ -type f -path \*CVS\* -print0 | xargs -0 rm -rf
 	find $(distdir)/ -type f -name \*~ -print0 | xargs -0 rm -rf
 	find $(distdir)/ -type f -name \*.bak -print0 | xargs -0 rm -rf
 	find $(distdir)/ -type f -name \*.log -print0 | xargs -0 rm -rf
