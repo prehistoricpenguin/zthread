@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -26,82 +26,58 @@
 
 namespace ZThread {
 
-/**
- * @class Cancelable
- *
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T08:41:35-0500>
- * @version 2.2.11
- *
- * The Cancelable interface defines a common method of adding general <i>disable-and-exit</i>
- * semantics to some object. By cancel()ing a Cancelable object, a request is
- * made to disable that object. A simple description of this interface might be that 
- * it can be used to define an object that can be elegantly shutdown. 
- *
- * The following text describes the specific meaning of <i>disable-and-exit</i> 
- * semantics in more detail. 
- *
- * <b>Disabling</b>
- *
- * A cancel()ed object may not neccessarily abort it work immediately. Often, it much more
- * elegant for a cancel()ed object to complete handling whatever responsiblies have 
- * been assigned to it, but it will <i>not</i> take on any new responsiblity. 
- *
- * <b>Exiting</b>
- *
- * A cancel()ed <i>must</i> complete its responsibilites as soon as possible.
- * Canceling is not just a request to stop taking on new responsibility, and to
- * complete its current responsibility. Its also a request to complete dealing with its 
- * current responsibilites <i>quickly</i>. This should happen in a determinent amount of time
- * and may involve handing that responsibility off to some other object. 
- *
- * The details of these semantics are refined further by specializaions of this 
- * class, but the general conotation remains intact.
- *
- * Typically, the Cancelable interface is used to create a way to shutdown and 
- * exit elegantly. For example, transactions previously assigned to cancel()ed Database 
- * entity would not lost, they would be commited; but new transactions can not be
- * submitted. Similarly, Executor objects can be cancel()ed so that they will finish
- * run()ing thier current tasks, but won't accept new one.
- *
- * Combining the Cancelable interface with the Waitable interface creates a method 
- * for disabling some object, and then waiting for that object to exit (to complete 
- * doing whatever it was doing as soon as possible).
- */
-class Cancelable {
-public:
-
-  //! Destroy a Cancelable object.
-	virtual ~Cancelable() throw() {}
-
   /**
-   * Canceling a Cancelable object is an indication that some part of its 
-   * operation should be disabled. Canceling a Cancelable object more than
-   * once has no effect.
+   * @class Cancelable
    *
-   * @exception Interrupted_Exception should <i>not</i> be thrown. 
-   * @exception Synchronization_Exception thrown if there is some error in 
-   * cancel()ing the object.
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T09:28:46-0400>
+   * @version 2.3.0
    *
-   * @post The Cancelable object will have permanently transitioned to a 
-   * canceled state. 
+   * The Cancelable interface defines a common method of adding general <i>disable-and-exit</i>
+   * semantics to some object. By cancel()ing a Cancelable object, a request is
+   * made to disable that object. 
+   *
+   * <b>Disabling</b>
+   *
+   * A cancel()ed object may not necessarily abort it work immediately. Often, it much more
+   * elegant for a cancel()ed object to complete handling whatever responsibilities have 
+   * been assigned to it, but it will <i>not</i> take on any new responsibility. 
+   *
+   * <b>Exiting</b>
+   *
+   * A cancel()ed should complete its responsibilities as soon as possible.
+   * Canceling is not only a request to stop taking on new responsibility, and to
+   * complete its current responsibility. Its also a request to complete dealing with its 
+   * current responsibilities, quickly when possible. 
    */
-  virtual void cancel()
-    /* throw(Synchronization_Exception) */ = 0;
+  class Cancelable {
+  public:
 
-  /**
-   * Determine if a Cancelaeble object has been cancel()ed.
-   *
-   * @return bool true if cancel() was called prior to this method, otherwise false.
-   *
-   * @exception Interrupted_Exception should <i>not</i> be thrown. 
-   * @exception Synchronization_Exception thrown if there is some error in 
-   * cancel()ing the object.
-   */
-  virtual bool isCanceled()
-    /* throw(Synchronization_Exception) */ = 0;
+    //! Destroy a Cancelable object.
+    virtual ~Cancelable() {}
 
-};
+    /**
+     * Canceling a Cancelable object makes a request to disable that object. 
+     * This entails refusing to take on any new responsibility, and completing 
+     * its current responsibilities quickly.
+     *
+     * Canceling an object more than once has no effect.
+     * 
+     * @post The Cancelable object will have permanently transitioned to a 
+     *       disabled state; it will now refuse to accept new responsibility. 
+     */
+    virtual void cancel() = 0;
+
+    /**
+     * Determine if a Cancelable object has been canceled.
+     *
+     * @return 
+     *   - <em>true</em> if cancel() was called prior to this function.
+     *   - <em>false</em> otherwise.
+     */
+    virtual bool isCanceled() = 0;
+
+  }; /* Cancelable */
 
 
 } // namespace ZThread

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -24,81 +24,72 @@
 
 namespace ZThread {
 
-/**
- * Create a new semaphore of a given size with a given count
- *
- * @param initialCount initial count to assign this semaphore
- * @param maxCount maximum size of the semaphore count
- */
-Semaphore::Semaphore(int count, unsigned int maxCount) 
-  /* throw(Synchronization_Exception) */ {
+  /**
+   * Create a new semaphore of a given size with a given count
+   *
+   * @param initialCount initial count to assign this semaphore
+   * @param maxCount maximum size of the semaphore count
+   */
+  Semaphore::Semaphore(int count, unsigned int maxCount) {
   
-  _impl = new FifoSemaphoreImpl(count, maxCount, true);
+    _impl = new FifoSemaphoreImpl(count, maxCount, true);
   
-}
+  }
 
-Semaphore::~Semaphore() 
-  throw() {
+  Semaphore::~Semaphore() {
 
-  if(_impl != 0)
-    delete _impl;
+    if(_impl != 0)
+      delete _impl;
 
-}
+  }
 
-void Semaphore::wait() 
-  /* throw(Synchronization_Exception) */ {
+  void Semaphore::wait() {
 
-  _impl->acquire();
+    _impl->acquire();
 
-}
+  }
 
 
-bool Semaphore::tryWait(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  bool Semaphore::tryWait(unsigned long ms) {
 
-  return _impl->tryAcquire(ms);
+    return _impl->tryAcquire(ms);
 
-}
+  }
 
-void Semaphore::post() 
-  /* throw(Synchronization_Exception) */ {
+  void Semaphore::post() {
 
-  _impl->release();
+    _impl->release();
 
-}
+  }
 
-int Semaphore::count() 
-  throw() {
+  int Semaphore::count() {
 
-  return _impl->count();
+    return _impl->count();
 
-}
+  }
 
-///////////////////////////////////////////////////////////////////////////////
-// Locakable compatibility
-//
+  ///////////////////////////////////////////////////////////////////////////////
+  // Locakable compatibility
+  //
 
-void Semaphore::acquire() 
-  /* throw(Synchronization_Exception) */ {
+  void Semaphore::acquire() {
 
-  _impl->acquire();
+    _impl->acquire();
 
-}
+  }
 
-bool Semaphore::tryAcquire(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  bool Semaphore::tryAcquire(unsigned long ms) {
 
-  return _impl->tryAcquire(ms);
+    return _impl->tryAcquire(ms);
 
 
-}
+  }
 
-void Semaphore::release() 
-  /* throw(Synchronization_Exception) */ {
+  void Semaphore::release() {
 
-  _impl->release();
+    _impl->release();
 
-}
+  }
 
 } // namespace ZThread
 

@@ -1,3 +1,7 @@
+07-15-2003:
+
+     Made lots of changes, consider ThreadLocals
+
 07-01-2002:
  
      Expand Handle & CountedPtr to be assignable

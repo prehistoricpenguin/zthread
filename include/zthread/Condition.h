@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -28,134 +28,125 @@
 
 namespace ZThread {
   
-class FifoConditionImpl;
+  class FifoConditionImpl;
 
-/**
- * @class Condition
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-02T08:10:20-0400>
- * @version 2.2.1
- *
- * A Condition is a Waitable object used to block a thread until a particular 
- * condition is met. A Condition object is always used in conjunction with Lockable 
- * object. This object should be a FastMutex, Mutex, PriorityMutex or PriorityInheritanceMutex.
- *
- * Condition objects are reminicent of POSIX condition variables in several ways but 
- * are slightly different. 
- * 
- * A Condition is <i>not</i> subject to spurious wakeup.
- *
- * Like all Waitable objects, Conditions are sensative to Thread::interupt() which can
- * be used to prematurely end a wait().
- *
- * @see Thread::interupt()
- *
- * Before a wait() is performed on a Condition, the associated Lockable object should
- * have been acquire()ed. When the wait() begins, that Lockable object is release()d 
- * (wait() will atomically begin the wait and unlock the Lockable). 
- *
- * A thread blocked by wait() will remain so until an exception occurs, or until 
- * the thread awakened by a signal() or broadcast(). When the thread resumes execution,
- * the associated Lockable is acquire()d before wait() returns.
- *
- * <b>Scheduling</b>
- *
- * Threads blocked on a Condition are resumed in FIFO order.
- */
-class ZTHREAD_API Condition : public Waitable, private NonCopyable {
+  /**
+   * @class Condition
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T14:38:59-0400>
+   * @version 2.2.1
+   *
+   * A Condition is a Waitable object used to block a thread until a particular 
+   * condition is met. A Condition object is always used in conjunction with Lockable 
+   * object. This object should be a FastMutex, Mutex, PriorityMutex or PriorityInheritanceMutex.
+   *
+   * Condition objects are reminiscent of POSIX condition variables in several ways but 
+   * are slightly different. 
+   * 
+   * A Condition is <i>not</i> subject to spurious wakeup.
+   *
+   * Like all Waitable objects, Conditions are sensitive to Thread::interupt() which can
+   * be used to prematurely end a wait().
+   *
+   * @see Thread::interupt()
+   *
+   * Before a wait() is performed on a Condition, the associated Lockable object should
+   * have been acquire()ed. When the wait() begins, that Lockable object is release()d 
+   * (wait() will atomically begin the wait and unlock the Lockable). 
+   *
+   * A thread blocked by wait() will remain so until an exception occurs, or until 
+   * the thread awakened by a signal() or broadcast(). When the thread resumes execution,
+   * the associated Lockable is acquire()d before wait() returns.
+   *
+   * <b>Scheduling</b>
+   *
+   * Threads blocked on a Condition are resumed in FIFO order.
+   */
+  class ZTHREAD_API Condition : public Waitable, private NonCopyable {
 
-  FifoConditionImpl* _impl;
+    FifoConditionImpl* _impl;
   
- public:
+  public:
   
-  /**
-   * Create a new condition variable associated with the given Lockable object.
-   *
-   * @param l - Lockable object to associate with this Condition object.
-   *
-   * @exception Synchronization_Exception thrown if there is some error 
-   * creating the Condition object
-   */
-  Condition(Lockable& l) 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * Create a Condition associated with the given Lockable object.
+     *
+     * @param l Lockable object to associate with this Condition object.
+     */
+    Condition(Lockable& l); 
 
-  //! Destroy Condition object
-  virtual ~Condition()
-    throw(); 
+    //! Destroy Condition object
+    virtual ~Condition();
   
-  /**
-   * Wake <i>ONE</i> threads wait()ing on this Condition.
-   *
-   * @post a wait()ing thread, if any exists, will be awakened.
-   *
-   * @exception Synchronization_Exception thrown if there is an error 
-   * performing this operation
-   */
-  void signal() 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * Wake <em>one</em> thread waiting on this Condition.
+     *
+     * The associated Lockable need not have been acquire when this function is 
+     * invoked.
+     *
+     * @post a waiting thread, if any exists, will be awakened.
+     */
+    void signal(); 
 
-  /**
-   * Wake <i>ALL</i> threads wait()ing on this Condition.
-   *
-   * @post all wait()ing threads, if any exist, will be awakened.
-   *
-   * @exception Synchronization_Exception thrown if there is an error 
-   * performing this operation
-   */
-  void broadcast() 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * Wake <em>all</em> threads wait()ing on this Condition.
+     *
+     * The associated Lockable need not have been acquire when this function is 
+     * invoked.
+     *
+     * @post all wait()ing threads, if any exist, will be awakened.
+     */
+    void broadcast();
 
+    /**
+     * Wait for this Condition, blocking the calling thread until a signal or broadcast
+     * is received.
+     *
+     * This operation atomically releases the associated Lockable and blocks the calling thread.
+     *
+     * @exception Interrupted_Exception thrown when the calling thread is interrupted.
+     *            A thread may be interrupted at any time, prematurely ending any wait.
+     *
+     * @pre The thread calling this method must have first acquired the associated 
+     *      Lockable object. 
+     *
+     * @post A thread that has resumed execution without exception (because of a signal(), 
+     *       broadcast() or exception) will have acquire()d the associated Lockable object 
+     *       before returning from a wait().
+     *
+     * @see Waitable::wait()
+     */
+    virtual void wait(); 
 
-  /**
-   * Wait for this Condition object to be signal()ed. The thread calling this method
-   * will block until the Condition is signal()ed or broadcast() to. 
-   *
-   * This operation atomically release()s the associated Lockable and blocks the calling thread.
-   *
-   * @exception Interrupted_Exception thrown when the calling thread is interupt()ed.
-   * A thread may be interrupted at any time, prematurely ending any wait.
-   *
-   * @pre The thread calling this method must have first acquire()d the associated 
-   * Lockable object. 
-   *
-   * @post A thread that has resumed execution without exception (because of a signal(), 
-   * broadcast() or exception) will have acquire()d the associated Lockable object before
-   * returning from a wait().
-   *
-   * @see Waitable::wait()
-   */
-  virtual void wait() 
-    /* throw(Synchronization_Exception) */;   
-
-  /**
-   * Wait for this Condition object to be signal()ed. The thread calling this method
-   * will block until the Condition is signal()ed, broadcast() to or until the timeout 
-   * expires.
-   *
-   * This operation atomically release()s the associated Lockable and blocks the calling thread.
-   *
-   * @param timeout - maximum amount of time (milliseconds) this method could block
-   *
-   * @return true if the Condition was signal()ed before the timeout expired, otherwise
-   * false.
-   *
-   * @exception Interrupted_Exception thrown when the calling thread is interupt()ed.
-   * A thread may be interrupted at any time, prematurely ending any wait.
-   *
-   * @pre The thread calling this method must have first acquire()d the associated 
-   * Lockable object. 
-   *
-   * @post A thread that has resumed execution without exception (because of a signal(), 
-   * broadcast() or exception) will have acquire()d the associated Lockable object before
-   * returning from a wait().
-   *
-   * @see Waitable::wait(timeout)
-   */
-  virtual bool wait(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * Wait for this Condition, blocking the calling thread until a signal or broadcast
+     * is received.
+     *
+     * This operation atomically releases the associated Lockable and blocks the calling thread.
+     *
+     * @param timeout maximum amount of time (milliseconds) this method could block
+     *
+     * @return 
+     *   - <em>true</em> if the Condition receives a signal or broadcast before 
+     *                   <i>timeout</i> milliseconds elapse.
+     *   - <em>false</em> otherwise.
+     *   
+     * @exception Interrupted_Exception thrown when the calling thread is interrupted.
+     *            A thread may be interrupted at any time, prematurely ending any wait.
+     *
+     * @pre The thread calling this method must have first acquired the associated 
+     *      Lockable object. 
+     *
+     * @post A thread that has resumed execution without exception (because of a signal(), 
+     *       broadcast() or exception) will have acquire()d the associated Lockable object 
+     *       before returning from a wait().
+     *
+     * @see Waitable::wait(unsigned long timeout)
+     */
+    virtual bool wait(unsigned long timeout);
 
   
-};
+  };
   
 } // namespace ZThread
 

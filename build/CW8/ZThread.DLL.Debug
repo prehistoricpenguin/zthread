@@ -1,6 +1,0 @@
-#define ZT_WIN32
-#define ZTHREAD_EXPORTS
-
-
-#include <cstdlib>
-using std::size_t;

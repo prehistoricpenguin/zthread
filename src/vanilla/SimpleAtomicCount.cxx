@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -19,11 +19,12 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
  */
 
-
 #ifndef __ZTATOMICCOUNTIMPL_H__
 #define __ZTATOMICCOUNTIMPL_H__
 
+#include "zthread/Guard.h"
 #include "../FastLock.h"
+
 #include <assert.h>
 
 namespace ZThread {
@@ -33,7 +34,7 @@ typedef struct atomic_count_t {
   FastLock lock;
   unsigned long count;
   
-  atomic_count_t() : count(1) {}
+  atomic_count_t() : count(0) {}
 
 } ATOMIC_COUNT;
 
@@ -53,29 +54,45 @@ AtomicCount::~AtomicCount() {
 
 }
   
-void AtomicCount::increment() {
+//! Postfix decrement and return the current value
+size_t AtomicCount::operator--(int) {
 
   ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
   
-  c->lock.acquire();
-  ++c->count;
-  c->lock.release();  
-  
+  Guard<FastLock> g(c->lock);
+  return c->count--;
+
 }
   
-bool AtomicCount::decrement() {
+//! Postfix increment and return the current value
+size_t AtomicCount::operator++(int) {
 
   ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
-  bool n;
-
-  c->lock.acquire();
-  n = (--c->count == 0);
-  c->lock.release();  
-
-  return n;
   
+  Guard<FastLock> g(c->lock);
+  return c->count++;
+
 }
- 
+
+//! Prefix decrement and return the current value
+size_t AtomicCount::operator--() {
+
+  ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
+  
+  Guard<FastLock> g(c->lock);
+  return --c->count;
+
+}
+  
+//! Prefix increment and return the current value
+size_t AtomicCount::operator++() {
+  
+  ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
+  
+  Guard<FastLock> g(c->lock);
+  return ++c->count;
+
+}
 
 };
 

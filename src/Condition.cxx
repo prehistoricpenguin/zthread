@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -24,62 +24,56 @@
 
 namespace ZThread {
 
-class FifoConditionImpl : public ConditionImpl<fifo_list> {
-public:
-  FifoConditionImpl(Lockable& l) : ConditionImpl<fifo_list>(l) {}
+  class FifoConditionImpl : public ConditionImpl<fifo_list> {
+  public:
+    FifoConditionImpl(Lockable& l) : ConditionImpl<fifo_list>(l) {}
 
-};
+  };
 
-Condition::Condition(Lockable& lock)
-  /* throw(Synchronization_Exception) */ {
+  Condition::Condition(Lockable& lock) {
   
-  _impl = new FifoConditionImpl(lock);
+    _impl = new FifoConditionImpl(lock);
 
-}
+  }
 
 
-Condition::~Condition() 
-  throw() {
+  Condition::~Condition() {
   
-  if(_impl != 0)
-    delete _impl;
+    if(_impl != 0)
+      delete _impl;
 
-}
-
-
-
-void Condition::wait() 
-  /* throw(Synchronization_Exception) */ {
-
-  _impl->wait();
-
-}
+  }
 
 
 
-bool Condition::wait(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  void Condition::wait() {
 
-  return _impl->wait(ms);
+    _impl->wait();
 
-}
-
+  }
 
 
-void Condition::signal()
-  /* throw(Synchronization_Exception) */ {
+
+  bool Condition::wait(unsigned long ms) {
+
+    return _impl->wait(ms);
+
+  }
+
+
+
+  void Condition::signal() {
   
-  _impl->signal();
+    _impl->signal();
 
-}
+  }
 
 
-void Condition::broadcast()
-  /* throw(Synchronization_Exception) */ {
+  void Condition::broadcast() {
 
-  _impl->broadcast();
+    _impl->broadcast();
 
-}
+  }
 
 } // namespace ZThread
 

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,9 +17,6 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
- *
- *  SUNY @ Buffalo, hereby disclaims all copyright interest in the
- *  ZThreads library written by Eric Crahen
  */
 
 #ifndef __ZTTSS_H__
@@ -29,81 +26,81 @@
 
 namespace ZThread {
 
-/**
- * @class TSS
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-26T11:47:55-0400>
- * @version 2.1.0
- *
- * An abstraction for dealing with WIN32 thread specific storage (tss). 
- * Provides get/set and creation/destruction.
- */
-template <typename T>
-class TSS {
-  
-  DWORD _key;
-  bool _valid;
-
- public:
-
   /**
-   * Create a new object for accessing tss. The def
+   * @class TSS
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-27T14:18:43-0400>
+   * @version 2.3.0
+   *
+   * An abstraction for dealing with WIN32 thread specific storage (tss). 
+   * Provides get/set and creation/destruction.
    */
-  TSS() throw() {
-
-    _key = ::TlsAlloc();
-    _valid = (_key != 0xFFFFFFFF);
-
-  }
-
- /**
-  * Destroy the underlying supoprt for accessing tss with this 
-  * object.
-  */
- virtual ~TSS() throw() {
+  template <typename T>
+    class TSS {
   
-   if(_valid) 
-     ::TlsFree(_key);
+    DWORD _key;
+    bool _valid;
+
+    public:
+
+    /**
+     * Create a new object for accessing tss. The def
+     */
+    TSS() {
+
+      _key = ::TlsAlloc();
+      _valid = (_key != 0xFFFFFFFF);
+
+    }
+
+    /**
+     * Destroy the underlying supoprt for accessing tss with this 
+     * object.
+     */
+    virtual ~TSS() {
+  
+      if(_valid) 
+        ::TlsFree(_key);
    
- }
+    }
  
- /**
-  * Get the value stored in tss.
-  *
-  * @return T
-  *
-  * @exception InvalidOp_exception thrown when the tss is not properly initialized
-  */
- inline T get() const {
+    /**
+     * Get the value stored in tss.
+     *
+     * @return T
+     *
+     * @exception InvalidOp_exception thrown when the tss is not properly initialized
+     */
+    inline T get() const {
 
-  if(!_valid)
-    throw InvalidOp_Exception();
+      if(!_valid)
+        throw InvalidOp_Exception();
 
-  return static_cast<T>(::TlsGetValue(_key));
+      return static_cast<T>(::TlsGetValue(_key));
+
+    }
+
+    /**
+     * Store a value in tss.
+     *
+     * @param value T
+     * @return T old value
+     *
+     * @exception InvalidOp_exception thrown when the tss is not properly initialized
+     */
+    inline T set(T value) const {
+
+      T oldValue = get();
+      ::TlsSetValue(_key, value);
+
+      return oldValue;
+
+    }
+ 
+ 
+  };
 
 }
-
- /**
-  * Store a value in tss.
-  *
-  * @param value T
-  * @return T old value
-  *
-  * @exception InvalidOp_exception thrown when the tss is not properly initialized
-  */
- inline T set(T value) const {
-
-  T oldValue = get();
-  ::TlsSetValue(_key, value);
-
-  return oldValue;
-
- }
- 
- 
-};
-
-};
 
 #endif
 

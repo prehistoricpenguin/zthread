@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -27,134 +27,111 @@
 
 namespace ZThread {
   
-class FifoSemaphoreImpl;
-  
-/**
- * @class CountingSemaphore
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-02T08:12:01-0400>
- * @version 2.2.1
- *
- * A CountingSemaphore in the same way as a Semaphore. Its an ownerless 
- * Lockable object. It differs in that there is no upper bound on this 
- * object and it will not throw exceptions because a maximum value has been exceeded.
- *
- * @see Semaphore
- *
- * <b>Scheduling</b>
- *
- * Threads blocked on a CountingSemaphore are resumed in FIFO order.
- *
- * <b>Error Checking</b>
- *
- * None. An attempt to increase a CountingSemaphore beyond its maximum value will 
- * not result in an InvalidOp_Exception.
- */
-class ZTHREAD_API CountingSemaphore : public Lockable, private NonCopyable {
-  
-  FifoSemaphoreImpl* _impl;  
-
- public:
-
-  /**
-   * Create a new CountingSemaphore. 
-   *
-   * @param count - initial count
-   *
-   * @exception Synchronization_Exception thrown if the Semaphore could not 
-   * be created
-   */
-  CountingSemaphore(int initialCount = 0) 
-    /*throw(Synchronization_Exception) */;
-
-  //! Destroy the CountingSemaphore
-  virtual ~CountingSemaphore() throw();
-
-  /**
-   * Decrement the count.
-   *
-   * @see acquire() - provided to reflect the traditional Semaphore
-   * semantics
-   */ 
-  void wait() 
-    /* throw(Synchronization_Exception) */;
-
-
-  /**
-   * Decrement the count.
-   *
-   * @see tryAcquire() - provided to reflect the traditional Semaphore
-   * semantics
-   */
-  bool tryWait(unsigned long) 
-    /* throw(Synchronization_Exception) */;
-
-  /**
-   * Increment the count.
-   *
-   * @see release()  - provided to reflect the traditional Semaphore
-   * semantics
-   */
-  void post() 
-    /* throw(Synchronization_Exception) */;
+  class FifoSemaphoreImpl;
   
   /**
-   * Get the current count of the semaphore. This value may change immediately
-   * after this function returns to the calling thread.
+   * @class CountingSemaphore
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T15:26:18-0400>
+   * @version 2.2.1
    *
-   * @return int - count
+   * A CountingSemaphore is an owner-less Lockable object. 
+   * 
+   * It differs from a normal Semaphore in that there is no upper bound on the count
+   * and it will not throw an exception because a maximum value has been exceeded.
+   *
+   * @see Semaphore
+   *
+   * Threads blocked on a CountingSemaphore are resumed in FIFO order.
    */
-  virtual int count() 
-    throw();    
+  class ZTHREAD_API CountingSemaphore : public Lockable, private NonCopyable {
   
-  /**
-   * Decrement the count, blocking that calling thread if the count becomes 0 or 
-   * less than 0. The calling thread will remain blocked until the count is 
-   * raised above 0, an exception is thrown or the given amount of time expires.
-   * 
-   * @param timeout - maximum amount of time (milliseconds) this method could block
-   * 
-   * @return bool true if the Semaphore was acquire()ed before the timeout expired, 
-   * otherwise false
-   *
-   * @exception Interrupted_Exception thrown when the calling thread is interupt()ed.
-   * A thread may be interrupted at any time, prematurely ending any wait.
-   * @exception Synchronization_Exception thrown if there is some other error.
-   * 
-   * @see Lockable::tryAcquire(unsigned long)
-   */
-  virtual bool tryAcquire(unsigned long timeout)  
-    /* throw(Synchronization_Exception) */;
+    FifoSemaphoreImpl* _impl;  
 
-  /**
-   * Decrement the count, blocking that calling thread if the count becomes 0 or 
-   * less than 0. The calling thread will remain blocked until the count is 
-   * raised above 0 or if an exception is thrown.
-   * 
-   * @exception Interrupted_Exception thrown when the calling thread is interupt()ed.
-   * A thread may be interrupted at any time, prematurely ending any wait.
-   * @exception Synchronization_Exception thrown if there is some other error.
-   * 
-   * @see Lockable::acquire()
-   */
-  virtual void acquire() 
-    /* throw(Synchronization_Exception) */;
+  public:
 
-  /**
-   * Increment the count, unblocking one thread if count is posative.
-   *
-   * @exception Synchronization_Exception thrown if there is some other error.
-   *
-   * @see Lockable::release()
-   */
-  virtual void release() 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * Create a new CountingSemaphore. 
+     *
+     * @param count - initial count
+     */
+    CountingSemaphore(int initialCount = 0); 
+
+    //! Destroy the CountingSemaphore
+    virtual ~CountingSemaphore();
+
+    /**
+     * <i>Provided to reflect the traditional Semaphore semantics</i>
+     *
+     * @see acquire()
+     */ 
+    void wait(); 
+
+
+    /**
+     * <i>Provided to reflect the traditional Semaphore semantics</i>
+     *
+     * @see tryAcquire(unsigned long timeout)
+     */
+    bool tryWait(unsigned long timeout); 
+
+    /**
+     * <i>Provided to reflect the traditional Semaphore semantics</i>
+     *
+     * @see release()
+     */
+    void post(); 
 
   
-}; 
+    /**
+     * Get the current count of the semaphore. 
+     *
+     * This value may change immediately after this function returns to the calling thread.
+     *
+     * @return <em>int</em> count
+     */
+    virtual int count(); 
+  
+    /**
+     * Decrement the count, blocking that calling thread if the count becomes 0 or 
+     * less than 0. The calling thread will remain blocked until the count is 
+     * raised above 0, an exception is thrown or the given amount of time expires.
+     * 
+     * @param timeout maximum amount of time (milliseconds) this method could block
+     * 
+     * @return 
+     *   - <em>true</em> if the Semaphore was acquired before <i>timeout</i> milliseconds elapse.
+     *   - <em>false</em> otherwise.
+     *
+     * @exception Interrupted_Exception thrown when the calling thread is interrupted.
+     *            A thread may be interrupted at any time, prematurely ending any wait.
+     * 
+     * @see Lockable::tryAcquire(unsigned long timeout)
+     */
+    virtual bool tryAcquire(unsigned long timeout);
+
+    /**
+     * Decrement the count, blocking that calling thread if the count becomes 0 or 
+     * less than 0. The calling thread will remain blocked until the count is 
+     * raised above 0 or if an exception is thrown.
+     * 
+     * @exception Interrupted_Exception thrown when the calling thread is interrupted.
+     *            A thread may be interrupted at any time, prematurely ending any wait.
+     * 
+     * @see Lockable::acquire()
+     */
+    virtual void acquire();
+
+    /**
+     * Increment the count, unblocking one thread if count is positive.
+     *
+     * @see Lockable::release()
+     */
+    virtual void release();
+  
+  }; 
 
 
 } // namespace ZThread
 
 #endif // __ZTCOUNTINGSEMAPHORE_H__
-

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -24,32 +24,29 @@
 
 namespace ZThread {
 
-FastMutex::FastMutex() 
-  /* throw(Synchronization_Exception) */ : _lock(new FastLock) { }
+  FastMutex::FastMutex() : _lock(new FastLock) { }
 
-FastMutex::~FastMutex() 
-  throw() { delete _lock; }
+  FastMutex::~FastMutex() {
+    delete _lock; 
+  }
 
 
-void FastMutex::acquire() 
-  /* throw(Synchronization_Exception) */ {
+  void FastMutex::acquire() {
 
-  _lock->acquire();
+    _lock->acquire();
 
-}
+  }
 
-bool FastMutex::tryAcquire(unsigned long timeout) 
-  /* throw(Synchronization_Exception) */ {
+  bool FastMutex::tryAcquire(unsigned long timeout) {
   
-  return _lock->tryAcquire(timeout);
+    return _lock->tryAcquire(timeout);
 
-}
+  }
 
-void FastMutex::release() 
-  /* throw(Synchronization_Exception) */ {
+  void FastMutex::release() {
 
-  _lock->release();
+    _lock->release();
 
-}
+  }
 
 } // namespace ZThread

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -24,188 +24,103 @@
 #include "ThreadImpl.h"
 
 namespace ZThread {
+
+
+  Thread::Thread() 
+    : _impl( ThreadImpl::current() ) { 
+
+    // ThreadImpl's start out life with a reference count 
+    // of one, and the they are added to the ThreadQueue.
+    _impl->addReference();
+    
+  }
+
+  Thread::Thread(const Task& task, bool autoCancel)
+    : _impl( new ThreadImpl(task, autoCancel) ) { 
+    
+    _impl->addReference();
+    
+  }
+
+  bool Thread::operator==(const Thread& t) const {
+    return (t._impl == _impl);
+  }
+
+  Thread::~Thread() {
+
+    _impl->delReference();
+
+  }
+
+  void Thread::wait() {
+    _impl->join(0);
+  }
+
+  bool Thread::wait(unsigned long timeout) {
+
+    return _impl->join(timeout == 0 ? 1 : timeout);
+
+  }
+
+  bool Thread::interrupted() {
+
+    return ThreadImpl::current()->isInterrupted();
+
+  }
+
+
+  bool Thread::canceled() {
+
+    return ThreadImpl::current()->isCanceled();
+
+  }
+
+  void Thread::setPriority(Priority n) {
+
+    _impl->setPriority(n);
+
+  }
+
+
+  Priority Thread::getPriority() {
+
+    return _impl->getPriority();
+
+  }
+
+  bool Thread::interrupt() {
+
+    return _impl->interrupt();
+
+  }
   
-/**
- * @class Holder
- *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2003-06-29T21:22:12-0400>
- * @version 2.2.11
- *
- * Holders are used to create submit tasks to a thread without
- * transfering thier ownership to the enclosing Handle(s).
- */
-template <typename T>
-class Holder : public Runnable {
+  void Thread::cancel() {
 
-  Runnable& _task;
-  
- public:
-  
-  /**
-   * Create a new Holder, wrapping the given reference.
-   *
-   * @param task Runnable& reference to wrap
-   */
-  explicit Holder(Runnable& task) : _task(task) { }
-  
-  //!
-  virtual ~Holder() throw();
-  
-  //!
-  virtual void run() throw();
+    if(ThreadImpl::current() == _impl)
+      throw InvalidOp_Exception();
 
-}; // Holder
- 
+    _impl->cancel();
 
-template<typename T>
-Holder<T>::~Holder() throw() { }
+  } 
 
-template<typename T>
-void Holder<T>::run() throw() {
-  _task.run();
-}
+  bool Thread::isCanceled() {
 
-//! Generate a Handle and a Holder for some Runnable object
-template<typename T>
-Handle< Holder<T> > RunnablePtr(T& t) { 
-  return Handle< Holder<T> >(new Holder<T>(t)); 
-}
+    return _impl->isCanceled();
 
-  
-void Thread::Reference::interrupt() 
-  throw() {
+  }
 
-  _impl->interrupt();
 
-}
+  void Thread::sleep(unsigned long ms) {
 
+    ThreadImpl::sleep(ms);
 
-void Thread::Reference::setPriority(Priority p) 
-  throw() {
+  }
 
-  _impl->setPriority(p);
 
-}
+  void Thread::yield() {
 
+    ThreadImpl::yield();
 
-Priority Thread::Reference::getPriority() 
-  throw() {
-
-  return _impl->getPriority();
-  
-}
-
-  
-//ThreadLocal<void*> Thread::_interruptKey;
-
-Thread::Thread() : _impl(new ThreadImpl) { }
-
-Thread::~Thread() 
-  throw() {
-
-  // Decrement the reference count
-  _impl->delReference();
-
-}
-
-bool Thread::join(unsigned long timeout) 
-  /* throw(Synchronization_Exception) */ {
-
-  return _impl->join(timeout);
-
-}
-
-void Thread::run() throw() { /* NOOP */ }
-
-void Thread::start() {
-
-  run( RunnablePtr(*this) );
-
-}
-
-void Thread::run(const RunnableHandle& task) {
-
-  _impl->run(task);
-
-}
-
-Thread::Reference Thread::current() 
-  throw() {
-
-  return Reference( ThreadImpl::current() );
-
-}
-
-
-bool Thread::interrupted() 
-  throw() {
-
-  return ThreadImpl::current()->isInterrupted();
-
-}
-
-
-bool Thread::canceled() 
-  throw() {
-
-  return ThreadImpl::current()->isCanceled();
-
-}
-
-void Thread::setPriority(Priority n) 
-  throw() {
-
-  _impl->setPriority(n);
-
-}
-
-
-Priority Thread::getPriority() 
-  throw() {
-
-  return _impl->getPriority();
-
-}
-
-bool Thread::interrupt() 
-  throw() {
-
-  return _impl->interrupt();
-
-}
-  
-void Thread::cancel() 
-  /* throw(Synchronization_Exception) */ {
-
-  if(ThreadImpl::current() == _impl)
-    throw InvalidOp_Exception();
-
-  _impl->cancel();
-
-} 
-
-bool Thread::isCanceled() 
-  /* throw(Synchronization_Exception) */ {
-
-  return _impl->isCanceled();
-
-}
-
-
-void Thread::sleep(unsigned long ms) 
- /* throw(Synchronization_Exception) */ {
-
-  ThreadImpl::sleep(ms);
-
-}
-
-
-void Thread::yield() 
-  throw() {
-
-  ThreadImpl::yield();
-
-}
+  }
 
 } // namespace ZThread 

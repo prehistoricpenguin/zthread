@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,9 +17,6 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
- *
- *  SUNY @ Buffalo, hereby disclaims all copyright interest in the
- *  ZThreads library written by Eric Crahen
  */
 
 
@@ -36,8 +33,8 @@ class Runnable;
 
 /**
  * @class ThreadOps
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T04:21:15-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T23:33:59-0400>
  * @version 2.2.8
  *
  * This class is an abstraction used to perform various operations on a 

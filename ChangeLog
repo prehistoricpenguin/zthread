@@ -1,3 +1,11 @@
+VERSION 2.3.0:
+
+  I've been working on some updates after working with Bruce Eckle and
+  Chuck Allison; who've provided quite a bit of valuable feedback
+
+  <changes to be enumerted shortly>
+	
+
 VERSION 2.2.11:
 
   Adjusted some of the include files that were missing #include's

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -25,42 +25,37 @@
 
 namespace ZThread {
 
-RecursiveMutex::RecursiveMutex() 
-  /* throw(Synchronization_Exception) */ {
+  RecursiveMutex::RecursiveMutex() {
   
-  _impl = new RecursiveMutexImpl();
+    _impl = new RecursiveMutexImpl();
   
-}
+  }
 
-RecursiveMutex::~RecursiveMutex() 
-  throw() {
+  RecursiveMutex::~RecursiveMutex() {
 
-  if(_impl != (RecursiveMutexImpl*)0 ) 
-    delete _impl;
+    if(_impl != (RecursiveMutexImpl*)0 ) 
+      delete _impl;
 
-}
-
-
-void RecursiveMutex::acquire() 
-  /* throw(Synchronization_Exception) */{
-
-  _impl->acquire(); 
-
-}
+  }
 
 
-bool RecursiveMutex::tryAcquire(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  void RecursiveMutex::acquire() {
 
-  return _impl->tryAcquire(ms); 
+    _impl->acquire(); 
 
-}
+  }
 
-void RecursiveMutex::release() 
-  /* throw(Synchronization_Exception) */ {
 
-  _impl->release(); 
+  bool RecursiveMutex::tryAcquire(unsigned long ms) {
 
-}
+    return _impl->tryAcquire(ms); 
+
+  }
+
+  void RecursiveMutex::release() {
+
+    _impl->release(); 
+
+  }
 
 } // namespace ZThread

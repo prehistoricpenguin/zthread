@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -22,325 +22,151 @@
 #ifndef __ZTPOOLEXECUTOR_H__
 #define __ZTPOOLEXECUTOR_H__
 
-#include "zthread/DefaultThreadFactory.h"
 #include "zthread/Executor.h"
-#include "zthread/MonitoredQueue.h"
 #include "zthread/CountedPtr.h"
-#include "zthread/Singleton.h"
 #include "zthread/Thread.h"
-#include "zthread/Mutex.h"
-
-#include <assert.h>
 
 namespace ZThread {
+  
+  namespace { class ExecutorImpl; }
 
-/**
- * @class PoolExecutor
- *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2003-06-30T08:14:12-0400>
- * @version 2.2.2
- *
- * This is an Executor that will run submitted tasks using a group 
- * of threads.
- *
- * Submitting a NullTask will allow you to wait() for all real tasks 
- * being executed to complete; and not just to be serviced (started).
- *
- * @see Executor
- */
-template <
-  class LockType = Mutex, 
-  class QueueType = MonitoredQueue<RunnableHandle*, LockType>, 
-  typename RefType = CountedPtr<QueueType> 
->
-class PoolExecutor : public Executor {
+  /**
+   * @class PoolExecutor
+   *
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T22:41:07-0400>
+   * @version 2.3.0
+   *
+   * A PoolExecutor spawns a set of threads that are used to run tasks 
+   * that are submitted in parallel. A PoolExecutor supports the following
+   * optional operations,
+   *
+   * - <em>cancel</em>()ing a PoolExecutor will cause it to stop accepting 
+   *   new tasks. 
+   *
+   * - <em>interrupt</em>()ing a PoolExecutor will cause the any thread running 
+   *   a task which was submitted prior to the invocation of this function to 
+   *   be interrupted during the execution of that task.
+   *
+   * - <em>wait</em>()ing on a PoolExecutor will block the calling thread 
+   *   until all tasks that were submitted prior to the invocation of this function
+   *   have completed.
+   * 
+   * @see Executor.
+   */
+  class PoolExecutor : public Executor {
 
-  //! Typedef
-  typedef typename std::deque<Thread*> WorkerList;
-
-  //! Worker threads
-  WorkerList _activeWorkers;
-
-  //! Serialize the thread queue
-  LockType _lock;
-
-  //! Reference to the Queue 
-  RefType _queue;
-
-  //! Minimum
-  volatile unsigned int _min;
-
-  //! Maximum
-  volatile unsigned int _max;
-
-  //! Canceled
-  volatile bool _canceled;
-
-  //! Helper class
-  class Worker : public Runnable {
-
-    RefType _queue;
+    //! Reference to the internal implementation 
+    CountedPtr< ExecutorImpl > _impl;
+    
+    //! Cancellation task
+    Task _shutdown;
 
   public:
-
-    //! Create a Worker that draws upon the given Queue
-    Worker(RefType& q) : _queue(q) { }
     
-    //! Destroy the Worker
-    virtual ~Worker() throw() { }
+    /**
+     * Create a PoolExecutor
+     *
+     * @param n number of threads to service tasks with
+     */
+    PoolExecutor(size_t n);
 
-    //! Run until interrupted
-    virtual void run() throw() {
+    //! Destroy a PoolExecutor
+    virtual ~PoolExecutor();
 
-      RunnableHandle* task = 0;
+    /**
+     * Invoking this function causes each task that had been submitted prior to
+     * this function to be interrupted. Tasks submitted after the invocation of 
+     * this function are unaffected.
+     *
+     * @post Any task submitted prior to the invocation of this function will be
+     *       run in the context of an interrupted thread. 
+     * @post Any thread already executing a task which was submitted prior to the 
+     *       invocation of this function will be interrupted.        
+     */
+    virtual void interrupt();
 
-      try {
+    /**
+     * Alter the number of threads being used to execute submitted tasks.
+     * 
+     * @param n number of worker threads.
+     *
+     * @pre  <i>n</i> must be greater than 0.
+     * @post <i>n</i> threads will be executing tasks submitted to this executor.
+     *
+     * @exception InvalidOp_Exception thrown if the new number of threads
+     *            <i>n</i> is less than 1.
+     */
+    void size(size_t n);
         
-        while(!Thread::canceled()) { 
-          
-          // Draw tasks from the queue
-          task = _queue->next();
-          (*task)->run();
-          
-          delete task;
-          task = 0;
-          
-        } 
-        
-      } catch(Interrupted_Exception&) { 
-        // Thread canceled while drawing from the Queue
-      } catch(Cancellation_Exception&) { 
-        // Queue has emptied.
-      } catch(...) {
-        assert(0);
-      }
-      
-      if(task) 
-        delete task;
+    /**
+     * Get the current number of threads being used to execute submitted tasks.
+     *
+     * @return n number of worker threads.
+     */
+    size_t size();
+    
+    /**
+     * Submit a task to this Executor. 
+     *
+     * This will not block the calling thread very long. The submitted task will
+     * be executed at some later point by another thread.
+     * 
+     * @param task Task to be run by a thread managed by this executor 
+     *
+     * @pre  The Executor should have been canceled prior to this invocation.
+     * @post The submitted task will be run at some point in the future by this Executor.
+     *
+     * @exception Cancellation_Exception thrown if the Executor was canceled prior to
+     *            the invocation of this function.
+     *
+     * @see PoolExecutor::cancel()
+     * @see Executor::execute(const Task& task)
+     */
+    virtual void execute(const Task& task);
 
-    }
+    /**
+     * @see Cancelable::cancel()
+     */
+    virtual void cancel();
 
-  }; // Worker
-
-public:
-
-  /**
-   * Create a new PoolExecutor
-   *
-   * @param min - minimum number of threads to service tasks with
-   */
-  PoolExecutor(unsigned int min)
-    /* throw(Synchronization_Exception) */ 
-    : _min(min), _max(min), _canceled(false) {}
-
-  /**
-   * Create a new PoolExecutor
-   *
-   * @param min - minimum number of threads to service tasks with
-   * @param max - maximum number of threads to service tasks with
-   */
-  PoolExecutor(unsigned int min, unsigned int max)
-    /* throw(Synchronization_Exception) */
-    : _min(min), _max(max), _canceled(false) {}
-
-  /**
-   * Change the maximum number of threads in the pool. As tasks are
-   * added to the Executor, more threads will be added as needed -
-   * up to the maximum number of worker threads set.
-   *
-   * @param unsigned int - new maximum number of worker threads.
-   *
-   * @exception Interrupted_Exception
-   */
-  void setMax(unsigned int max)
-    /* throw(Synchronization_Exception) */ {
-
-    Guard<LockType> g(_lock);
-    _max = max;
-
-  }
-
-  /**
-   * Change the minimum number of threads in the pool. When currently
-   * running tasks complete, and the Thread executing the task completes
-   * it can be removed. A Thread will never be instantly canceled because
-   * the minimum number of threads has changed. It is a gradual decline
-   * in the number of worker threads, they are canceled lazily.
-   *
-   * @param unsigned int - new minimum number of worker threads.
-   *
-   * @exception Interrupted_Exception
-   */
-  void setMin(unsigned int)
-    /* throw(Synchronization_Exception) */ {
-
-    Guard<LockType> g(_lock);
-    _min = min;
-
-  }
-
-  /**
-   * Get the current maximum number of threads
-   *
-   * @return unsigned int - current maximum
-   *
-   * @exception Interrupted_Exception
-   */
-  unsigned int getMax()
-    /* throw(Synchronization_Exception) */ {
-
-    Guard<LockType> g(_lock);
-    return _max;
-
-  }
-
-  /**
-   * Get the current minimum number of threads
-   *
-   * @return unsigned int - current minimum
-   *
-   * @exception Interrupted_Exception
-   */
-  unsigned int getMin()
-    /* throw(Synchronization_Exception) */ {
-
-    Guard<LockType> g(_lock);
-    return _min;
-
-  }
-
-  //! Destroy a new PoolExecutor
-  virtual ~PoolExecutor() throw() { 
-
-    for(typename WorkerList::iterator i = _activeWorkers.begin(); i != _activeWorkers.end(); ++i) 
-      delete *i;
-
-  }
-
-
-  /**
-   * Submit a light wieght task to an Executor. This will not
-   * block the calling thread very long. The submitted task will
-   * be executed at some later point by another thread.
-   * 
-   * @exception Cancellation_Exception thrown if a task is submited when 
-   * the executor has been canceled.
-   * @exception Synchronization_Exception thrown is some other error occurs.
-   *
-   * @see Executor::execute(RunnableHandle&)
-   */
-  virtual void execute(const RunnableHandle& task)
-    /* throw(Synchronization_Exception) */ {
-
-    {
-      
-      Guard<LockType> g(_lock);
-      
-      // Canceled Executors will not accept new tasks
-      if(_canceled)
-        throw Cancellation_Exception();
-      
-      // Increase threads working threads to minimum
-      while(_activeWorkers.size() < _min)
-        addWorker();
-
-      // Remove any threads over the maximum
-      if(_activeWorkers.size() > _max)
-        removeWorker();
-
-    }
-
-    // Enqueue the task
-    _queue->add(new RunnableHandle(task)); 
-
-  }
-
-
-  /**
-   * Convience method
-   *
-   * @see Executor::execute(const RunnableHandle&)
-   */
-  void execute(Runnable* task)
-    /* throw(Synchronization_Exception) */ {
-
-    execute( RunnablePtr(task) );
-
-  }
-
-
-  /**
-   * @see Executor::cancel()
-   */
-  virtual void cancel() 
-    /* throw(Synchronization_Exception) */ { 
-
-    Guard<LockType> g(_lock);
-
-    _queue->cancel(); 
-    _canceled = true;
-
-  }
-
-  /**
-   * @see Executor::isCanceled()
-   */
-  virtual bool isCanceled()
-    /* throw(Synchronization_Exception) */ { 
-
-    Guard<LockType> g(_lock);
-
-    return _canceled; 
-
-  }
+    /**
+     * @see Cancelable::isCanceled()
+     */
+    virtual bool isCanceled();
  
-  /**
-   * @see Executor::wait()
-   */
-  virtual void wait() 
-    /* throw(Synchronization_Exception) */ { 
+    /**
+     * Block the calling thread until all tasks submitted prior to this invocation
+     * complete.
+     *
+     * @exception Interrupted_Exception thrown if the calling thread is interrupted
+     *            before the set of tasks being wait for can complete.
+     *
+     * @see Waitable::wait()
+     */
+    virtual void wait();
+
+    /**
+     * Block the calling thread until all tasks submitted prior to this invocation
+     * complete or until the calling thread is interrupted.
+     *
+     * @param timeout maximum amount of time, in milliseconds, to wait for the 
+     *                currently submitted set of Tasks to complete.
+     *
+     * @exception Interrupted_Exception thrown if the calling thread is interrupted
+     *            before the set of tasks being wait for can complete.
+     *
+     * @return 
+     *   - <em>true</em> if the set of tasks being wait for complete before 
+     *                   <i>timeout</i> milliseconds elapse.
+     *   - <em>false</em> otherwise.
+     *
+     * @see Waitable::wait(unsigned long timeout)
+     */
+    virtual bool wait(unsigned long timeout);
       
-    _queue->empty();
-      
-  }
+  }; /* PoolExecutor */
 
-  /**
-   * @see Executor::wait(unsigned long)
-   */
-  virtual bool wait(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */ { 
-
-      return _queue->empty(timeout); 
-
-    }
-
-
-private:
-
-  
-  void addWorker() {
-
-    Thread* t = Singleton<FactoryType>::instance()->create();
-
-    // Assign the daemon thread ownership of a Worker task.
-    t->run( RunnablePtr(new Worker(_queue)) );
-
-    _activeWorkers.push_back(t);
-
-  }
-
-  void removeWorker() {
-
-    Thread* t =_activeWorkers.front();
-    _activeWorkers.pop_front();
-
-    t->cancel();
-    delete t;
-
-  }
-      
-};
 
 } // namespace ZThread
 

@@ -66,8 +66,6 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 EXTRA_COMPILER_OPTIONS = @EXTRA_COMPILER_OPTIONS@
 EXTRA_LINKER_OPTIONS = @EXTRA_LINKER_OPTIONS@
-F77 = @F77@
-FFLAGS = @FFLAGS@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -108,7 +106,6 @@ ZT_MINOR_VERSION = @ZT_MINOR_VERSION@
 ZT_VERSION = @ZT_VERSION@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
-ac_ct_F77 = @ac_ct_F77@
 ac_ct_RANLIB = @ac_ct_RANLIB@
 ac_ct_STRIP = @ac_ct_STRIP@
 am__fastdepCC_FALSE = @am__fastdepCC_FALSE@
@@ -163,9 +160,9 @@ libZThread_la_LDFLAGS = \
 LIBADD = @LINKER_OPTIONS@ @EXTRA_LINKER_OPTIONS@
 
 libZThread_la_SOURCES = \
-AbstractThreadLocal.cxx \
 AtomicCount.cxx \
 Condition.cxx \
+ConcurrentExecutor.cxx \
 CountingSemaphore.cxx \
 FastMutex.cxx \
 FastRecursiveMutex.cxx \
@@ -173,14 +170,18 @@ Mutex.cxx \
 RecursiveMutexImpl.cxx \
 RecursiveMutex.cxx \
 Monitor.cxx \
+PoolExecutor.cxx \
 PriorityCondition.cxx \
 PriorityInheritanceMutex.cxx \
 PriorityMutex.cxx \
 PrioritySemaphore.cxx \
 Semaphore.cxx \
+SynchronousExecutor.cxx \
 Thread.cxx \
+ThreadedExecutor.cxx \
 ThreadImpl.cxx \
-ThreadLocalMap.cxx \
+ThreadLocalImpl.cxx \
+ThreadQueue.cxx \
 Time.cxx \
 ThreadOps.cxx
 
@@ -191,35 +192,42 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(lib_LTLIBRARIES)
 
 libZThread_la_DEPENDENCIES =
-am_libZThread_la_OBJECTS = AbstractThreadLocal.lo AtomicCount.lo \
-	Condition.lo CountingSemaphore.lo FastMutex.lo \
+am_libZThread_la_OBJECTS = AtomicCount.lo Condition.lo \
+	ConcurrentExecutor.lo CountingSemaphore.lo FastMutex.lo \
 	FastRecursiveMutex.lo Mutex.lo RecursiveMutexImpl.lo \
-	RecursiveMutex.lo Monitor.lo PriorityCondition.lo \
-	PriorityInheritanceMutex.lo PriorityMutex.lo \
-	PrioritySemaphore.lo Semaphore.lo Thread.lo ThreadImpl.lo \
-	ThreadLocalMap.lo Time.lo ThreadOps.lo
+	RecursiveMutex.lo Monitor.lo PoolExecutor.lo \
+	PriorityCondition.lo PriorityInheritanceMutex.lo \
+	PriorityMutex.lo PrioritySemaphore.lo Semaphore.lo \
+	SynchronousExecutor.lo Thread.lo ThreadedExecutor.lo \
+	ThreadImpl.lo ThreadLocalImpl.lo ThreadQueue.lo Time.lo \
+	ThreadOps.lo
 libZThread_la_OBJECTS = $(am_libZThread_la_OBJECTS)
 
 DEFAULT_INCLUDES =  -I. -I$(srcdir) -I.
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
-@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/AbstractThreadLocal.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/AtomicCount.Plo \
+@AMDEP_TRUE@DEP_FILES = ./$(DEPDIR)/AtomicCount.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/ConcurrentExecutor.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/Condition.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/CountingSemaphore.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/FastMutex.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/FastRecursiveMutex.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/Monitor.Plo ./$(DEPDIR)/Mutex.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/PoolExecutor.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/PriorityCondition.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/PriorityInheritanceMutex.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/PriorityMutex.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/PrioritySemaphore.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/RecursiveMutex.Plo \
 @AMDEP_TRUE@	./$(DEPDIR)/RecursiveMutexImpl.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/Semaphore.Plo ./$(DEPDIR)/Thread.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/ThreadImpl.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/ThreadLocalMap.Plo \
-@AMDEP_TRUE@	./$(DEPDIR)/ThreadOps.Plo ./$(DEPDIR)/Time.Plo
+@AMDEP_TRUE@	./$(DEPDIR)/Semaphore.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/SynchronousExecutor.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/Thread.Plo ./$(DEPDIR)/ThreadImpl.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/ThreadLocalImpl.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/ThreadOps.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/ThreadQueue.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/ThreadedExecutor.Plo \
+@AMDEP_TRUE@	./$(DEPDIR)/Time.Plo
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
@@ -303,14 +311,15 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AbstractThreadLocal.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/AtomicCount.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ConcurrentExecutor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Condition.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CountingSemaphore.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FastMutex.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FastRecursiveMutex.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Monitor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Mutex.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PoolExecutor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PriorityCondition.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PriorityInheritanceMutex.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/PriorityMutex.Plo@am__quote@
@@ -318,10 +327,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RecursiveMutex.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RecursiveMutexImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Semaphore.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SynchronousExecutor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Thread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ThreadImpl.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ThreadLocalMap.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ThreadLocalImpl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ThreadOps.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ThreadQueue.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ThreadedExecutor.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Time.Plo@am__quote@
 
 distclean-depend:

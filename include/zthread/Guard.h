@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -39,8 +39,8 @@ namespace ZThread {
 
 /**
  * @class LockHolder
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * This is a simple base class for Guards class. It allows Guards
@@ -87,12 +87,12 @@ class LockHolder {
 
 /**
  * @class CompoundScope
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * Locking policy that aggregates two policies that share a target.
- * It is not appopriate to use with any type of OverlappedScope
+ * It is not appropriate to use with any type of OverlappedScope
  */
 template <class Scope1, class Scope2>
 class CompoundScope {
@@ -134,8 +134,8 @@ class CompoundScope {
 
 /**
  * @class LockedScope
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * Locking policy for Lockable objects. This policy acquire()s a Lockable
@@ -200,8 +200,8 @@ class LockedScope {
 
 /**
  * @class UnlockedScope
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * Locking policy for Lockable objects. This policy release()s a Lockable
@@ -255,8 +255,8 @@ class UnlockedScope {
 
 /**
  * @class TimedLockedScope
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * Locking policy that attempts to enterScope some resource
@@ -299,8 +299,8 @@ class TimedLockedScope {
 
 /**
  * @class OverlappedScope
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * Locking policy allows the effective scope of two locks to overlap
@@ -332,8 +332,8 @@ class OverlappedScope {
 
 /**
  * @class Guard
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:28:39-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:55:42-0400>
  * @version 2.2.0
  *
  * Scoped locking utility. This template class can be given a Lockable

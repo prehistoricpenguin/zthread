@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -30,51 +30,46 @@
 
 namespace ZThread {
 
-class Monitor;
+  class Monitor;
 
-/**
- * @class RecursiveMutexImpl
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-26T09:16:04-0400>
- * @version 2.1.6
- *
- * This synchronization object provides serialized access 
- * through an acquire/release protocol. 
- */
-class ZTHREAD_API RecursiveMutexImpl {
+  /**
+   * @class RecursiveMutexImpl
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T19:58:26-0400>
+   * @version 2.1.6
+   *
+   * This synchronization object provides serialized access 
+   * through an acquire/release protocol. 
+   */
+  class ZTHREAD_API RecursiveMutexImpl {
   
-  typedef std::vector<Monitor*> List;  
+    typedef std::vector<Monitor*> List;  
 
-  //! List of Events that are waiting for notification 
-  List _waiters;
+    //! List of Events that are waiting for notification 
+    List _waiters;
 
-  //! Serialize access to this Mutex
-  FastLock _lock;
+    //! Serialize access to this Mutex
+    FastLock _lock;
 
-  //! Current owning Event object
-  Monitor* _owner;
+    //! Current owning Event object
+    Monitor* _owner;
 
-  //! Entry count 
-  size_t _count;
+    //! Entry count 
+    size_t _count;
 
   public:
    
-  RecursiveMutexImpl() 
-    /* throw(Synchronization_Exception) */;
+    RecursiveMutexImpl(); 
 
-  virtual ~RecursiveMutexImpl()
-    throw();
+    virtual ~RecursiveMutexImpl();
   
-  void acquire() 
-    /* throw(Synchronization_Exception) */;
+    void acquire();
   
-  bool tryAcquire(unsigned long) 
-    /* throw(Synchronization_Exception) */;
+    bool tryAcquire(unsigned long);
   
-  void release() 
-    /* throw(Synchronization_Exception) */;
+    void release(); 
 
-}; /* RecursiveMutexImpl */
+  }; /* RecursiveMutexImpl */
 
 
 }; 

@@ -1,12 +1,5 @@
 
-  I'd like to create a list of projects that use or have used ZThreads; many
-  of you have already contacted me and I am very grateful for that. I think it
-  might be intresting for other people to see who as used ZThreads and for what
-  so if you'd like to get your project listed send me some mail.
-
-------------------------------------------------------------------------------
-
-                               ZTHREADS 2.2.11
+                               ZTHREADS 2.3.0
                                by Eric Crahen
                            <zthread@code-foo.com>
                         http://zthread.sourceforge.net
@@ -78,10 +71,11 @@ DISTRIBUTION:
 
 NOTES:
 
-  Please report bugs to me via email
+  Please report bugs to me via email, I don't monitor the bug tracker 
+  or the forums on sf.
 
 HISTORY:
 
-  So far, this library has been tested on MacOS X, Linux, Tru64 Unix, Win95, Win98,
-  WinNT, Win2k, SunOS, Solaris and FreeBSD.
+  So far, this library has been tested on MacOS X, Linux, Tru64 Unix, 
+  Win95, Win98, WinNT, Win2k, WinXP, SunOS, and FreeBSD.
 

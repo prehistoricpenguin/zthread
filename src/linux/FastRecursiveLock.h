@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -30,8 +30,8 @@ namespace ZThread {
 /**
  * @class FastRecursiveLock
  *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-27T08:12:25-0400>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T23:27:14-0400>
  * @version 2.2.0
  *
  * This implementation of a FastRecursiveLock uses the recursive mutex

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -23,25 +23,30 @@
 #ifndef __ZTTHREADIMPL_H__
 #define __ZTTHREADIMPL_H__
 
-#include "zthread/Handle.h"
+#include "zthread/ThreadLocalImpl.h"
+#include "zthread/Thread.h"
 #include "zthread/Exceptions.h"
-#include "zthread/IntrusivePtr.h"
+#include "IntrusivePtr.h"
 
 #include "Monitor.h"
 #include "TSS.h"
 #include "ThreadOps.h"
 #include "State.h"
-#include "ThreadLocalMap.h"
+
+#include <map>
+#include <deque>
 
 namespace ZThread {
 
 /**
  * @class ThreadImpl
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2003-06-29T21:23:27-0400>
- * @version 2.2.11
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-27T13:39:03-0400>
+ * @version 2.3.0
  */
 class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
+
+  typedef std::deque<ThreadImpl*> List;
 
   //! TSS to store implementation to current thread mapping.
   static TSS<ThreadImpl*> _threadMap;
@@ -52,67 +57,63 @@ class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
   //! Current state for the thread
   State _state;
 
-  //! Joining thread, if any.
-  ThreadImpl* _joiner;
+  //! Joining threads
+  List _joiners;
 
-  //! Mapping of the ThreadLocal associations
-  ThreadLocalMap _localValues;
+ public:
+  
+  typedef std::map<const ThreadLocalImpl*, ThreadLocalImpl::ValuePtr > ThreadLocalMap;
+
+ private:
+  
+  ThreadLocalMap _tls;
 
   //! Cached thread priority
   Priority _priority;
 
+  //! Request cancel() when main() goes out of scope
+  bool _autoCancel;
+  
+  void start(const Task& task);
+
  public:
 
-  //! Create a new ThreadImpl
-  ThreadImpl() 
-    /* throw(Synchronization_Exception) */;
+  ThreadImpl();
 
-  //! Destroy a new ThreadImpl
-  ~ThreadImpl() throw();  
+  ThreadImpl(const Task&, bool);
 
-  //! Get a reference to this threads Monitor
+  ~ThreadImpl();  
+
   Monitor& getMonitor();
 
-  //! Set the CANCELED status of the monitor
-  void cancel() throw();
+  void cancel(bool autoCancel = false);
 
-  //! Set the INTERRUPTED status of the monitor
-  bool interrupt() throw();
+  bool interrupt();
 
-  //! Check & clear the INTERRUPTED status of the monitor
-  bool isInterrupted() throw();
+  bool isInterrupted();
 
-  //! Check the CANCELED status of the monitor
-  bool isCanceled() throw();
+  bool isCanceled();
 
-  //! Get the current priority, not serialized, should be replaced
-  //! with an atomic operation
   Priority getPriority() const;
 
-  //! Get a reference to the ThreadLocalMap
-  ThreadLocalMap& getThreadLocalMap();
-  
-  bool join(unsigned long) 
-    /* throw(Synchronization_Exception) */;
-  
-  void run(const RunnableHandle& task) 
-    /* throw(Synchronization_Exception) */;
+  //  ThreadLocalMap& getThreadLocalMap();
+  ThreadLocalMap& getThreadLocalMap() { return _tls; }
 
+  bool join(unsigned long); 
+  
   void setPriority(Priority);
 
-  bool isActive() throw();
+  bool isActive();
 
-  //! Test for a reference thread 
-  bool isReference() throw();
+  bool isReference();
 
-  static void sleep(unsigned long) 
-    /* throw(Synchronization_Exception) */;
+  static void sleep(unsigned long); 
 
-  static void yield() throw();
+  static void yield();
   
-  static ThreadImpl* current() throw();
+  static ThreadImpl* current();
 
-  static void dispatch(ThreadImpl*, ThreadImpl*, const RunnableHandle&);
+  static void dispatch(ThreadImpl*, ThreadImpl*, Task);
 
 };
 

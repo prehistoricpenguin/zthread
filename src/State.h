@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,9 +17,6 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
- *
- *  SUNY @ Buffalo, hereby disclaims all copyright interest in the
- *  ZThreads library written by Eric Crahen
  */
 
 #ifndef __ZTSTATE_H__
@@ -29,26 +26,22 @@ namespace ZThread {
 
 /**
  * @class State 
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2003-06-30T03:17:07-0400>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T20:04:01-0400>
  * @version 2.2.1
  *
- * Class to encapsulte the current state of the threads life-cycle.
+ * Class to encapsulate the current state of the threads life-cycle.
  */
 class State {
+ public:
 
   //! Various states
   typedef enum { REFERENCE, IDLE, RUNNING, JOINED } STATE;
 
-  //! Current state
-  STATE _state;
-
- public:
-
   /**
    * Create State with the given flag set.
    */
-  State(STATE s=IDLE) : _state(s) {}
+  State(STATE initialState) : _state(initialState) {}
 
   /**
    * Test for the IDLE state. No task has yet run.
@@ -143,6 +136,11 @@ class State {
     return true;
 
   }
+
+ private:
+
+  //! Current state
+  STATE _state;
 
 };
 

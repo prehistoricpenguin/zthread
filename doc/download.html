@@ -1,172 +1,86 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>ZThreads : A Portable C++ Object-Oriented Thread Library</title>
-<style type="text/css">
 
-A         { cursor:hand; text-decoration: none }
-A:link    { text-decoration:none }
-A:visited { text-decoration:none }
-A:active  { cursor:hand; text-decoration:none }
+  <link rel="Stylesheet" type="text/css"
+          href="ns4.css" />
 
-.shade    { font-size: 10pt; font-weight: bold; background-color: #dddddd }
-.active   { font-size: 10pt; font-weight: bold; background-color: #777777 }
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="imagetoolbar" content="no" />
 
-</style>
+  <!-- For CSS2 capable browsers -->
+  <style type="text/css" media="screen"> @import url(zthread.css);</style>
+
+  <script type="text/javascript" src="bugs.js"></script>
+
+  <title></title>
+
 </head>
+<body>
 
-<body bgcolor="#FFFFFF">
-
-<table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td height="100%" valign="top">
-
-<!-- menu bar -->
-
-<table align="center" border="0" cellspacing="0" cellpadding="0" width="95%">
-<tr>
-
- <td width="4" valign="bottom"><img width="4" height="1" src="black.gif"><td>
-
- <td class="active">
-  <table border="0" cellspacing="1" cellpadding="0" width="100%" class="active">
-    <tr>
-    <td class="shade">
-       <a href="news.html"><font color="#000000">&nbsp;News&nbsp;</font></a>
-    </td>
-    </tr>
-  </table>
- </td>
-
- <td width="4" valign="bottom"><img width="4" height="1" src="black.gif"><td>
- 
-  <td class="active">
-  <table border="0" cellspacing="1" cellpadding="0" width="100%" class="active">
-    <tr>
-    <td class="shade">
-       <a href="info.html"><font color="#000000">&nbsp;Info&nbsp;</font></a>
-    </td>
-    </tr>
-  </table>
- </td>
-
- <td width="4" valign="bottom"><img width="4" height="1" src="black.gif"><td>
- 
- <td class="active">
-  <table border="0" cellspacing="1" cellpadding="0" width="100%">
-    <tr>
-    <td class="shade">
-      <a href="documents.html"><font color="#000000">&nbsp;Documents&nbsp;</font></a>
-    </td>
-    </tr>
-  </table>
- </td>
-
- <td width="4" valign="bottom"><img width="4" height="1" src="black.gif"><td>
- 
- <td class="active">
-  <table border="0" cellspacing="0" cellpadding="1" width="100%" class="active">
-    <tr>
-    <td>
-      <font color="#ffffff">&nbsp;Downloads&nbsp;</font>
-    </td>
-    </tr>
-  </table>
- </td>
- </td>
-
- <td width="100%" valign="bottom"><img width="100%" height="1" src="black.gif"><td>
-
-</tr>
-</table>
-
-<table align="center" border="0" cellspacing="0" cellpadding="0" width="95%">
-<tr> 
-  <td class="active" width="100%"><font color="#ffffff">&nbsp;Current version, 2.2.11</font></td>
-<tr> 
-</tr>
-  <td height="1" width="100%" bgcolor="#000000"><img src="blank.gif"><td>
-</tr>
-</table>
-
-<table align="center" border="0" cellspacing="0" cellpadding="10" width="95%">
-<tr>
-<td valign ="top">
-<!-- BODY -->
-Here you can find the source code and documentation for the ZThreads library.
-The latest 2.2.X release was version 2.2.11.
-<p>
-<table border="0" width="100%">
-  <tr>
-    <td width="30%"><span class="projectbrief">Source, Version 2.2.11</span></td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;<a class="projectlink" href="http://prdownloads.sourceforge.net/zthread/ZThread-2.2.11.tar.gz">ZThread-2.2.11.tar.gz</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="projectbrief"><B>(</B>Sourceforge<B>)</B></span></td>
-  </tr>
-  <tr>
-    <td width="30%"><span class="projectbrief">Source, Version 2.2.11</span></td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;<a class="projectlink" href="http://www.cse.buffalo.edu/%7Ecrahen/projects/zthread/ZThread-2.2.11.tar.gz">ZThread-2.2.11.tar.gz</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="projectbrief"><B>(</B>SUNY @ Buffalo<B>)</B></span></td>
-  </tr>
-</table>
-
-<p>
-<p>
-For an archive of past releases, visit <a href="http://www.sourceforge.net/projects/zthread">sourceforge</a>.
-<p>
-<p>
-There is also anonymous CVS access to the most recent development version of the library. You can check out a copy with these commands, 
-
-<pre>
- cvs -d:pserver:anonymous@cvs.ZThread.sourceforge.net:/cvsroot/zthread login &lt;blank password&gt;
- cvs -z3 -d:pserver:anonymous@cvs.ZThread.sourceforge.net:/cvsroot/zthread co zthread 
-</pre>
-
-or you can browse the CVS by <a href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/zthread">clicking here</a>.
-<p>
-<p>
-
-The Java version is, by no means, a complete port of the C++ library. 
-Its main purpose was to help model and develop the ideas and patterns used 
-in the main version of the library. However, it is still useful in some situations.
-For a more complete description of what this is and how it came to be, 
-please see the README included.
-<p>            
-<table border="0" width="100%">
-  <tr>
-    <td width="30%"><span class="projectbrief">Source, Version 0.0.1</span></td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;<a class="projectlink" href="http://prdownloads.sourceforge.net/zthread/ZThread-Java-0.0.1.tar.gz">ZThread-Java-0.0.1.tar.gz</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="projectbrief"><B>(</B>Sourceforge<B>)</B></span></td>
-  </tr>
-  <tr>
-    <td width="30%"><span class="projectbrief">Source, Version 0.0.1</span></td>
-	<td>&nbsp;&nbsp;&nbsp;&nbsp;<a class="projectlink" href="http://www.cse.buffalo.edu/%7Ecrahen/projects/zthread/ZThread-Java-0.0.1.tar.gz">ZThread-Java-0.0.1.tar.gz</a>&nbsp;&nbsp;&nbsp;&nbsp;<span class="projectbrief"><B>(</B>SUNY @ Buffalo<B>)</B></span></td>
-  </tr>
-</table>
-
-<p>
-<p>
-
-I would strongly recommend taking a look at Doug Lea's util.concurrent package if you are interested in Java threading libraries. It is far more relavant and up to date. You can find more information about it on his <a href="http://g.oswego.edu/dl">web page</a>.
-
-<!-- BODY -->
-</td>
-</tr>
-</table>
+<!-- old browser detection -->
+<div class="compliance">
+<strong>
+If you can read this text, it means you are not experiencing this website at its best.
+This website is designed for used with a <a href="http://www.webstandards.org/upgrade/">standards-compliant browser</a>. 
+</strong>
+</div>
 
 
-</td>
-</tr>
-</table>
+<div class="header">
 
-<!-- -- FOOTER -- -->
+  <div class="version">Current version: <em>2.3.0</em></div>
 
-<!-- Spacer -->
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr><td height="1"><img width="100%" height="1" src="black.gif"></td></tr>
-</table>
+  <div class="title">
+  ZThreads
+    <div class="caption">A platform-independent, multi-threading and synchronization library for C++</div>
+  </div>
 
-<!-- Footer Text -->
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-<tr class="shade">
-  <td valign="middle" align="left"><font face="Verdana, Arial, Sans-serif" size="1">&nbsp;Copyright &copy; 2000 - 2002,&nbsp;&nbsp;Eric Crahen &lt;crahen at cs dot buffalo dot edu&gt; - All rights reserved.</font></td>
-</tr>
-</table>
+  <div class="tabs">
+
+    <a href="index.html">Home</a>
+    <a href="documentation.html">Documentation</a>
+    <a href="#" class="current">Download</a>
+    <a href="cvs.html">CVS</a>
+    <a href="contact.html">Contact</a>
+
+  </div>
+
+</div>
+
+<div class="content">
+
+The latest release, <strong>2.3.0</strong> can be downloaded here:
+
+<ul>
+  <li>(source tarball)
+    <a href="http://prdownloads.sourceforge.net/zthread/ZThread-2.3.0.tar.gz"><strong>2.3.0</strong></a>
+  </li>
+  <li>(source tarball)
+    <a href="http://prdownloads.sourceforge.net/zthread/ZThread-2.2.11.tar.gz">2.2.11</a>
+  </li>
+  <li>
+    <em>
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=7232">past releases</a>
+    </em>
+  </li>
+</ul>
+
+
+</code>
+
+
+</div>
+
+<div class="footer">
+ZThreads is Copyright &copy; 2000-<span>2003</span> by 
+<a href="http://www.code-foo.com">Eric Crahen</a>, see the 
+<a href-"http://www.gnu.org/copyleft/lesser.html">LGPL</a> for details.
+</div>
+
 
 </body>
 </html>
+

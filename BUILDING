@@ -1,57 +1,26 @@
-BUILDING THE SOURCE:
+HOWTO COMPILE THE SOURCE:
 
-  If you are using autoconf (the configure script) you can select an
-  implementation by using one of the following
+  There are several options for compiling the source code.
 
-  --enable-posix 
-  --enable-win32
-  --enable-win9x
+  * The preferred option is to use the configure script that is provided.
+    I can only actively maintain one method for compiling and configuring 
+    the source. 
 
-  By default one will be autodetected.
+    ./configure --help will provide a list of options detailing this method.
 
-  Otherwise, define one of the following flags to select an implementation:
+  * Any other method is up to you. There are simply too many compilers,  
+    too many versions and too many platforms to maintain separate build files
+    for. 
 
-  ZT_POSIX, ZT_WIN32, ZT_WIN9X
-
-  ZT_POSIX should support everything
-  ZT_WIN32 supports windows NT, 2K, XP on 32 and 64 bit platforms.
-  ZT_WIN9X supports windows 9X, NT, 2K, XP on 32 bit platforms.
+    BUT, this doesn't mean you are out of luck. 
   
-  Define the following flag if you defined ZT_WIN32 and want to compile
-  a static version of the library. 
+    I have structured the code so that it is very simple to compile the library
+    however suits your needs best. All you need to do is include the .cxx files
+    in the src/ directory (not the subdirectories) in your build rule, and add the
+    include directory to your compilers include/ path. 
 
-  ZTHREAD_STATIC
+    Anything else you need to do is specific to your compiler and I leave the 
+    details up to you. 
 
-  If compiling the library itself from an IDE, or with some other compiler
-  the autoconf scripts don't detect and use; be sure to define 
- 
-  ZTHREAD_EXPORTS
-
-  so that the library functions will be correctly exported from the DLL.
-
-  In the contrib directory, you will find a makefile for trolltechs make.
-  This can also be used to build the project on many different systems.  
-
-CUSTOMIZING YOUR COMPILATION:
-
-    Priorities, debug-mode & the I/O interrupt mechanism can all be enabled
-  or disabled in your compilation by making the appropriate defines. The
-  autoconf toold available to unix platforms make this very easy. The same
-  can be done for a Win32 compilation, but you will have to setup your
-  projects by hand to make these defines.  
-
-    An m4 macro file is included to help build projects with autoconf that
-  use ZThreads. It defines the standard --with-zthreads-xxx= type configure
-  switches that you see with alot of autoconf-friendly libraries.
-
-ERRORS ON WIN32 BUILDS:
-
-    Some of the library uses the InterlockedExchangeXXX() functions as 
-  mentioned above. The PSDK for windows underwent many changed since VC 6
-  came out (which is what I was using when I first wrote that part of the 
-  library) and part of those changes changes the signature for the 
-  InterlockedExchangeXXX() functions. You should either update your PSDK
-  to a more recent version, or simply use the -DZT_WIN9X flag which will
-  select an implementation that isn't using those functions and will just
-  avoid that problem.
-    
+    Anything you want to tweak configuration-wise can be done by editing 
+    include/zthread/Config.h    

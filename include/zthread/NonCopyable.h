@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -24,35 +24,35 @@
 
 namespace ZThread {
 
-/**
- * @class NonCopyable
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-30T08:34:02-0400>
- * @version 2.2.11
- *
- * Some objects kind of objects should not be copied. This is particularly true
- * of objects involved in providing mutually exclusive access to something
- * (e.g. Mutexes, Queues, Semaphores, etc.)
- *
- * Based on Dave Abrahams contribution to the Boost library.
- */
-class NonCopyable {
+  /**
+   * @class NonCopyable
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T19:36:00-0400>
+   * @version 2.2.11
+   *
+   * Some objects kind of objects should not be copied. This is particularly true
+   * of objects involved in providing mutually exclusive access to something
+   * (e.g. Mutexes, Queues, Semaphores, etc.)
+   *
+   * Based on Dave Abrahams contribution to the Boost library.
+   */
+  class NonCopyable {
 
-  //! Restrict the copy constructor
-  NonCopyable(const NonCopyable&);
+    //! Restrict the copy constructor
+    NonCopyable(const NonCopyable&);
 
-  //! Restrict the assignment operator
-  const NonCopyable& operator=(const NonCopyable&);
+    //! Restrict the assignment operator
+    const NonCopyable& operator=(const NonCopyable&);
 
-protected:
+  protected:
 
-  //! Create a NonCopyable object
-  NonCopyable() { }
+    //! Create a NonCopyable object
+    NonCopyable() { }
 
-  //! Destroy a NonCopyable object
-  ~NonCopyable() { }
+    //! Destroy a NonCopyable object
+    ~NonCopyable() { }
 
-};
+  }; /* NonCopyable */
 
 } // namespace ZThread
 

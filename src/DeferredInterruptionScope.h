@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -22,15 +22,16 @@
 #ifndef __ZTDEFERREDINTERRUPTIONSCOPE_H__
 #define __ZTDEFERREDINTERRUPTIONSCOPE_H__
 
-#include <assert.h>
+#include "ThreadImpl.h"
+#include <cassert>
 
 namespace ZThread {
 
 /**
  * @class DeferredInterruptionScope
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-29T08:00:49-0400>
- * @version 2.2.0
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T19:45:18-0400>
+ * @version 2.3.0
  *
  * Locking policy for a Guard that will defer any state reported 
  * for the reported Status of a thread except SIGNALED until the 

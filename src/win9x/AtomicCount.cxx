@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -28,9 +28,9 @@
 namespace ZThread {
 
 typedef struct atomic_count_t {
-
+  
   CRITICAL_SECTION cs;
-  unsigned long count;
+  size_t count;
 
   atomic_count_t() : count(1) {}
   
@@ -52,29 +52,61 @@ AtomicCount::~AtomicCount() {
   delete c;
 
 }
-  
-void AtomicCount::increment() {
+
+//! Postfix decrement and return the current value
+size_t AtomicCount::operator--(int) {
 
   ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
+  size_t value; 
   
   ::EnterCriticalSection(&c->cs);
-  ++c->count;
+  value = c->count--;
   ::LeaveCriticalSection(&c->cs);
 
-  
+  return value;
+
 }
   
-bool AtomicCount::decrement() {
+//! Postfix increment and return the current value
+size_t AtomicCount::operator++(int) {
 
   ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
-  bool n;
-
+  size_t value; 
+  
   ::EnterCriticalSection(&c->cs);
-  n = (--c->count == 0);
+  value = c->count++;
   ::LeaveCriticalSection(&c->cs);
 
-  return n;
+  return value;
+
+}
+
+//! Prefix decrement and return the current value
+size_t AtomicCount::operator--() {
+
+  ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
+  size_t value; 
   
+  ::EnterCriticalSection(&c->cs);
+  value = --c->count;
+  ::LeaveCriticalSection(&c->cs);
+
+  return value;
+
+}
+  
+//! Prefix increment and return the current value
+size_t AtomicCount::operator++() {
+  
+  ATOMIC_COUNT* c = reinterpret_cast<ATOMIC_COUNT*>(_value);
+  size_t value; 
+  
+  ::EnterCriticalSection(&c->cs);
+  value = ++c->count;
+  ::LeaveCriticalSection(&c->cs);
+
+  return value;
+
 }
 
 };

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -52,7 +52,7 @@
 
 // (configure)
 // Uncomment to select a Windows based implementation that does not use features not
-// supported by windows 98 and 95, but may not be comatible with 64 bit or alpha systems
+// supported by windows 98 and 95, but may not be compatible with 64 bit or alpha systems
 // #define ZT_WIN9X 1
 
 // (configure)

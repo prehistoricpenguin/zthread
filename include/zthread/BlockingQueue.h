@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -29,269 +29,215 @@
 #include <deque>
 
 namespace ZThread {
-
-/**
- * @class BlockingQueue
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-29T07:52:35-0700>
- * @version 2.2.8
- *
- * Like a LockedQueue, a BlockingQueue is a Queue implementation that provides 
- * serialized access to the items added to it. It differs by causing threads
- * causing the next() methods to block until an item becomes available.
- */
-template <class T, class LockType, typename StorageType=std::deque<T> >
-class BlockingQueue : public Queue<T> {
-
-  //! Serialize access
-  LockType _lock;
-
-  //! Signaled when empty
-  Condition _notEmpty;
-
-  //! Storage backing the queue
-  StorageType _queue;
-
-  //! Cancellation flag
-  volatile bool _canceled;
-
-public:
-
-  //! Create a new BlockingQueue
-  BlockingQueue() : _notEmpty(_lock), _canceled(false) {}
-
-  //! Destroy this BlockingQueue, delete remaining items
-  virtual ~BlockingQueue() throw() {
-
-    for(typename StorageType::iterator i = _queue.begin(); _queue.size() > 0;) {
-
-      delete *i;
-      i = _queue.erase(i);
-
-    }
-
-  }
-
-  /**
-   * Adds an object to this Queue.
-   *
-   * This method will block the calling thread until exclusive access to 
-   * the Queue can be obtained or until an exception is thrown.
-   *
-   * @param item - object to attempt to add to this Queue
-   * 
-   * @see Queue::add(T)
-   *
-   * @post if the Queue was empty, threads blocked by a next() method will 
-   * be awakend if no exception is thrown
-   */
-  virtual void add(T item) 
-    /* throw(Synchronization_Exception) */ {
-
-    Guard<LockType> g(_lock);
-    
-    if(_canceled)
-      throw Cancellation_Exception();
-
-    _queue.push_back(item);
-
-    _notEmpty.signal();
-
-  }
-
-  /**
-   * Adds an object to this Queue.
-   *
-   * This method will block the calling thread until exclusive access to 
-   * the Queue can be obtained, until an exception is thrown or until the
-   * given amount of time expires.
-   *
-   * @param item - object to attempt to add to this Queue
-   * @param timeout - maximum amount of time (milliseconds) this method could block
-   * 
-   * @return true if the item was add()ed before the given timeout expired. Otherwise
-   * false
-   * 
-   * @see Queue::add(T, unsigned long)
-   *
-   * @post if the Queue was empty, threads blocked by a next() method will 
-   * be awakend if no exception is thrown and the method returns true
-   */
-  virtual bool add(T item, unsigned long timeout) 
-    /* throw(Synchronization_Exception) */ {
-
-    try {
-
-      Guard<LockType> g(_lock, timeout);
-      
-      if(_canceled)
-      throw Cancellation_Exception();
-      
-      _queue.push_back(item);
-
-      _notEmpty.signal();
-
-    } catch(Timeout_Exception&) { return false; }
  
-    return true;    
-
-  }
-
   /**
-   * Get an object from this Queue. 
+   * @class BlockingQueue
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T12:01:43-0400>
+   * @version 2.3.0
    *
-   * This method will block the calling thread until an item
-   * arrives in the Queue or until an exception is thrown.
-   *
-   * @return T next available object
-   * 
-   * @see Queue::next()
-   *
-   * @exception Cancellation_Exception thrown if there are no items available 
-   * in the Queue and the Queue has become cancel()ed
-   *
-   * @post if the Queue becomes empty as a result of this method, threads 
-   * blocked by an empty() or size() method will be awakend.
+   * Like a LockedQueue, a BlockingQueue is a Queue implementation that provides 
+   * serialized access to the items added to it. It differs by causing threads
+   * accessing the next() methods to block until a value becomes available.
    */
-  virtual T next()
-    /* throw(Synchronization_Exception) */ {
+  template <class T, class LockType, typename StorageType = std::deque<T> >
+    class BlockingQueue : public Queue<T>, public Lockable {
 
-    Guard<LockType> g(_lock);
+      //! Serialize access
+      LockType _lock;
 
-    while(_queue.size() == 0 && !_canceled)
-      _notEmpty.wait();
+      //! Signaled when empty
+      Condition _notEmpty;
 
-    if(_queue.size() == 0 )
-      throw Cancellation_Exception();
+      //! Storage backing the queue
+      StorageType _queue;
+
+      //! Cancellation flag
+      volatile bool _canceled;
+
+      public:
+
+      //! Create a new BlockingQueue
+      BlockingQueue() : _notEmpty(_lock), _canceled(false) {}
+
+      //! Destroy this BlockingQueue
+      virtual ~BlockingQueue() { }
+
+      /**
+       * @see Queue::add(const T& item)
+       */
+      virtual void add(const T& item) {
+
+        Guard<LockType> g(_lock);
     
+        if(_canceled)
+          throw Cancellation_Exception();
+        
+        _queue.push_back(item);
+        
+        _notEmpty.signal();
+
+      }
+
+      /**
+       * @see Queue::add(const T& item, unsigned long timeout)
+       */
+      virtual bool add(T item, unsigned long timeout) {
+
+        try {
+
+          Guard<LockType> g(_lock, timeout);
+      
+          if(_canceled)
+            throw Cancellation_Exception();
+      
+          _queue.push_back(item);
+
+          _notEmpty.signal();
+
+        } catch(Timeout_Exception&) { return false; }
+ 
+        return true;    
+
+      }
+
+      /**
+       * Get a value from this Queue. The calling thread may block indefinitely.
+       *
+       * @return <em>T</em> next available value
+       * 
+       * @exception Cancellation_Exception thrown if this Queue has been canceled.
+       *
+       * @exception Interrupted_Exception thrown if the calling thread is interrupted
+       *            before a value becomes available.
+       *
+       * @pre  The Queue should not have been canceled prior to the invocation of this function.
+       * @post The value returned will have been removed from the Queue.
+       *
+       * @see Queue::next()
+       */
+      virtual T next() {
+
+        Guard<LockType> g(_lock);
+
+        while(_queue.size() == 0 && !_canceled)
+          _notEmpty.wait();
+
+        if( _queue.size() == 0 )
+          throw Cancellation_Exception();
+        
+        T item = _queue.front();
+        _queue.pop_front();
+    
+        return item;
+
+      }
+
+
+      /**
+       * Get a value from this Queue. The calling thread may block indefinitely.
+       *
+       * @param timeout maximum amount of time (milliseconds) this method may block
+       *        the calling thread.
+       *
+       * @return <em>T</em> next available value
+       * 
+       * @exception Cancellation_Exception thrown if this Queue has been canceled.
+       * @exception Timeout_Exception thrown if the timeout expires before a value
+       *            can be retrieved.
+       * @exception Interrupted_Exception thrown if the calling thread is interrupted
+       *            before a value becomes available.
+       *
+       * @pre  The Queue should not have been canceled prior to the invocation of this function.
+       * @post The value returned will have been removed from the Queue.
+       *
+       * @see Queue::next(unsigned long timeout)
+       */
+      virtual T next(unsigned long timeout) {
+
+        Guard<LockType> g(_lock, timeout);
+
+        while(_queue.size() == 0 && !_canceled) {
+          if(!_notEmpty.wait(timeout))
+            throw Timeout_Exception();
+        }
+
+        if(_queue.size() == 0 )
+          throw Cancellation_Exception();
   
-    T item = _queue.front();
-    _queue.pop_front();
+        T item = _queue.front();
+        _queue.pop_front();
     
-    return item;
+        return item;
 
-  }
-
-
-  /**
-   * Get an object from this Queue. 
-   *
-   * This method will block the calling thread until an item
-   * arrives in the Queue or until an exception is thrown.
-   *
-   * @param timeout - maximum amount of time (milliseconds) this method could block
-   * @return T next available object
-   * 
-   * @see Queue::next(unsigned long)
-   *
-   * @exception Cancellation_Exception thrown if there are no items available 
-   * in the Queue and the Queue has become cancel()ed
-   *
-   * @post if the Queue becomes empty as a result of this method, threads 
-   * blocked by an empty() or size() method will be awakend.
-   */
-  virtual T next(unsigned long timeout)
-    /* throw(Synchronization_Exception) */ {
-
-    Guard<LockType> g(_lock, timeout);
-
-    while(_queue.size() == 0 && !_canceled) {
-      if(!_notEmpty.wait(timeout))
-        throw Timeout_Exception();
-    }
-
-    if(_queue.size() == 0 )
-      throw Cancellation_Exception();
-  
-    T item = _queue.front();
-    _queue.pop_front();
-    
-    return item;
-
-  }
+      }
 
 
-  /**
-   * Cancel this queue. 
-   *
-   * This method will block the calling thread until exclusive access to 
-   * the Queue can be obtained or until an exception is thrown.
-   *
-   * @see Queue::cancel()
-   *
-   * @post If threads are blocked on a next(), empty() or size() method, 
-   * they will awakend
-   */
-  virtual void cancel()
-    /* throw(Synchronization_Exception) */ {
+      /**
+       * @see Queue::cancel()
+       *
+       * @post If threads are blocked on one of the next() functions then 
+       *       they will be awakened with a Cancellation_Exception.
+       */
+      virtual void cancel() {
 
-    Guard<LockType> g(_lock);
+        Guard<LockType> g(_lock);
 
-    _notEmpty.broadcast();
-    _canceled = true;
+        _notEmpty.broadcast();
+        _canceled = true;
 
-  }
+      }
 
-  /**
-   * Determine if this Queue has been cancel()ed.
-   *
-   * This method will block the calling thread until exclusive access to 
-   * the Queue can be obtained or until an exception is thrown.
-   *
-   * @return bool true if cancel() was called prior to this method, otherwise false.
-   * 
-   * @see Queue::isCanceled()
-   */
-  virtual bool isCanceled()
-    /* throw(Synchronization_Exception) */ {
+      /**
+       * @see Queue::isCanceled()
+       */
+      virtual bool isCanceled() {
 
-    // Faster check since the queue will not become un-canceled
-    if(_canceled)
-      return true;
-    
-    Guard<LockType> g(_lock);
+        // Faster check since the queue will not become un-canceled
+        if(_canceled)
+          return true;
+        
+        Guard<LockType> g(_lock);
 
-    return _canceled;
+        return _canceled;
 
-  }
+      }
 
-  /**
-   * Count the items present in this Queue. 
-   *
-   * This method will not block the calling thread.
-   *
-   * @return size_t number of elements available in the Queue. These are
-   * retrievable through the next() methods.
-   *
-   * @see Queue::size()
-   */
-  virtual size_t size()
-    /* throw(Synchronization_Exception) */ {
+      /**
+       * @see Queue::size()
+       */
+      virtual size_t size() {
 
-    Guard<LockType> g(_lock);
-    return _queue.size();
+        Guard<LockType> g(_lock);
+        return _queue.size();
 
-  }
+      }
 
-  /**
-   * Count the items present in this Queue. 
-   *
-   * This method will not block the calling thread.
-   *
-   * @return size_t number of elements available in the Queue. These are
-   * retrievable through the next() methods.
-   *
-   * @see Queue::size(unsigned long)
-   */
-  virtual size_t size(unsigned long timeout)
-    /* throw(Synchronization_Exception) */ {
+      /**
+       * @see Queue::size(unsigned long timeout)
+       */
+      virtual size_t size(unsigned long timeout) {
 
-    Guard<LockType> g(_lock, timeout);
-    return _queue.size();
+        Guard<LockType> g(_lock, timeout);
+        return _queue.size();
 
-  }
+      }
 
-};
+      public:
+
+      virtual void acquire() {
+        _lock.acquire();
+      }
+
+      virtual bool tryAcquire(unsigned long timeout) {
+        return _lock.tryAcquire(timeout);
+      }
+
+      virtual void release() {
+        _lock.release();
+      }
+
+    }; /* BlockingQueue */
 
 } // namespace ZThread
 

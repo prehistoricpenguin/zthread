@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -22,55 +22,52 @@
 #ifndef __ZTCLASSLOCKABLE_H__
 #define __ZTCLASSLOCKABLE_H__
 
-#include "zthread/Lockable.h"
+#include "zthread/CountedPtr.h"
+#include "zthread/Mutex.h"
 
 namespace ZThread { 
 
-/**
- * @class ClassLockable
- *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-30T17:08:19-0400>
- * @version 2.2.0
- *
- * The ClassLockable template creates a Lockable object that delegates
- * to an different static instance of a Lockable object for each type.
- * It is used to create a Lockable shared among all instances of the class 
- * specified in the template parameter. 
- *
- */
-template <typename ClassType, class LockType>
-class ClassLockable : public Lockable {
+  /**
+   * @class ClassLockable
+   *
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T23:37:38-0400>
+   * @version 2.3.0
+   *
+   *
+   */
+  template <typename ClassType, class LockType = Mutex>
+    class ClassLockable : public Lockable {
 
-  static LockType _instance;
+    static CountedPtr<LockType> _instance;
+    CountedPtr<LockType> _lock;
 
- public:  
+    public:  
   
-  //! Create a ClassLockable
-  ClassLockable() {} 
+    //! Create a ClassLockable
+    ClassLockable() 
+      : _lock(_instance) {} 
   
-  //! Destroy the ClassLockable
-  virtual ~ClassLockable() {} 
-  
-  //! acquire() the ClassLockable
-  virtual void acquire() 
-    /* throw(Synchronization_Exception) */ { _instance.acquire(); }
+    //! acquire() the ClassLockable
+    virtual void acquire() { 
+      _lock->acquire(); 
+    }
 
-  //! tryAcquire() the ClassLockable
-  virtual bool tryAcquire(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */
-    { return _instance.tryAcquire(timeout); }
+    //! tryAcquire() the ClassLockable
+    virtual bool tryAcquire(unsigned long timeout) {
+      return _lock->tryAcquire(timeout); 
+    }
 
-  //! release() the ClassLockable
-  virtual void release() 
-    /* throw(Synchronization_Exception) */ { _instance.release(); }
+    //! release() the ClassLockable
+    virtual void release() {
+      _lock->release(); 
+    }
 
-};
+  };
 
-template <typename ClassType, class LockType>
-LockType ClassLockable<ClassType, LockType>::_instance;
+  template <typename ClassType, class LockType>
+    CountedPtr<LockType> ClassLockable<ClassType, LockType>::_instance(new LockType);
 
 } // namespace ZThread
 
 #endif // __ZTCLASSLOCKABLE_H__
- 

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and
+ *  synchronization library
  *
- *  Copyright (C) 2001 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -22,51 +22,46 @@
 #include "zthread/Mutex.h"
 #include "MutexImpl.h"
 
-
 namespace ZThread {
 
-class FifoMutexImpl : public MutexImpl<fifo_list, NullBehavior> { };
-
-Mutex::Mutex() /* throw(Synchronization_Exception) */ {
-
-  _impl = new FifoMutexImpl();
-
-}
-
-Mutex::~Mutex()
- throw() {
-
-  if(_impl != 0)
-    delete _impl;
-
-}
-
-// P
-void Mutex::acquire()
-  /* throw(Synchronization_Exception) */ {
-
-  _impl->acquire();
-
-}
+  class FifoMutexImpl : public MutexImpl<fifo_list, NullBehavior> { };
 
 
-// P
-bool Mutex::tryAcquire(unsigned long ms)
-  /* throw(Synchronization_Exception) */ {
+  Mutex::Mutex() {
 
-  return _impl->tryAcquire(ms);
+    _impl = new FifoMutexImpl();
 
-}
+  }
 
-// V
-void Mutex::release()
-  /* throw(Synchronization_Exception) */ {
+  Mutex::~Mutex() {
 
-  _impl->release();
+    if(_impl != 0)
+      delete _impl;
+  }
 
-}
+  // P
+  void Mutex::acquire() {
+
+    _impl->acquire();
+
+  }
+
+
+  // P
+  bool Mutex::tryAcquire(unsigned long ms) {
+
+    return _impl->tryAcquire(ms);
+
+  }
+
+  // V
+  void Mutex::release() {
+
+    _impl->release();
+
+  }
 
 
 
-} // namespace ZThread
+} // namespace ZThread 
 

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -22,17 +22,6 @@
 #ifndef __ZTEXCEPTIONS_H__
 #define __ZTEXCEPTIONS_H__
 
-/**
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-01T21:06:07-0400>
- * @version 2.2.0
- *
- * Revised all the exception classes. They now can carry some useful
- * information. Also, many of the exceptions that were previously provided 
- * were not necessary and overlapped with other exception. A tighter
- * more concise set of exceptions has been created to replace the 
- * old exceptions
- */
 
 #include "zthread/Config.h"
 #include <string>

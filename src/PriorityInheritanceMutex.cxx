@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -26,88 +26,82 @@
 
 namespace ZThread {
 
-class InheritPriorityBehavior : public NullBehavior {
+  class InheritPriorityBehavior : public NullBehavior {
   
-  ThreadImpl* owner;
-  Priority p;
+    ThreadImpl* owner;
+    Priority p;
 
-protected:
+  protected:
 
-  // Temporarily raise the effective priority of the owner 
-  inline void waiterArrived(ThreadImpl* impl) {  
+    // Temporarily raise the effective priority of the owner 
+    inline void waiterArrived(ThreadImpl* impl) {  
     
-    Priority q = impl->getPriority();
-    if((int)q > (int)p) {
+      Priority q = impl->getPriority();
+      if((int)q > (int)p) {
 
-      ThreadOps::setPriority(impl, p);
-      p = q;
+        ThreadOps::setPriority(impl, p);
+        p = q;
       
+      }
+
     }
 
-  }
 
+    // Note the owners priority
+    inline void ownerAcquired(ThreadImpl* impl) {  
 
-  // Note the owners priority
-  inline void ownerAcquired(ThreadImpl* impl) {  
+      p = impl->getPriority();
+      owner = impl;
 
-    p = impl->getPriority();
-    owner = impl;
+    }
 
-  }
+    // Restore its original priority
+    inline void ownerReleased(ThreadImpl* impl) {  
 
-  // Restore its original priority
-  inline void ownerReleased(ThreadImpl* impl) {  
+      if(p > owner->getPriority())
+        ThreadOps::setPriority(impl, impl->getPriority());
 
-    if(p > owner->getPriority())
-      ThreadOps::setPriority(impl, impl->getPriority());
+    }
 
-  }
+  };
 
-};
-
-class PriorityInheritanceMutexImpl : 
+  class PriorityInheritanceMutexImpl : 
     public MutexImpl<priority_list, InheritPriorityBehavior> { };
 
-PriorityInheritanceMutex::PriorityInheritanceMutex() 
-  /* throw(Synchronization_Exception) */ {
+  PriorityInheritanceMutex::PriorityInheritanceMutex() {
   
-  _impl = new PriorityInheritanceMutexImpl();
+    _impl = new PriorityInheritanceMutexImpl();
   
-}
+  }
 
-PriorityInheritanceMutex::~PriorityInheritanceMutex() 
- throw() {
+  PriorityInheritanceMutex::~PriorityInheritanceMutex() {
 
-  if(_impl != 0) 
-    delete _impl;
+    if(_impl != 0) 
+      delete _impl;
 
-}
+  }
 
-// P
-void PriorityInheritanceMutex::acquire() 
-  /* throw(Synchronization_Exception) */ {
+  // P
+  void PriorityInheritanceMutex::acquire() {
 
-  _impl->acquire(); 
+    _impl->acquire(); 
 
-}
+  }
 
 
-// P
-bool PriorityInheritanceMutex::tryAcquire(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  // P
+  bool PriorityInheritanceMutex::tryAcquire(unsigned long ms) {
 
-  return _impl->tryAcquire(ms); 
+    return _impl->tryAcquire(ms); 
 
-}
+  }
 
-// V
-void PriorityInheritanceMutex::release() 
-  /* throw(Synchronization_Exception) */ {
+  // V
+  void PriorityInheritanceMutex::release() {
 
-  _impl->release(); 
+    _impl->release(); 
 
-}
-
+  }
 
 
 } // namespace ZThread

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,9 +17,6 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
- *
- *  SUNY @ Buffalo, hereby disclaims all copyright interest in the
- *  ZThreads library written by Eric Crahen
  */
 
 #ifndef __ZTREADWRITELOCK_H__
@@ -30,64 +27,53 @@
 
 namespace ZThread {
   
-/**
- * @class ReadWriteLock
- * 
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-19T07:39:55-0400>
- * @version 2.2.7
- *
- * Read/Write lock provide a set of coordinated Lockable object that
- * allow many Readers while there is no update in progress, but only 1 
- * Writer & 0 Readers during an update
- *
- * Because the general case where an ReadWriteLock would be used is one where 
- * you have more readers than writers, this lock will have a bias toward
- * readers
- */
-  
-class ReadWriteLock : public NonCopyable {
- public:
+  /**
+   * @class ReadWriteLock
+   * 
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T10:17:31-0400>
+   * @version 2.2.7
+   *
+   * A ReadWriteLock provides a set of coordinated Lockable objects that can be used to
+   * guard an object; One for read-only access, and another for read-write access.
+   *
+   * @see BiasedReadWriteLock
+   * @see FairReadWriteLock
+   */  
+  class ReadWriteLock : public NonCopyable {
+  public:
 
-  /**
-   * Create a new ReadWriteLock
-   *
-   * @exception Initialization_Exception - thrown if resources could 
-   * not be allocated
-   */
-  ReadWriteLock() {}
-    /* throw(Synchronization_Exception) */;
+    /**
+     * Create a ReadWriteLock
+     *
+     * @exception Initialization_Exception thrown if resources could not be 
+     *            allocated for this object.
+     */
+    ReadWriteLock() {}
   
-  /**
-   * Destroy this ReadWriteLock
-   */
-  virtual ~ReadWriteLock() throw() {} 
+    //! Destroy this ReadWriteLock
+    virtual ~ReadWriteLock() {} 
   
-  /**
-   * Get a reference to the read lock
-   *
-   * @return Lockable& read lock
-   */
-  virtual Lockable& getReadLock() = 0;
+    /**
+     * Get a reference to the read-only Lockable.
+     *
+     * @return <em>Lockable&</em> reference to a Lockable that provides read-only
+     *         access.
+     */
+    virtual Lockable& getReadLock() = 0;
 
-  /**
-   * Get a reference to the write lock
-   *
-   * @return Lockable& write lock
-   */
-  virtual Lockable& getWriteLock() = 0;
+    /**
+     * Get a reference to the read-write Lockable.
+     *
+     * @return <em>Lockable&</em> reference to a Lockable that provides read-write
+     *         access.
+     */
+    virtual Lockable& getWriteLock() = 0;
 
       
-}; /* ReadWriteLock */
+  }; /* ReadWriteLock */
 
 
 }; // __ZTREADWRITELOCK_H__
 
 #endif
-
-
-
-
-
-
-

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -26,96 +26,68 @@
 
 namespace ZThread { 
 
-/**
- * @class Lockable
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T04:50:56-0500>
- * @version 2.2.11
- *
- * The Lockable interface defines a common method of adding general <i>acqurie-release</i> 
- * semantics to an object. These <i>acquire-release</i> create a protocol that does <b>not</b> 
- * neccessarily imply exclusive access. 
- *
- * The following text describes the specific meaning of <i>acqurie-release</i> 
- * semantics in more detail. 
- * 
- * <b>Acquiring/Releasing</b> 
- * 
- * Acquiring a Lockable object means that a check point has been reached. If execution
- * can continue, the Lockable object may be acquire()d. 
- *
- * Releasing a Lockable object means that a check point is being left. 
- *
- * The details of these semantics are refined further by specializaions of this 
- * class, but the general conotation remains intact. 
- *
- * For example, A Mutex class implements the Lockable interface to provide a strict protocol 
- * for <i>acquire()</i>ing and <i>release()</i>ing mutually exclusive access to something. 
- *
- * A Semaphore class implements the Lockable interface to define semantics for <i>acquire()</i>ing 
- * and <i>release()</i>ing permits for something, which may or may not be exclusive.
- */
-class Lockable {
-public:  
-  
-  //! Destroy a Lockable object.
-  virtual ~Lockable() throw() {}
-
-  /** 
-   * Acquire the Lockable object. 
+  /**
+   * @class Lockable
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T10:33:32-0400>
+   * @version 2.3.0
    *
-   * This method may or may not block the caller for an indefinite amount
-   * of time. Those details are defined by specializations of this class.
-   *
-   * @exception Interrupted_Exception thrown if the the method is invoked from the 
-   * context of a thread that has been interrupt()ed.
-   * @exception Synchronization_Exception thrown if some error occurs while
-   * attempting to acquire this Lockable.
-   *
-   * @post The Lockable is safely acquired if no exception is thrown. 
+   * The Lockable interface defines a common method of adding general <i>acquire-release</i> 
+   * semantics to an object. An <i>acquire-release</i> protocol does not necessarily imply 
+   * exclusive access. 
    */
-  virtual void acquire() 
-    /* throw(Synchronization_Exception) */ = 0;
-
-
-  /** 
-   * Attempt to acquire the Lockable object. 
-   *
-   * This method may or may not block the caller for a definite amount
-   * of time. Those details are defined by specializations of this class;
-   * however, this method includes a timeout value that can be used to 
-   * limit the maximum amount of time that a specialization <i>could</i> block. 
-   *
-   * @param timeout - maximum amount of time (milliseconds) this method could block
-   *
-   * @return bool true if the operation completes and the Lockable is acquired before 
-   * the timeout expires. Otherwise false is returned and the Lockable is not acquired.
-   * 
-   * @exception Interrupted_Exception thrown if the the method is invoked from the 
-   * context of a thread that has been interrupt()ed.
-   * @exception Synchronization_Exception  thrown if some error occurs while
-   * attempting to acquire this Lockable.
-   */
-  virtual bool tryAcquire(unsigned long) 
-    /* throw(Synchronization_Exception) */ = 0;
+  class Lockable {
+  public:  
   
-  /** 
-   * Release the Lockable object.
-   *
-   * This method may or may not block the caller for an indefinite amount
-   * of time. Those details are defined by specializations of this class.
-   *
-   * @exception Interrupted_Exception thrown if the the method is invoked from the 
-   * context of a thread that has been interrupt()ed.
-   * @exception Synchronization_Exception  thrown if some error occurs
-   * while releasing this Lockable.
-   *
-   * @post The Lockable is safely released if no exception is thrown. 
-   */    
-  virtual void release() 
-    /* throw(Synchronization_Exception) */ = 0;
+    //! Destroy a Lockable object.
+    virtual ~Lockable() {}
 
-};
+    /** 
+     * Acquire the Lockable object. 
+     *
+     * This method may or may not block the caller for an indefinite amount
+     * of time. Those details are defined by specializations of this class.
+     *
+     * @exception Interrupted_Exception thrown if the calling thread is interrupted before
+     *            the operation completes.
+     *
+     * @post The Lockable is acquired only if no exception was thrown. 
+     */
+    virtual void acquire() = 0;
+
+    /** 
+     * Attempt to acquire the Lockable object. 
+     *
+     * This method may or may not block the caller for a definite amount
+     * of time. Those details are defined by specializations of this class;
+     * however, this method includes a timeout value that can be used to 
+     * limit the maximum amount of time that a specialization <i>could</i> block. 
+     *
+     * @param timeout - maximum amount of time (milliseconds) this method could block
+     *
+     * @return 
+     *   - <em>true</em>  if the operation completes and the Lockable is acquired before 
+     *     the timeout expires. 
+     *   - <em>false</em> if the operation times out before the Lockable can be acquired.
+     * 
+     * @exception Interrupted_Exception thrown if the calling thread is interrupted before
+     *            the operation completes.
+     *
+     * @post The Lockable is acquired only if no exception was thrown. 
+     */
+    virtual bool tryAcquire(unsigned long timeout) = 0;
+  
+    /** 
+     * Release the Lockable object.
+     *
+     * This method may or may not block the caller for an indefinite amount
+     * of time. Those details are defined by specializations of this class.
+     *
+     * @post The Lockable is released only if no exception was thrown. 
+     */    
+    virtual void release() = 0;
+
+  };
 
 
 } // namespace ZThread

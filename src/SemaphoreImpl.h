@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -32,71 +32,70 @@
 
 namespace ZThread {
 
-class Monitor;
+  class Monitor;
 
-/**
- * @class SemaphoreImpl
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T08:37:42-0500>
- * @version 2.2.11
- *
- * The SemaphoreImpl template allows how waiter lists are sorted
- * to be parameteized
- */
-template <typename List> 
-class SemaphoreImpl {
+  /**
+   * @class SemaphoreImpl
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T20:03:20-0400>
+   * @version 2.2.11
+   *
+   * The SemaphoreImpl template allows how waiter lists are sorted
+   * to be parameteized
+   */
+  template <typename List> 
+    class SemaphoreImpl {
 
-  //! List of waiting events
-  List _waiters;
+    //! List of waiting events
+    List _waiters;
 
-  //! Serialize access to this object
-  FastLock _lock;
+    //! Serialize access to this object
+    FastLock _lock;
 
-  //! Current count
-  volatile int _count;
+    //! Current count
+    volatile int _count;
 
-  //! Maximum count if any
-  volatile int _maxCount;
+    //! Maximum count if any
+    volatile int _maxCount;
   
-  //! Flag for bounded or unbounded count
-  volatile bool _checked;
+    //! Flag for bounded or unbounded count
+    volatile bool _checked;
 
-  //! Entry count
-  volatile int _entryCount;
+    //! Entry count
+    volatile int _entryCount;
 
- public:
+    public:
    
  
-  /**
-   * Create a new SemaphoreImpl. Initialzes one pthreads mutex for 
-   * internal use.
-   *
-   * @exception Initialization_Exception thrown if resources could not be
-   * properly allocated
-   */
-  SemaphoreImpl(int count, unsigned int maxCount, bool checked) 
-    /* throw(Synchronization_Exception) */ 
-    : _count(count), _maxCount(maxCount), _checked(checked), _entryCount(0) { }
+    /**
+     * Create a new SemaphoreImpl. Initialzes one pthreads mutex for 
+     * internal use.
+     *
+     * @exception Initialization_Exception thrown if resources could not be
+     * properly allocated
+     */
+    SemaphoreImpl(int count, unsigned int maxCount, bool checked) 
+      : _count(count), _maxCount(maxCount), _checked(checked), _entryCount(0) { }
 
 
-  ~SemaphoreImpl() throw();
+    ~SemaphoreImpl();
 
-  void acquire();
+    void acquire();
   
-  void release();
+    void release();
 
-  bool tryAcquire(unsigned long timeout);
+    bool tryAcquire(unsigned long timeout);
  
-  int count();
+    int count();
 
-}; 
+  }; 
 
 
   /**
    * Destroy this SemaphoreImpl and release its resources. 
    */
-template <typename List> 
-SemaphoreImpl<List>::~SemaphoreImpl() throw() {
+  template <typename List> 
+    SemaphoreImpl<List>::~SemaphoreImpl() {
 
 #ifndef NDEBUG
 
@@ -117,13 +116,13 @@ SemaphoreImpl<List>::~SemaphoreImpl() throw() {
    *
    * @return int
    */
-template <typename List> 
-int SemaphoreImpl<List>::count() {
+  template <typename List> 
+    int SemaphoreImpl<List>::count() {
 
-  Guard<FastLock> g(_lock);
-  return _count;
+    Guard<FastLock> g(_lock);
+    return _count;
   
-}
+  }
 
   /**
    * Decrement the count, blocking when that count becomes 0 or less.
@@ -131,8 +130,8 @@ int SemaphoreImpl<List>::count() {
    * @exception Interrupted_Exception thrown when the caller status is interrupted
    * @exception Synchronization_Exception thrown if there is some other error.
    */
-template <typename List> 
-void SemaphoreImpl<List>::acquire() {
+  template <typename List> 
+    void SemaphoreImpl<List>::acquire() {
 
     // Get the monitor for the current thread
     ThreadImpl* self = ThreadImpl::current();
@@ -199,8 +198,8 @@ void SemaphoreImpl<List>::acquire() {
    * @exception Interrupted_Exception thrown when the caller status is interrupted
    * @exception Synchronization_Exception thrown if there is some other error.
    */
-template <typename List> 
-bool SemaphoreImpl<List>::tryAcquire(unsigned long timeout) {
+  template <typename List> 
+    bool SemaphoreImpl<List>::tryAcquire(unsigned long timeout) {
  
     // Get the monitor for the current thread
     ThreadImpl* self = ThreadImpl::current();
@@ -277,8 +276,8 @@ bool SemaphoreImpl<List>::tryAcquire(unsigned long timeout) {
    * @exception InvalidOp_Exception thrown if the maximum count is exceeded while
    * the checked flag is set.
    */
-template <typename List> 
-void SemaphoreImpl<List>::release()  {
+  template <typename List> 
+    void SemaphoreImpl<List>::release()  {
 
     Guard<FastLock> g1(_lock);
 
@@ -333,14 +332,14 @@ void SemaphoreImpl<List>::release()  {
   
   }
 
-class FifoSemaphoreImpl : public SemaphoreImpl<fifo_list> { 
-public:
+  class FifoSemaphoreImpl : public SemaphoreImpl<fifo_list> { 
+  public:
 
-  FifoSemaphoreImpl(int count, unsigned int maxCount, bool checked) 
-    /* throw(Synchronization_Exception) */
-    : SemaphoreImpl<fifo_list>(count, maxCount, checked) { }
+    FifoSemaphoreImpl(int count, unsigned int maxCount, bool checked) 
+      /* throw(Synchronization_Exception) */
+      : SemaphoreImpl<fifo_list>(count, maxCount, checked) { }
 
-};
+  };
 
 
 } // namespace ZThread

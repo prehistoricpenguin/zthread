@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -31,8 +31,8 @@ namespace ZThread {
 
 /**
  * @class ConditionImpl
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T05:00:21-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-18T08:15:37-0400>
  * @version 2.2.11
  *
  * The ConditionImpl template allows how waiter lists are sorted
@@ -58,15 +58,14 @@ class ConditionImpl {
    * @exception Initialization_Exception thrown if resources could not be
    * allocated
    */
-  ConditionImpl(Lockable& predicateLock)   
-    /* throw(Synchronization_Exception) */ : _predicateLock(predicateLock) {
+  ConditionImpl(Lockable& predicateLock) : _predicateLock(predicateLock) {
 
   }
 
   /**
    * Destroy this ConditionImpl, release its resources
    */
-  ~ConditionImpl() throw();
+  ~ConditionImpl();
 
   void signal();
 
@@ -80,7 +79,7 @@ class ConditionImpl {
 
 
 template <typename List> 
-ConditionImpl<List>::~ConditionImpl() throw() {
+ConditionImpl<List>::~ConditionImpl() {
 
 #ifndef NDEBUG
 
@@ -252,7 +251,7 @@ void ConditionImpl<List>::wait() {
     // Defer interruption until the external lock is acquire()d
     Guard<Monitor, DeferredInterruptionScope> g3(m);
     {
-    
+
 #if !defined(NDEBUG)
       try {
 #endif
@@ -341,7 +340,7 @@ bool ConditionImpl<List>::wait(unsigned long timeout) {
     // Defer interruption until the external lock is acquire()d
     Guard<Monitor, DeferredInterruptionScope> g3(m);
     {
-    
+
 #if !defined(NDEBUG)
       try {
 #endif

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -25,94 +25,79 @@
 
 namespace ZThread {
 
-class PrioritySemaphoreImpl : public SemaphoreImpl<priority_list> { 
-public:
+  class PrioritySemaphoreImpl : public SemaphoreImpl<priority_list> { 
+  public:
 
-  PrioritySemaphoreImpl(int count, unsigned int maxCount) /* throw(Synchronization_Exception) */ 
-    : SemaphoreImpl<priority_list>(count, maxCount, true) { }
+    PrioritySemaphoreImpl(int count, unsigned int maxCount) 
+      : SemaphoreImpl<priority_list>(count, maxCount, true) { }
 
-};
+  };
 
-/**
- * Create a new semaphore of a given size with a given count
- *
- * @param initialCount initial count to assign this semaphore
- * @param maxCount maximum size of the semaphore count
- */
-PrioritySemaphore::PrioritySemaphore(int count, unsigned int maxCount) 
-  /* throw(Synchronization_Exception) */ {
+  /**
+   * Create a new semaphore of a given size with a given count
+   *
+   * @param initialCount initial count to assign this semaphore
+   * @param maxCount maximum size of the semaphore count
+   */
+  PrioritySemaphore::PrioritySemaphore(int count, unsigned int maxCount) {
   
-  _impl = new PrioritySemaphoreImpl(count, maxCount);
+    _impl = new PrioritySemaphoreImpl(count, maxCount);
   
-}
+  }
 
-PrioritySemaphore::~PrioritySemaphore() 
-  throw() {
+  PrioritySemaphore::~PrioritySemaphore() {
 
-  if(_impl != 0)
-    delete _impl;
+    if(_impl != 0)
+      delete _impl;
 
-}
+  }
 
-void PrioritySemaphore::wait() 
-  /* throw(Synchronization_Exception) */ {
+  void PrioritySemaphore::wait() {
 
-  _impl->acquire();
+    _impl->acquire();
 
-}
+  }
 
 
-bool PrioritySemaphore::tryWait(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  bool PrioritySemaphore::tryWait(unsigned long ms) {
 
-  return _impl->tryAcquire(ms);
+    return _impl->tryAcquire(ms);
 
-}
+  }
 
-void PrioritySemaphore::post() 
-  /* throw(Synchronization_Exception) */ {
+  void PrioritySemaphore::post() {
 
-  _impl->release();
+    _impl->release();
 
-}
+  }
 
-int PrioritySemaphore::count() 
-  throw() {
+  int PrioritySemaphore::count() {
 
-  return _impl->count();
+    return _impl->count();
 
-}
+  }
 
-///////////////////////////////////////////////////////////////////////////////
-// Locakable compatibility
-//
+  ///////////////////////////////////////////////////////////////////////////////
+  // Locakable compatibility
+  //
 
-void PrioritySemaphore::acquire() 
-  /* throw(Synchronization_Exception) */ {
+  void PrioritySemaphore::acquire() {
 
-  _impl->acquire();
+    _impl->acquire();
 
-}
+  }
 
-bool PrioritySemaphore::tryAcquire(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  bool PrioritySemaphore::tryAcquire(unsigned long ms) {
 
-  return _impl->tryAcquire(ms);
+    return _impl->tryAcquire(ms);
 
 
-}
+  }
 
-void PrioritySemaphore::release() 
-  /* throw(Synchronization_Exception) */ {
+  void PrioritySemaphore::release() {
 
-  _impl->release();
+    _impl->release();
 
-}
+  }
 
 } // namespace ZThread
-
-
-
-
-
-

@@ -2,7 +2,7 @@
  *  ZThreads, a platform-independant, multithreading and 
  *  synchroniation library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -27,73 +27,65 @@ using namespace ZThread;
 namespace ZThread {
 
 
-CountingSemaphore::CountingSemaphore(int initialCount) 
-  /* throw(Synchronization_Exception) */ {
+  CountingSemaphore::CountingSemaphore(int initialCount) {
   
-  _impl = new FifoSemaphoreImpl(initialCount, 0 , false);
+    _impl = new FifoSemaphoreImpl(initialCount, 0 , false);
   
-}
+  }
 
 
-CountingSemaphore::~CountingSemaphore() throw() {
+  CountingSemaphore::~CountingSemaphore() {
 
-  try {
+    try {
 
-    if(_impl != 0)
-      delete _impl;
+      if(_impl != 0)
+        delete _impl;
 
-  } catch(...) { }
+    } catch(...) { }
 
-}
-
-
-void CountingSemaphore::wait() 
-  /* throw(Synchronization_Exception) */ {
-  _impl->acquire();
-}
+  }
 
 
-bool CountingSemaphore::tryWait(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
-
-  return _impl->tryAcquire(ms);
-
-}
+  void CountingSemaphore::wait() {
+    _impl->acquire();
+  }
 
 
-void CountingSemaphore::post() 
-  /* throw(Synchronization_Exception) */ {
+  bool CountingSemaphore::tryWait(unsigned long ms) {
 
-  _impl->release();
+    return _impl->tryAcquire(ms);
 
-}
+  }
 
-int CountingSemaphore::count()
-  throw() {
 
-  return _impl->count();
+  void CountingSemaphore::post() {
 
-}
+    _impl->release();
 
-void CountingSemaphore::acquire() 
-  /* throw(Synchronization_Exception) */ {
+  }
 
-  _impl->acquire();
+  int CountingSemaphore::count() {
 
-}
+    return _impl->count();
 
-bool CountingSemaphore::tryAcquire(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  }
 
-  return _impl->tryAcquire(ms);
+  void CountingSemaphore::acquire() {
 
-}
+    _impl->acquire();
 
-void CountingSemaphore::release() 
-  /* throw(Synchronization_Exception) */ {
+  }
 
-  _impl->release();
+  bool CountingSemaphore::tryAcquire(unsigned long ms) {
 
-}
+    return _impl->tryAcquire(ms);
+
+  }
+
+  void CountingSemaphore::release() {
+
+    _impl->release();
+
+  }
 
 } // namespace ZThread

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -17,9 +17,6 @@
  *  You should have received a copy of the GNU Lesser General Public
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
- *
- *  SUNY @ Buffalo, hereby disclaims all copyright interest in the
- *  ZThreads library written by Eric Crahen
  */
 
 #ifndef __ZTBIASEDREADWRITELOCK_H__
@@ -32,297 +29,289 @@
 
 namespace ZThread {
 
-/**
- * @class BiasedReadWriteLock
- *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-19T08:38:39-0400>
- * @version 2.2.7
- *  
- * A specialized ReadWriteLock that has a bias toward writers. It will 
- * prefer writers over readers when many threads are competing for 
- * this lock.
- *
- * @see ReadWriteLock 
- */
-class BiasedReadWriteLock : public ReadWriteLock {
-
-  FastMutex _lock;
-  Condition _condRead;
-  Condition _condWrite;
-  
-  volatile int _activeWriters;
-  volatile int _activeReaders; 
-
-  volatile int _waitingReaders;
-  volatile int _waitingWriters;
-
   /**
-   * @class ReadLock
+   * @class BiasedReadWriteLock
+   *
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T10:22:34-0400>
+   * @version 2.2.7
+   *  
+   * A BiasedReadWriteLock has a bias toward writers. It will prefer read-write access over 
+   * read-only access when many threads are contending for access to either Lockable this
+   * ReadWriteLock provides.
+   *
+   * @see ReadWriteLock 
    */
-  class ReadLock : public Lockable {
+  class BiasedReadWriteLock : public ReadWriteLock {
 
-    BiasedReadWriteLock& _rwlock;
+    FastMutex _lock;
+    Condition _condRead;
+    Condition _condWrite;
+  
+    volatile int _activeWriters;
+    volatile int _activeReaders; 
+
+    volatile int _waitingReaders;
+    volatile int _waitingWriters;
+
+    //! @class ReadLock
+    class ReadLock : public Lockable {
+
+      BiasedReadWriteLock& _rwlock;
+
+    public:
+
+      ReadLock(BiasedReadWriteLock& rwlock) : _rwlock(rwlock) {}
+
+      virtual ~ReadLock() {}
+
+      virtual void acquire() {
+        _rwlock.beforeRead();
+      }
+
+      virtual bool tryAcquire(unsigned long timeout) {            
+        return _rwlock.beforeReadAttempt(timeout);
+      }
+
+      virtual void release() {
+        _rwlock.afterRead();
+      }
+
+    };
+
+    //! @class WriteLock
+    class WriteLock : public Lockable {
+
+      BiasedReadWriteLock& _rwlock;
+
+    public:
+
+      WriteLock(BiasedReadWriteLock& rwlock) : _rwlock(rwlock) {}
+
+      virtual ~WriteLock() {}
+
+
+      virtual void acquire() {
+        _rwlock.beforeWrite();
+      }
+
+      virtual bool tryAcquire(unsigned long timeout) {            
+        return _rwlock.beforeWriteAttempt(timeout);
+      }
+
+      virtual void release() {
+        _rwlock.afterWrite();
+      }
+
+    };
+
+    friend class ReadLock;
+    friend class WriteLock;
+
+    ReadLock _rlock;
+    WriteLock _wlock;
 
   public:
-
-    ReadLock(BiasedReadWriteLock& rwlock) : _rwlock(rwlock) {}
-
-    virtual ~ReadLock() throw() {}
-
-    virtual void acquire() {
-      _rwlock.beforeRead();
-    }
-
-    virtual bool tryAcquire(unsigned long timeout) {            
-      return _rwlock.beforeReadAttempt(timeout);
-    }
-
-    virtual void release() {
-      _rwlock.afterRead();
-    }
-
-  };
-
-  /**
-   * @class WriteLock
-   */
-  class WriteLock : public Lockable {
-
-    BiasedReadWriteLock& _rwlock;
-
-  public:
-
-    WriteLock(BiasedReadWriteLock& rwlock) : _rwlock(rwlock) {}
-
-    virtual ~WriteLock() throw() {}
-
-
-    virtual void acquire() {
-      _rwlock.beforeWrite();
-    }
-
-    virtual bool tryAcquire(unsigned long timeout) {            
-      return _rwlock.beforeWriteAttempt(timeout);
-    }
-
-    virtual void release() {
-      _rwlock.afterWrite();
-    }
-
-  };
-
-  friend class ReadLock;
-  friend class WriteLock;
-
-  ReadLock _rlock;
-  WriteLock _wlock;
-
- public:
   
-  /**
-   * Create a fair or somewhat balanced ReadWriteLock
-   */
-  BiasedReadWriteLock() : _condRead(_lock), _condWrite(_lock), _rlock(*this), _wlock(*this) {
+    /**
+     * Create a BiasedReadWriteLock
+     *
+     * @exception Initialization_Exception thrown if resources could not be 
+     *            allocated for this object.
+     */
+    BiasedReadWriteLock() : _condRead(_lock), _condWrite(_lock), _rlock(*this), _wlock(*this) {
 
-    _activeWriters = 0;
-    _activeReaders = 0;
+      _activeWriters = 0;
+      _activeReaders = 0;
  
-    _waitingReaders = 0;
-    _waitingWriters = 0;
+      _waitingReaders = 0;
+      _waitingWriters = 0;
 
-  }
-    /* throw(Synchronization_Exception) */ 
+    }
 
-  /**
-   * Destroy this ReadWriteLock
-   */
-  virtual ~BiasedReadWriteLock() throw() {}
+    //! Destroy this ReadWriteLock
+    virtual ~BiasedReadWriteLock() {}
 
-  /**
-   * Get a reference to the read lock
-   *
-   * @return Lockable& read lock
-   */
-  virtual Lockable& getReadLock() { return _rlock; }
+    /**
+     * @see ReadWriteLock::getReadLock()
+     */
+    virtual Lockable& getReadLock() { return _rlock; }
 
-  /**
-   * Get a reference to the write lock
-   *
-   * @return Lockable& write lock
-   */
-  virtual Lockable& getWriteLock() { return _wlock; }
+    /**
+     * @see ReadWriteLock::getWriteLock()
+     */
+    virtual Lockable& getWriteLock() { return _wlock; }
 
   
- protected:
+  protected:
 
-  void beforeRead() {
+    void beforeRead() {
     
-    Guard<FastMutex> guard(_lock); 
+      Guard<FastMutex> guard(_lock); 
     
-    ++_waitingReaders;  
+      ++_waitingReaders;  
     
-    while(!allowReader()) {
+      while(!allowReader()) {
       
-      try {
+        try {
         
-        // wait
-        _condRead.wait();
+          // wait
+          _condRead.wait();
         
-      } catch(...) {
+        } catch(...) {
         
-        --_waitingReaders;        
-        throw;
+          --_waitingReaders;        
+          throw;
+
+        }
+      
+      }
+    
+      --_waitingReaders;
+      ++_activeReaders;
+    
+    }
+
+    bool beforeReadAttempt(unsigned long timeout) {
+      
+      Guard<FastMutex> guard(_lock); 
+      bool result = false;
+
+      ++_waitingReaders;  
+
+      while(!allowReader()) {
+        
+        try {
+          
+          result = _condRead.wait(timeout);
+          
+        } catch(...) {
+          
+          --_waitingReaders;          
+          throw;
+
+        }
 
       }
       
-    }
-    
-    --_waitingReaders;
-    ++_activeReaders;
-    
-  }
+      --_waitingReaders;
+      ++_activeReaders;
 
-  bool beforeReadAttempt(unsigned long timeout) {
+      return result;
+    }   
+  
+
+    void afterRead() {
+
+      bool wakeReader = false;
+      bool wakeWriter = false;
+
+      {
+
+        Guard<FastMutex> guard(_lock);
       
-    Guard<FastMutex> guard(_lock); 
-    bool result = false;
+        --_activeReaders;
 
-    ++_waitingReaders;  
-
-    while(!allowReader()) {
-        
-      try {
-          
-        result = _condRead.wait(timeout);
-          
-      } catch(...) {
-          
-        --_waitingReaders;          
-        throw;
+        wakeReader = (_waitingReaders > 0);
+        wakeWriter = (_waitingReaders > 0);
 
       }
 
+      if(wakeWriter)
+        _condWrite.signal();
+    
+      else if(wakeReader)
+        _condRead.signal();
+
     }
-      
-    --_waitingReaders;
-    ++_activeReaders;
 
-    return result;
-  }   
-  
-
-  void afterRead() {
-
-    bool wakeReader = false;
-    bool wakeWriter = false;
-
-    {
-
+    void beforeWrite() {
+    
       Guard<FastMutex> guard(_lock);
-      
-      --_activeReaders;
-
-      wakeReader = (_waitingReaders > 0);
-      wakeWriter = (_waitingReaders > 0);
-
-    }
-
-    if(wakeWriter)
-      _condWrite.signal();
-    
-    else if(wakeReader)
-      _condRead.signal();
-
-  }
-
-  void beforeWrite() {
-    
-    Guard<FastMutex> guard(_lock);
   
-    ++_waitingWriters;
+      ++_waitingWriters;
 
-    while(!allowWriter()) {
+      while(!allowWriter()) {
         
-      try {
+        try {
 
-        _condWrite.wait();
+          _condWrite.wait();
           
-      } catch(...) {
+        } catch(...) {
 
-        --_waitingWriters;
-        throw;
+          --_waitingWriters;
+          throw;
 
-      }
+        }
         
-    }
+      }
       
-    --_waitingWriters;
-    ++_activeWriters;    
+      --_waitingWriters;
+      ++_activeWriters;    
 
-  }
+    }
 
-  bool beforeWriteAttempt(unsigned long timeout) {
+    bool beforeWriteAttempt(unsigned long timeout) {
   
-    Guard<FastMutex> guard(_lock);
-    bool result = false;
-
-    ++_waitingWriters;
-
-    while(!allowWriter()) {
-        
-      try {
-
-        result = _condWrite.wait(timeout);
-          
-      } catch(...) {
-
-        --_waitingWriters;
-        throw;
-      }
-        
-    }
-      
-    --_waitingWriters;
-    ++_activeWriters;
-      
-    return result;
-
-  }
-
-  void afterWrite() {
-
-    bool wakeReader = false;
-    bool wakeWriter = false;
-
-    {
-
       Guard<FastMutex> guard(_lock);
+      bool result = false;
+
+      ++_waitingWriters;
+
+      while(!allowWriter()) {
+        
+        try {
+
+          result = _condWrite.wait(timeout);
+          
+        } catch(...) {
+
+          --_waitingWriters;
+          throw;
+        }
+        
+      }
       
-      --_activeWriters;
+      --_waitingWriters;
+      ++_activeWriters;
       
-      wakeReader = (_waitingReaders > 0);
-      wakeWriter = (_waitingReaders > 0);
+      return result;
 
     }
 
-    if(wakeWriter)
-      _condWrite.signal();
+    void afterWrite() {
+
+      bool wakeReader = false;
+      bool wakeWriter = false;
+
+      {
+
+        Guard<FastMutex> guard(_lock);
+      
+        --_activeWriters;
+      
+        wakeReader = (_waitingReaders > 0);
+        wakeWriter = (_waitingReaders > 0);
+
+      }
+
+      if(wakeWriter)
+        _condWrite.signal();
     
-    else if(wakeReader)
-      _condRead.signal();
+      else if(wakeReader)
+        _condRead.signal();
    
-  }
+    }
 
-  bool allowReader() {
-    return (_activeWriters == 0);   
-  }
+    bool allowReader() {
+      return (_activeWriters == 0);   
+    }
 
-  bool allowWriter() {
-    return (_activeWriters == 0 && _activeReaders == 0);
-  }
+    bool allowWriter() {
+      return (_activeWriters == 0 && _activeReaders == 0);
+    }
 
-};
+  };
 
 }; // __ZTBIASEDREADWRITELOCK_H__
 

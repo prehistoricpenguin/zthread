@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -29,110 +29,62 @@ namespace ZThread {
   
   class PriorityInheritanceMutexImpl;
 
-/**
- * @class PriorityInheritanceMutex
- *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-02T08:10:44-0400>
- * @version 2.2.1
- *
- * A PriorityInheritanceMutex is similar to a PriorityMutex, it is a non-reentrant, 
- * priority sensative MUTual EXclusion Lockable object. It differs only in its 
- * scheduling policy.
- *
- * @see PriorityMutex
- *
- * <b>Scheduling</b>
- *
- * Threads competing to acquire() a PriorityInheritanceMutex are granted access in 
- * order of priority. Threads with a higher priority will be given access first.
- *
- * When a higher priority thread tries to acquire() a PriorityInheritanceMutex and is 
- * about to be blocked by a lower priority thread that has alerady acquire()d it, the
- * lower priority thread will temporarily have its effective priority raised to that 
- * of the higher priority thread until it release()s the mutex; at which point its 
- * previous priority will be restored. 
- */
-class ZTHREAD_API PriorityInheritanceMutex : public Lockable, private NonCopyable {
-  
-  PriorityInheritanceMutexImpl* _impl;
-  
- public:
-
-  //! Create a new PriorityInheritanceMutex.
-  PriorityInheritanceMutex() 
-    /* throw(Synchronization_Exception) */;
-
-  //! Destroy this PriorityInheritanceMutex.
-  virtual ~PriorityInheritanceMutex()
-    throw();
-  
   /**
-   * Acquire a PriorityInheritanceMutex, possbily blocking until the the current owner of the 
-   * PriorityInheritanceMutex release()es it or until an exception is thrown.
+   * @class PriorityInheritanceMutex
    *
-   * Only one thread may acquire() the PriorityInheritanceMutex at any given time.
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T19:37:36-0400>
+   * @version 2.2.1
    *
-   * @exception Interrupted_Exception thrown when the calling thread is interupt()ed.
-   * A thread may be interrupted at any time, prematurely ending any wait.
-   * @exception Deadlock_Exception thrown when the same thread attempts to acquire()
-   * a PriorityInheritanceMutex more than once, without having first release()ed it.
+   * A PriorityInheritanceMutex is similar to a PriorityMutex, it is a non-reentrant, 
+   * priority sensitive MUTual EXclusion Lockable object. It differs only in its 
+   * scheduling policy.
    *
-   * @pre the calling thread must not have already acquire()ed PriorityInheritanceMutex
+   * @see PriorityMutex
    *
-   * @post the calling thread succesfully acquire()ed PriorityInheritanceMutex only if no exception
-   * was thrown.
+   * <b>Scheduling</b>
    *
-   * @see Lockable::acquire()
+   * Threads competing to acquire() a PriorityInheritanceMutex are granted access in 
+   * order of priority. Threads with a higher priority will be given access first.
+   *
+   * When a higher priority thread tries to acquire() a PriorityInheritanceMutex and is 
+   * about to be blocked by a lower priority thread that has already acquire()d it, the
+   * lower priority thread will temporarily have its effective priority raised to that 
+   * of the higher priority thread until it release()s the mutex; at which point its 
+   * previous priority will be restored. 
    */
-  virtual void acquire() 
-    /* throw(Synchronization_Exception) */;
+  class ZTHREAD_API PriorityInheritanceMutex : public Lockable, private NonCopyable {
+  
+    PriorityInheritanceMutexImpl* _impl;
+  
+  public:
 
-  /**
-   * Acquire a PriorityInheritanceMutex, possbily blocking until the the current owner of the 
-   * PriorityInheritanceMutex release()es it, until an exception is thrown or until the given amount
-   * of time expires.
-   *
-   * Only one thread may acquire() the PriorityInheritanceMutex at any given time.
-   *
-   * @param timeout - maximum amount of time (milliseconds) this method could block
-   * 
-   * @return bool true if the PriorityInheritanceMutex was acquire()ed before the timeout expired, otherwise
-   * false
-   *
-   * @exception Interrupted_Exception thrown when the calling thread is interupt()ed.
-   * A thread may be interrupted at any time, prematurely ending any wait.
-   * @exception Deadlock_Exception thrown when the same thread attempts to acquire()
-   * a PriorityInheritanceMutex more than once, without having first release()ed it.
-   *
-   * @pre the calling thread must not have already acquire()ed PriorityInheritanceMutex
-   *
-   * @post the calling thread succesfully acquire()ed PriorityInheritanceMutex only if no exception
-   * was thrown.
-   *
-   * @see Lockable::tryAcquire(unsigned long)
-   */
-  virtual bool tryAcquire(unsigned long) 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * @see Mutex::Mutex()
+     */
+    PriorityInheritanceMutex();
+
+    /**
+     * @see Mutex::~Mutex()
+     */
+    virtual ~PriorityInheritanceMutex();
   
-  /**
-   * Release a PriorityInheritanceMutex allowing another thread to acquire() it.
-   *
-   * see Lockable::release()
-   *
-   * @exception InvalidOp_Exception - thrown if there is an attempt to release() this
-   * PriorityInheritanceMutex from the context of a thread that had not previously acquire()ed it. 
-   *
-   * @pre the calling thread must have first acquire()d the PriorityInheritanceMutex.
-   * @post the calling thread succesfully release()d PriorityInheritanceMutex only if no exception
-   * was thrown.
-   *
-   * @see Lockable::acquire()
-   */
-  virtual void release() 
-    /* throw(Synchronization_Exception) */;
+    /**
+     * @see Mutex::acquire()
+     */
+    virtual void acquire(); 
+
+    /**
+     * @see Mutex::tryAcquire(unsigned long timeout)
+     */
+    virtual bool tryAcquire(unsigned long timeout); 
   
-}; 
+    /**
+     * @see Mutex::release()
+     */
+    virtual void release();
+  
+  }; 
 
 
 } // namespace ZThread

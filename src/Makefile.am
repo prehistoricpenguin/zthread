@@ -16,9 +16,9 @@ LIBADD=@LINKER_OPTIONS@ @EXTRA_LINKER_OPTIONS@
 
 
 libZThread_la_SOURCES = \
-AbstractThreadLocal.cxx \
 AtomicCount.cxx \
 Condition.cxx \
+ConcurrentExecutor.cxx \
 CountingSemaphore.cxx \
 FastMutex.cxx \
 FastRecursiveMutex.cxx \
@@ -26,14 +26,18 @@ Mutex.cxx \
 RecursiveMutexImpl.cxx \
 RecursiveMutex.cxx \
 Monitor.cxx \
+PoolExecutor.cxx \
 PriorityCondition.cxx \
 PriorityInheritanceMutex.cxx \
 PriorityMutex.cxx \
 PrioritySemaphore.cxx \
 Semaphore.cxx \
+SynchronousExecutor.cxx \
 Thread.cxx \
+ThreadedExecutor.cxx \
 ThreadImpl.cxx \
-ThreadLocalMap.cxx \
+ThreadLocalImpl.cxx \
+ThreadQueue.cxx \
 Time.cxx \
 ThreadOps.cxx
 

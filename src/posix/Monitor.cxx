@@ -1,4 +1,26 @@
+/*
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
+ *
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
+ *
+ *  This library is free software; you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public
+ *  License as published by the Free Software Foundation; either
+ *  version 2.1 of the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public
+ *  License along with this library; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+ */
+
 #include "Monitor.h"
+#include "../Debug.h"
 #include "../TimeStrategy.h"
 
 #include <errno.h>
@@ -78,9 +100,10 @@ Monitor::STATE Monitor::wait(unsigned long ms) {
     TimeStrategy t; 
 
     ms += t.milliseconds();
+
     unsigned long s = t.seconds() + (ms / 1000);
     ms %= 1000;
-   
+
     // Convert to a timespec
     struct ::timespec timeout;   
     
@@ -134,9 +157,8 @@ bool Monitor::interrupt() {
 
     wasInterruptable = false;
     
-    if(hadWaiter) 
+    if(hadWaiter && !masked(Monitor::INTERRUPTED))
       pthread_cond_signal(&_waitCond);
-    
     else
       wasInterruptable = !pthread_equal(_owner, pthread_self());
 
@@ -195,7 +217,7 @@ bool Monitor::cancel() {
     // Update the state & wake the waiter if there is one
     push(INTERRUPTED);
     
-    if(hadWaiter) 
+    if(hadWaiter && !masked(Monitor::INTERRUPTED))
       pthread_cond_signal(&_waitCond);
     
   }

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -28,12 +28,12 @@ namespace ZThread {
 
 /**
  * @class Time
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T08:43:27-0500>
+ * @author Eric Crahen <http://www.code-foo.com>
+ * @date <2003-07-16T17:52:46-0400>
  * @version 2.2.11
  *
  * The Time class provides access to time values relative to when the program
- * was started. In otherwords, this class might be thought of as a timer that
+ * was started. In other words, this class might be thought of as a timer that
  * starts at 0 and counts upwards. This class offers millisecond resolution.
  */
 class ZTHREAD_API Time {
@@ -80,7 +80,7 @@ class ZTHREAD_API Time {
 
   /**
    * Create a Time object with the current time relative to the
-   * begining of the program.
+   * beginning of the program.
    */
   Time();
 
@@ -176,7 +176,7 @@ const Time& operator-=(unsigned long millis) {
    * Subtract the value of another Time object from this one.
    * This function has a floor of 0.
    *
-   * @param t - Time object whose value should be substracted from this object
+   * @param t - Time object whose value should be subtracted from this object
    * @return const Time& this object
    */
 const Time& operator-=(const Time& t) {

@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -24,62 +24,56 @@
 
 namespace ZThread {
 
-class PriorityConditionImpl : public ConditionImpl<priority_list> {
-public:
-  PriorityConditionImpl(Lockable& l) : ConditionImpl<priority_list>(l) {}
+  class PriorityConditionImpl : public ConditionImpl<priority_list> {
+  public:
+    PriorityConditionImpl(Lockable& l) : ConditionImpl<priority_list>(l) {}
 
-};
+  };
 
-PriorityCondition::PriorityCondition(Lockable& lock)
-  /* throw(Synchronization_Exception) */ {
+  PriorityCondition::PriorityCondition(Lockable& lock) {
   
-  _impl = new PriorityConditionImpl(lock);
+    _impl = new PriorityConditionImpl(lock);
 
-}
+  }
 
 
-PriorityCondition::~PriorityCondition() 
-  throw() {
+  PriorityCondition::~PriorityCondition() {
   
-  if(_impl != 0)
-    delete _impl;
+    if(_impl != 0)
+      delete _impl;
 
-}
-
-
-
-void PriorityCondition::wait() 
-  /* throw(Synchronization_Exception) */ {
-
-  _impl->wait();
-
-}
+  }
 
 
 
-bool PriorityCondition::wait(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  void PriorityCondition::wait() {
 
-  return _impl->wait(ms);
+    _impl->wait();
 
-}
-
+  }
 
 
-void PriorityCondition::signal()
-  /* throw(Synchronization_Exception) */ {
 
-  _impl->signal();
+  bool PriorityCondition::wait(unsigned long ms) {
 
-}
+    return _impl->wait(ms);
+
+  }
 
 
-void PriorityCondition::broadcast()
-  /* throw(Synchronization_Exception) */ {
 
-  _impl->broadcast();
+  void PriorityCondition::signal() {
 
-}
+    _impl->signal();
+
+  }
+
+
+  void PriorityCondition::broadcast() {
+
+    _impl->broadcast();
+
+  }
 
 } // namespace ZThread
 

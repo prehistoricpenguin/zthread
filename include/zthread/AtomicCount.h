@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -22,41 +22,50 @@
 #ifndef __ZTATOMICCOUNT_H__
 #define __ZTATOMICCOUNT_H__
 
+#include <cstdlib>
+
 #include "zthread/Config.h"
 #include "zthread/NonCopyable.h"
 
 namespace ZThread {
 
-/**
- * @class AtomicCount
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-08-09T05:27:26-0400> 
- * @version 2.2.5
- *
- * This class provides an inferance to a small integer whose value can be
- * incremented or decremented atomically. It's designed to be as simple and
- * lightwieght as possible so that it can be used cheaply to create reference
- * counts.
- */
-class ZTHREAD_API AtomicCount : private NonCopyable {
+  /**
+   * @class AtomicCount
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T09:41:55-0400> 
+   * @version 2.3.0
+   *
+   * This class provides an interface to a small integer whose value can be
+   * incremented or decremented atomically. It's designed to be as simple and
+   * lightweight as possible so that it can be used cheaply to create reference
+   * counts.
+   */
+  class ZTHREAD_API AtomicCount : public NonCopyable {
   
-  void* _value;
+    void* _value;
   
   public:
   
-  //! Create a new AtomicCount, initialized to a value of 1
-  AtomicCount();
+    //! Create a new AtomicCount, initialized to a value of 1
+    AtomicCount();
 
-  //! Destroy a new AtomicCount
-  ~AtomicCount();
+    //! Destroy a new AtomicCount
+    ~AtomicCount();
   
-  //! Increment and return the current value
-  void increment();
+    //! Postfix decrement and return the current value
+    size_t operator--(int);
   
-  //! Decrement and return the current value, return true if the count has reached 0
-  bool decrement();
+    //! Postfix increment and return the current value
+    size_t operator++(int);  
+
+    //! Prefix decrement and return the current value
+    size_t operator--();
   
-};
+    //! Prefix increment and return the current value
+    size_t operator++();  
+
+
+  }; /* AtomicCount */
 
   
 } // namespace ZThread

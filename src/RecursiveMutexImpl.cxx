@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -30,258 +30,255 @@
 #include <errno.h>
 #include <algorithm>
 
-using namespace ZThread;
+namespace ZThread {
 
-/**
- * Create a new RecursiveMutexImpl
- *
- * @exception Initialization_Exception thrown if resources could not be
- * properly allocated
- */
-RecursiveMutexImpl::RecursiveMutexImpl() 
-  /* throw(Synchronization_Exception) */ : _owner(0), _count(0) {
+  /**
+   * Create a new RecursiveMutexImpl
+   *
+   * @exception Initialization_Exception thrown if resources could not be
+   * properly allocated
+   */
+  RecursiveMutexImpl::RecursiveMutexImpl() 
+    : _owner(0), _count(0) {
  
-}
+  }
 
-/**
- * Destroy this RecursiveMutexImpl and release its resources
- */
-RecursiveMutexImpl::~RecursiveMutexImpl() 
- throw() {
+  /**
+   * Destroy this RecursiveMutexImpl and release its resources
+   */
+  RecursiveMutexImpl::~RecursiveMutexImpl() {
 
 #ifndef NDEBUG
 
-  // It is an error to destroy a mutex that has not been released
-  if(_owner != 0) { 
+    // It is an error to destroy a mutex that has not been released
+    if(_owner != 0) { 
 
-    ZTDEBUG("** You are destroying a mutex which was never released. **\n");
-    assert(0); // Destroyed mutex while in use
+      ZTDEBUG("** You are destroying a mutex which was never released. **\n");
+      assert(0); // Destroyed mutex while in use
 
-  }
+    }
 
-  if(_waiters.size() > 0) { 
+    if(_waiters.size() > 0) { 
 
-    ZTDEBUG("** You are destroying a mutex which is blocking %d threads. **\n", _waiters.size());
-    assert(0); // Destroyed mutex while in use
+      ZTDEBUG("** You are destroying a mutex which is blocking %d threads. **\n", _waiters.size());
+      assert(0); // Destroyed mutex while in use
 
-  }
+    }
 
 #endif
 
-}
-
-
-void RecursiveMutexImpl::acquire() 
-  /* throw(Synchronization_Exception) */ {
-
-  // Get the monitor for the current thread
-  Monitor& m = ThreadImpl::current()->getMonitor();
-  Monitor::STATE state;
-
-  Guard<FastLock> g1(_lock);
-      
-  // If there is an entry count and the current thread is 
-  // the owner, increment the count and continue.
-  if(_owner == &m) 
-    _count++;
-
-  else {
-
-    // Acquire the lock if it is free and there are no waiting threads
-    if(_owner == 0 && _waiters.empty()) {
-
-      assert(_count == 0);
-
-      _owner = &m;    
-      _count++;
-
-    } else { // Otherwise, wait()
-        
-      _waiters.push_back(&m);
-
-      m.acquire();
-
-      {
-
-        Guard<FastLock, UnlockedScope> g2(g1);
-        state = m.wait();
-
-      }
-
-      m.release();
-        
-      // Remove from waiter list, regarless of weather release() is called or
-      // not. The monitor is sticky, so its possible a state 'stuck' from a
-      // previous operation and will leave the wait() w/o release() having
-      // been called.
-      List::iterator i = std::find(_waiters.begin(), _waiters.end(), &m);
-      if(i != _waiters.end())
-        _waiters.erase(i);
-
-      // If awoke due to a notify(), take ownership. 
-      switch(state) {
-        case Monitor::SIGNALED:
-          
-          assert(_owner == 0);
-          assert(_count == 0);
-
-          _owner = &m;
-          _count++;
-            
-          break;
-
-        case Monitor::INTERRUPTED:
-          throw Interrupted_Exception();
-            
-        default:
-          throw Synchronization_Exception();
-      } 
-            
-    }
-      
   }
 
-}
 
-bool RecursiveMutexImpl::tryAcquire(unsigned long timeout) 
-  /* throw(Synchronization_Exception) */ {
-  
-  // Get the monitor for the current thread
-  Monitor& m = ThreadImpl::current()->getMonitor();
+  void RecursiveMutexImpl::acquire() {
 
-  Guard<FastLock> g1(_lock);
-  
-  // If there is an entry count and the current thread is 
-  // the owner, increment the count and continue.
-  if(_owner == &m)
-    _count++;
+    // Get the monitor for the current thread
+    Monitor& m = ThreadImpl::current()->getMonitor();
+    Monitor::STATE state;
 
-  else {
-
-    // Acquire the lock if it is free and there are no waiting threads
-    if(_owner == 0 && _waiters.empty()) {
-
-      assert(_count == 0);
-
-      _owner = &m;
+    Guard<FastLock> g1(_lock);
+      
+    // If there is an entry count and the current thread is 
+    // the owner, increment the count and continue.
+    if(_owner == &m) 
       _count++;
 
-    } else { // Otherwise, wait()
+    else {
 
-      _waiters.push_back(&m);
+      // Acquire the lock if it is free and there are no waiting threads
+      if(_owner == 0 && _waiters.empty()) {
 
-      Monitor::STATE state = Monitor::TIMEDOUT;
+        assert(_count == 0);
 
-      // Don't bother waiting if the timeout is 0
-      if(timeout) {
+        _owner = &m;    
+        _count++;
+
+      } else { // Otherwise, wait()
+        
+        _waiters.push_back(&m);
 
         m.acquire();
 
         {
-          
+
           Guard<FastLock, UnlockedScope> g2(g1);
-          state = m.wait(timeout);
-          
+          state = m.wait();
+
         }
 
         m.release();
         
-      }
+        // Remove from waiter list, regarless of weather release() is called or
+        // not. The monitor is sticky, so its possible a state 'stuck' from a
+        // previous operation and will leave the wait() w/o release() having
+        // been called.
+        List::iterator i = std::find(_waiters.begin(), _waiters.end(), &m);
+        if(i != _waiters.end())
+          _waiters.erase(i);
 
-      // Remove from waiter list, regarless of weather release() is called or
-      // not. The monitor is sticky, so its possible a state 'stuck' from a
-      // previous operation and will leave the wait() w/o release() having
-      // been called.
-      List::iterator i = std::find(_waiters.begin(), _waiters.end(), &m);
-      if(i != _waiters.end())
-        _waiters.erase(i);
+        // If awoke due to a notify(), take ownership. 
+        switch(state) {
+          case Monitor::SIGNALED:
+          
+            assert(_owner == 0);
+            assert(_count == 0);
 
-      // If awoke due to a notify(), take ownership. 
-      switch(state) {
-        case Monitor::SIGNALED:
-
-          assert(_count == 0);
-          assert(_owner == 0);
-
-          _owner = &m;
-          _count++;
+            _owner = &m;
+            _count++;
             
-          break;
+            break;
 
-        case Monitor::INTERRUPTED:
-          throw Interrupted_Exception();
-          
-        case Monitor::TIMEDOUT:
-          return false;
-
-        default:
-          throw Synchronization_Exception();
-      } 
+          case Monitor::INTERRUPTED:
+            throw Interrupted_Exception();
             
-    }
-      
-  }
-
-  return true;
-
-}
-
-void RecursiveMutexImpl::release() 
-  /* throw(Synchronization_Exception) */ {
-
-  // Get the monitor for the current thread
-  Monitor& m = ThreadImpl::current()->getMonitor();
-
-  Guard<FastLock> g1(_lock);
-
-  // Make sure the operation is valid
-  if(!(_owner == &m))
-    throw InvalidOp_Exception();
-
-  // Update the count, if it has reached 0, wake another waiter.
-  if(--_count == 0) {
-    
-    _owner = 0;
-
-    // Try to find a waiter with a backoff & retry scheme
-    for(;;) {
-
-      // Go through the list, attempt to notify() a waiter.
-      for(List::iterator i = _waiters.begin(); i != _waiters.end();) {
-        
-        // Try the monitor lock, if it cant be locked skip to the next waiter
-        Monitor* n = *i;
-        if(n->tryAcquire()) {
-           
-          // If notify() is not sucessful, it is because the wait() has already 
-          // been ended (killed/interrupted/notify'd)
-          bool woke = n->notify();
-          n->release();
-          
-          // Once notify() succeeds, return
-          if(woke)
-            return;
-          
-        } else ++i;
-        
+          default:
+            throw Synchronization_Exception();
+        } 
+            
       }
       
-      if(_waiters.empty())
-        return;
-
-      { // Backoff and try again
-
-        Guard<FastLock, UnlockedScope> g2(g1);
-        ThreadImpl::yield();
-
-      }
-
     }
 
   }
+
+  bool RecursiveMutexImpl::tryAcquire(unsigned long timeout) {
   
-}
+    // Get the monitor for the current thread
+    Monitor& m = ThreadImpl::current()->getMonitor();
 
+    Guard<FastLock> g1(_lock);
+  
+    // If there is an entry count and the current thread is 
+    // the owner, increment the count and continue.
+    if(_owner == &m)
+      _count++;
+
+    else {
+
+      // Acquire the lock if it is free and there are no waiting threads
+      if(_owner == 0 && _waiters.empty()) {
+
+        assert(_count == 0);
+
+        _owner = &m;
+        _count++;
+
+      } else { // Otherwise, wait()
+
+        _waiters.push_back(&m);
+
+        Monitor::STATE state = Monitor::TIMEDOUT;
+
+        // Don't bother waiting if the timeout is 0
+        if(timeout) {
+
+          m.acquire();
+
+          {
+          
+            Guard<FastLock, UnlockedScope> g2(g1);
+            state = m.wait(timeout);
+          
+          }
+
+          m.release();
+        
+        }
+
+        // Remove from waiter list, regarless of weather release() is called or
+        // not. The monitor is sticky, so its possible a state 'stuck' from a
+        // previous operation and will leave the wait() w/o release() having
+        // been called.
+        List::iterator i = std::find(_waiters.begin(), _waiters.end(), &m);
+        if(i != _waiters.end())
+          _waiters.erase(i);
+
+        // If awoke due to a notify(), take ownership. 
+        switch(state) {
+          case Monitor::SIGNALED:
+
+            assert(_count == 0);
+            assert(_owner == 0);
+
+            _owner = &m;
+            _count++;
+            
+            break;
+
+          case Monitor::INTERRUPTED:
+            throw Interrupted_Exception();
+          
+          case Monitor::TIMEDOUT:
+            return false;
+
+          default:
+            throw Synchronization_Exception();
+        } 
+            
+      }
+      
+    }
+
+    return true;
+
+  }
+
+  void RecursiveMutexImpl::release() {
+
+    // Get the monitor for the current thread
+    Monitor& m = ThreadImpl::current()->getMonitor();
+
+    Guard<FastLock> g1(_lock);
+
+    // Make sure the operation is valid
+    if(!(_owner == &m))
+      throw InvalidOp_Exception();
+
+    // Update the count, if it has reached 0, wake another waiter.
+    if(--_count == 0) {
+    
+      _owner = 0;
+
+      // Try to find a waiter with a backoff & retry scheme
+      for(;;) {
+
+        // Go through the list, attempt to notify() a waiter.
+        for(List::iterator i = _waiters.begin(); i != _waiters.end();) {
+        
+          // Try the monitor lock, if it cant be locked skip to the next waiter
+          Monitor* n = *i;
+          if(n->tryAcquire()) {
+           
+            // If notify() is not sucessful, it is because the wait() has already 
+            // been ended (killed/interrupted/notify'd)
+            bool woke = n->notify();
+            n->release();
+          
+            // Once notify() succeeds, return
+            if(woke)
+              return;
+          
+          } else ++i;
+        
+        }
+      
+        if(_waiters.empty())
+          return;
+
+        { // Backoff and try again
+
+          Guard<FastLock, UnlockedScope> g2(g1);
+          ThreadImpl::yield();
+
+        }
+
+      }
+
+    }
+  
+  }
+
+} // namespace ZThread
 
 
 

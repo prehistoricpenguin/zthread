@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -31,64 +31,64 @@
 
 namespace ZThread {
 
-/**
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-31T17:13:48-0400>
- * @version 2.2.0
- * @class fifo_list
- */
-class fifo_list : public std::deque<ThreadImpl*> {
-public:
+  /**
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T20:01:18-0400>
+   * @version 2.2.0
+   * @class fifo_list
+   */
+  class fifo_list : public std::deque<ThreadImpl*> {
+  public:
 
-  void insert(const value_type& val) { push_back(val); }
+    void insert(const value_type& val) { push_back(val); }
 
-};
+  };
 
-/**
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-31T17:13:48-0400>
- * @version 2.2.0
- * @struct priority_order
- */
-struct priority_order : public std::binary_function<ThreadImpl*, ThreadImpl*, bool> {
+  /**
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T20:01:18-0400>
+   * @version 2.2.0
+   * @struct priority_order
+   */
+  struct priority_order : public std::binary_function<ThreadImpl*, ThreadImpl*, bool> {
    
-  std::less<const ThreadImpl*> id;
+    std::less<const ThreadImpl*> id;
 
-  bool operator()(const ThreadImpl* t0, const ThreadImpl* t1) const {
+    bool operator()(const ThreadImpl* t0, const ThreadImpl* t1) const {
 
-    if(t0->getPriority() > t1->getPriority())
-      return true;
+      if(t0->getPriority() > t1->getPriority())
+        return true;
 
-    else if (t0->getPriority() < t1->getPriority())
-      return false;
+      else if (t0->getPriority() < t1->getPriority())
+        return false;
 
-    return id(t0, t1);
+      return id(t0, t1);
 
-  }
+    }
   
-};
+  };
 
 
-/**
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-05-31T17:13:48-0400>
- * @version 2.2.0
- * @class priority_list
- */
-class priority_list : public std::deque<ThreadImpl*> { 
+  /**
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T20:01:18-0400>
+   * @version 2.2.0
+   * @class priority_list
+   */
+  class priority_list : public std::deque<ThreadImpl*> { 
 
-  priority_order comp;
+    priority_order comp;
 
- public:
+  public:
 
-  void insert(const value_type& val) { 
+    void insert(const value_type& val) { 
 
-    push_back(val); 
-    std::sort(begin(), end(), comp);
+      push_back(val); 
+      std::sort(begin(), end(), comp);
 
-  }
+    }
 
-};
+  };
 
 } // namespace ZThread
 

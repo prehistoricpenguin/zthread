@@ -2,7 +2,7 @@
  *  ZThreads, a platform-independant, multithreading and 
  *  synchroniation library
  *
- *  Copyright (C) 2001 Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003 Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -26,48 +26,42 @@
 
 namespace ZThread {
 
-class PriorityMutexImpl : public MutexImpl<priority_list, NullBehavior> { };
+  class PriorityMutexImpl : public MutexImpl<priority_list, NullBehavior> { };
 
-PriorityMutex::PriorityMutex() 
-  /* throw(Synchronization_Exception) */ {
+  PriorityMutex::PriorityMutex() { 
   
-  _impl = new PriorityMutexImpl();
+    _impl = new PriorityMutexImpl();
   
-}
+  }
 
-PriorityMutex::~PriorityMutex() 
- throw() {
+  PriorityMutex::~PriorityMutex() {
 
-  if(_impl != 0) 
-    delete _impl;
+    if(_impl != 0) 
+      delete _impl;
 
-}
+  }
 
-// P
-void PriorityMutex::acquire() 
-  /* throw(Synchronization_Exception) */ {
+  // P
+  void PriorityMutex::acquire() {
 
-  _impl->acquire(); 
+    _impl->acquire(); 
 
-}
+  }
 
 
-// P
-bool PriorityMutex::tryAcquire(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+  // P
+  bool PriorityMutex::tryAcquire(unsigned long ms) {
 
-  return _impl->tryAcquire(ms); 
+    return _impl->tryAcquire(ms); 
 
-}
+  }
 
-// V
-void PriorityMutex::release() 
-  /* throw(Synchronization_Exception) */ {
+  // V
+  void PriorityMutex::release() {
 
-  _impl->release(); 
+    _impl->release(); 
 
-}
-
+  }
 
 
 } // namespace ZThread

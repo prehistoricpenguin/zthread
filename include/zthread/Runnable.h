@@ -1,8 +1,8 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
- *  synchroniation library
+ *  ZThreads, a platform-independent, multi-threading and 
+ *  synchronization library
  *
- *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
+ *  Copyright (C) 2000-2003, Eric Crahen, See LGPL.TXT for details
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Lesser General Public
@@ -26,34 +26,31 @@
 
 namespace ZThread {
 
-/**
- * @class Runnable
- * 
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T04:31:53-0500>
- * @version 2.2.11
- *
- * Encapsulates a Runnable task.
- */
-class Runnable {
+  /**
+   * @class Runnable
+   * 
+   * @author Eric Crahen <http://www.code-foo.com>
+   * @date <2003-07-16T17:45:35-0400>
+   * @version 2.2.11
+   *
+   * Encapsulates a Runnable task.
+   */
+  class Runnable {
   public:
 
-  /**
-   * Runnables should never throw in thier destructors
-   */
-	  virtual ~Runnable() throw() { }
+    /**
+     * Runnables should never throw in their destructors
+     */
+    virtual ~Runnable() {}
 
-  /**
-   * Task to be performed in another thread of execution
-   */
-  virtual void run() throw() = 0;
+    /**
+     * Task to be performed in another thread of execution
+     */
+    virtual void run() = 0;
 
-};
+  };
  
 
 }
 
 #endif // __ZTRUNNABLE_H__
-
-
-
