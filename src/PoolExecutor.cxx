@@ -563,8 +563,8 @@ namespace ZThread {
     size(n);
     
     // Request cancelation when main() exits
+    ThreadQueue::instance()->insertShutdownTask(_shutdown);
 
-	ThreadImpl::current();
   }
 
   PoolExecutor::~PoolExecutor() { 
@@ -575,9 +575,9 @@ namespace ZThread {
        * If the shutdown task for this executor has not already been
        * selected to run, then run it locally
        */
-      if(ThreadQueue::instance()->removeShutdownTask(_shutdown))
+      if(ThreadQueue::instance()->removeShutdownTask(_shutdown)) 
         _shutdown->run();
-      
+        
     } catch(...) { }
 
   } 

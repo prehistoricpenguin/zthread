@@ -1,3 +1,8 @@
+VERSION 2.3.1:
+
+  Bug with PoolExecutor/ConcurrentExecutor not automatically canceling
+  themselves properly.
+	
 VERSION 2.3.0:
 
   I've been working on some updates after working with Bruce Eckle and

@@ -74,6 +74,8 @@ namespace ZThread {
                          std::back_inserter(shutdownTasks), 
                          Task((Runnable*)0)); 
         
+        //ZTDEBUG("Threads waiting: %d\n", threadsWaiting);
+        
       }
 
       // Execute the shutdown tasks
@@ -88,12 +90,13 @@ namespace ZThread {
     // Wait for all the users threads to get into the appropriate state
     if(threadsWaiting) {
 
-      //ZTDEBUG("Threads waiting: %d %d\n", _userThreads.size(), _pendingThreads.size());
+
       Monitor& m = _waiter->getMonitor();
       
       // Defer interruption while this thread waits for a signal from
       // the last pending user thread
       Guard<Monitor, CompoundScope<DeferredInterruptionScope, LockedScope> > g(m);
+      //ZTDEBUG("Threads waiting: %d %d\n", _userThreads.size(), _pendingThreads.size());
 
       // Avoid race-condition where the last threads are done with thier tasks, but
       // only begin the final part of the clean up phase after this destructor begins 
@@ -123,7 +126,7 @@ namespace ZThread {
   
 
   void ThreadQueue::insertPendingThread(ThreadImpl* impl) {
-
+    ZTDEBUG("insertPendingThread()\n");
     Guard<FastLock> g(_lock);
 
     // Move from the user-thread list to the pending-thread list
