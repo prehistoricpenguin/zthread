@@ -3,18 +3,15 @@
 <PROJECT>
   <MACROS>
     <VERSION value="BCB.06.00"/>
-    <PROJECT value="ZThread.dll"/>
-    <OBJFILES value="..\..\..\src\AbstractThreadLocal.obj ..\..\..\src\AtomicCount.obj 
-      ..\..\..\src\Condition.obj ..\..\..\src\CountingSemaphore.obj 
-      ..\..\..\src\FastMutex.obj ..\..\..\src\FastRecursiveMutex.obj 
-      ..\..\..\src\Monitor.obj ..\..\..\src\Mutex.obj 
-      ..\..\..\src\PriorityCondition.obj 
-      ..\..\..\src\PriorityInheritanceMutex.obj ..\..\..\src\PriorityMutex.obj 
-      ..\..\..\src\PrioritySemaphore.obj ..\..\..\src\RecursiveMutex.obj 
-      ..\..\..\src\RecursiveMutexImpl.obj ..\..\..\src\Semaphore.obj 
-      ..\..\..\src\Thread.obj ..\..\..\src\ThreadImpl.obj 
-      ..\..\..\src\ThreadLocalMap.obj ..\..\..\src\ThreadOps.obj 
-      ..\..\..\src\Time.obj"/>
+    <PROJECT value="Debug\ZThread.dll"/>
+    <OBJFILES value="Debug\AbstractThreadLocal.obj Debug\AtomicCount.obj Debug\Condition.obj 
+      Debug\CountingSemaphore.obj Debug\FastMutex.obj 
+      Debug\FastRecursiveMutex.obj Debug\Monitor.obj Debug\Mutex.obj 
+      Debug\PriorityCondition.obj Debug\PriorityInheritanceMutex.obj 
+      Debug\PriorityMutex.obj Debug\PrioritySemaphore.obj 
+      Debug\RecursiveMutex.obj Debug\RecursiveMutexImpl.obj Debug\Semaphore.obj 
+      Debug\Thread.obj Debug\ThreadImpl.obj Debug\ThreadLocalMap.obj 
+      Debug\ThreadOps.obj Debug\Time.obj"/>
     <RESFILES value="ZThread.res"/>
     <IDLFILES value=""/>
     <IDLGENFILES value=""/>
@@ -42,12 +39,11 @@
   <OPTIONS>
     <IDLCFLAGS value="-I..\..\..\include -I..\..\..\src -I$(BCB)\include -I$(BCB)\include\vcl 
       -src_suffix cpp -D_DEBUG -boa"/>
-    <CFLAG1 value="-WD -Od -H=$(BCB)\lib\vcl60.csm -Hc -P -Vx -Ve -X- -r- -a8 -b- -k -y -v 
-      -vi- -tWD -tWM -c"/>
-    <PFLAGS value="-$YD -$W -$O- -$A8 -v -JPHNE -M"/>
+    <CFLAG1 value="-WD -Od -P -Vx -Ve -X- -r- -a8 -b- -k -y -v -vi- -tWD -tWM -c"/>
+    <PFLAGS value="-N2Debug -N0Debug -$YD -$W -$O- -$A8 -v -JPHNE -M"/>
     <RFLAGS value=""/>
     <AFLAGS value="/mx /w2 /zd"/>
-    <LFLAGS value="-D&quot;&quot; -aa -Tpd -x -Gn -Gi -v"/>
+    <LFLAGS value="-IDebug -D&quot;&quot; -aa -Tpd -x -Gn -Gi -v"/>
     <OTHERFILES value=""/>
   </OPTIONS>
   <LINKER>
@@ -166,6 +162,14 @@ Item0=$(BCB)\source\vcl
 [HistoryLists\hlConditionals]
 Count=1
 Item0=_DEBUG
+
+[HistoryLists\hlIntOutputDir]
+Count=1
+Item0=Debug
+
+[HistoryLists\hlFinalOutputDir]
+Count=1
+Item0=Debug
 
 [Debugging]
 DebugSourceDirs=$(BCB)\source\vcl
