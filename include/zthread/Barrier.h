@@ -78,7 +78,7 @@ namespace ZThread {
 
     //! Create a Barrier
     Barrier() 
-      : _broken(false), _haveTask(false), _count(Count), _generation(0), _arrived(_lock) { }
+      : _broken(false), _haveTask(false), _count(Count), _generation(0), _arrived(_lock), _task(0) { }
 
     /**
      * Create a Barrier that executes the given task when all threads arrive
@@ -164,7 +164,7 @@ namespace ZThread {
           // resumed, then just propagate the interruption
 
           if(myGeneration != _generation)
-            Thread::current().interrupt();
+            Thread().interrupt();
 
           else _broken = true;
 
@@ -266,7 +266,7 @@ namespace ZThread {
           // resumed, then just propagate the interruption
 
           if(myGeneration != _generation)
-            Thread::current().interrupt();
+            Thread().interrupt();
 
           else _broken = true;
 
