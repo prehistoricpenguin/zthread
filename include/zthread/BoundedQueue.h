@@ -34,7 +34,7 @@ namespace ZThread {
  * @class BoundedQueue
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-02T10:38:07-0400>
+ * @date <2002-07-15T10:01:28-0400>
  * @version 2.2.0
  *
  * A BoundedQueues is a Queue implementation that provides  serialized access to the 
@@ -75,8 +75,8 @@ class BoundedQueue : public Queue<T> {
    * 
    * @param int capacity
    */
-  BoundedQueue(unsigned int capacity) /* throw(Synchronization_Exception) */ 
-    :  _capacity(capacity), _canceled(false) { }
+  BoundedQueue(unsigned int capacity)
+    : _notFull(_lock), _notEmpty(_lock), _isEmpty(_lock), _capacity(capacity), _canceled(false) {}
   
   //! Destroy this Queueand any remaining items 
   virtual ~BoundedQueue() throw() {
@@ -123,7 +123,7 @@ class BoundedQueue : public Queue<T> {
       
     // Wait for the capacity of the Queue to drop 
     while ((_queue.size() == _capacity) && !_canceled)
-      _notFull.wait(_lock);
+      _notFull.wait();
       
     if(_canceled)
       throw Cancellation_Exception();
@@ -160,7 +160,7 @@ class BoundedQueue : public Queue<T> {
       
     // Wait for the capacity of the Queue to drop 
     while ((_queue.size() == _capacity) && !_canceled)
-      if(!_notFull.wait(_lock, timeout))
+      if(!_notFull.wait(timeout))
        throw Timeout_Exception();
 
     if(_canceled)
@@ -195,7 +195,7 @@ class BoundedQueue : public Queue<T> {
     Guard<LockType> g(_lock);
       
     while ( _queue.size() == 0 && !_canceled)
-      _notEmpty.wait(_lock);
+      _notEmpty.wait();
     
     if( _queue.size() == 0) // Queue canceled
       throw Cancellation_Exception();  
@@ -236,7 +236,7 @@ class BoundedQueue : public Queue<T> {
     
     // Wait for items to be added
     while (_queue.size() == 0 && !_canceled) {
-      if(!_notEmpty.wait(_lock, timeout))
+      if(!_notEmpty.wait(timeout))
         throw Timeout_Exception();
     }
 
