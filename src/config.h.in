@@ -101,3 +101,6 @@
 
 /* No interrupt() hooks */
 #undef ZTHREAD_DISABLE_INTERRUPT
+
+/* No OS priority support */
+#undef ZTHREAD_DISABLE_PRIORITY

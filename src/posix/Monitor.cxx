@@ -136,7 +136,8 @@ bool Monitor::interrupt() {
   }
 
   pthread_mutex_unlock(&_waitLock);
-  
+
+  /*  
 #if !defined(ZTHREAD_DISABLE_INTERRUPT)
   
   // If a thread was not blocked, and the thread is not this thread,
@@ -145,7 +146,8 @@ bool Monitor::interrupt() {
     pthread_kill(_owner, SIGALRM);
   
 #endif
-  
+  */
+
   return wasInterruptable;
 
 }

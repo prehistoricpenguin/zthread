@@ -43,7 +43,8 @@ dist-hook:
 	cp -pR $(top_srcdir)/src/win32 $(distdir)/src
 	cp -pR $(top_srcdir)/src/win9x $(distdir)/src
 	cp -pR $(top_srcdir)/src/vanilla $(distdir)/src
-
+	find $(distdir)/* -type d -name \*CVS -print0 | xargs -0 rm -rf
+	find $(distdir)/* -type f -name \*~ -print0 | xargs -0 rm -rf
 
 ## RPM from the distribution rule
 rpm: dist
