@@ -419,8 +419,8 @@ namespace ZThread {
       Guard<Monitor> g(impl->_monitor);
       impl->_state.setJoined();
     
-      // Wake the joiners
-      for(List::iterator i = impl->_joiners.begin(); i != impl->_joiners.end(); ++i) {
+      // Wake the joiners that will be easy to join first
+      for(List::iterator i = impl->_joiners.begin(); i != impl->_joiners.end();) {
       
         ThreadImpl* joiner = *i;
         Monitor& m = joiner->getMonitor();
@@ -429,11 +429,26 @@ namespace ZThread {
   
           m.notify();
           m.release();   
-        
-        }
-      
+       
+          i = impl->_joiners.erase(i);
+
+        } else
+          ++i;
+
       } 
 
+      // Wake the joiners that might take a while next
+      for(List::iterator i = impl->_joiners.begin(); i != impl->_joiners.end(); ++i) {
+      
+        ThreadImpl* joiner = *i;
+        Monitor& m = joiner->getMonitor();
+
+        m.acquire();
+        m.notify();
+        m.release();   
+       
+      }
+      
     }
 
     ZTDEBUG("Thread exiting...\n"); 

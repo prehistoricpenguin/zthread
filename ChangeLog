@@ -8,7 +8,9 @@ VERSION 2.3.2:
   Added configuration option to prefer vanilla implementation where
 	possible.
 
-  Fix to Barrier (Michael Doppler)
+  Fix to Barrier (by Michael Doppler)
+
+	Fix to Thread joining implementation
 
 VERSION 2.3.1:
 
