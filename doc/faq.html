@@ -1,0 +1,144 @@
+<html>
+<head>
+<title>FAQ</title>
+</head>
+
+<body bgcolor="#ffffff">
+<center><h1>FAQ</h1></center>
+<hr>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+
+<tr>
+<td>1.</td>
+<td><a href="#q1">Why is compiling with Visual Studio is giving me errors?</a></td>
+</tr>
+
+<tr>
+<td>2.</td>
+<td><a href="#q2">Why is there no getId() or getName() function to identify a thread?</a></td>
+</tr>
+
+<tr>
+<td>2.</td>
+<td><a href="#q3">Then how can I identify a thread?</a></td>
+</tr>
+
+</table>
+
+
+<hr>
+<a name="q1"></a>
+<h4>1. Why is compiling with Visual Studio is giving me errors?</h4>
+<p>
+If you see the following error, or one like it,
+<p>
+<pre>
+  ...\fastrecursivelock.h(108) : error
+  C2664: 'InterlockedCompareExchange' : cannot convert parameter 1
+  from 'long *' to 'void ** '
+          Types pointed to are unrelated; conversion requires
+  reinterpret_cast, C-style cast or function-style cast
+</pre>
+<p>
+it's most likely because you are using an outdated version of the 
+Microsoft Platform SDK. In more recent versions of the Platform SDK,
+Microsoft has changed the signatures of the <i>Interlocked</i> functions.
+You can either <a href="http://www.microsoft.com/msdownload/platformsdk/sdkupdate">upgrade</a>
+to the current version of that SDK for free; or you can select the Win9X
+implementation by adjusting your zthread/Config.h file.
+<p>
+<a name="q2"></a>
+<h4>2. Why is there no getId() or getName() function to identify a thread?</h4>
+<p>
+There are a few reasons for this. Most low level APIs expose some method that 
+all you to identify a thread, but these are generally not very portable. Windows
+identifies threads using a <i>DWORD</i>, pthreads identifies threads using an opaque type
+called <i>pthread_t</i>. Deciding to interpret these types as unique number isn't
+always garunteed to work correctly.
+<p>
+ZThreads won't generate unique id's for threads or let you assign them a name
+(string). Not all applications will have the same requirements for identifying threads,
+for some a number may be fine, for other a string might work ok; but for some, maybe
+associating some other information or object would be preferable. Since an application
+is in the best position to make this descision, ZThreads doesn't force any one
+particular way by providing any canned methods for this.
+<p>
+<a name="q2"></a>
+<h4>3. Then how can I identify a thread?</h4>
+<p>
+ZThreads is very object and pattern oriented, so what it provides are thread factories.
+You can create your own custom ThreadFactory and use this to create threads that
+have an id, or whatever extra functionality you'd like to add to them. One simple
+way to create a named thread might be:
+<p>
+<pre>
+
+// A unique id generator
+class IdGenerator {
+
+  Mutex lock;
+  unsigned long lastId;
+    
+public:
+
+  IdGenerator() : lastId(0) {}
+  
+  unsigned long nextId() {
+  
+    Guard&lt;Mutex&gt; g(lock);
+    return ++lastId;
+    
+  } 
+    
+};
+
+// A named thread class
+class NamedThread {
+
+  unsigned long _id;
+
+public:
+
+  NamedThread() {
+  
+    _id = Singleton&lt;IdGenerator&gt;;::instance()-&gt;nextId();
+    
+  }
+  
+  virtual ~NamedThread() throw() { }
+  
+  unsigned long getId() { 
+    return _id;
+  }
+  
+};
+
+// A factory to produce named threads
+class NamedThreadFactory : public ThreadFactory {
+public:
+
+  virtual ~NamedThreadFactory() throw() { }
+  
+  virtual Thread* create() {
+    return new MyThread();
+  }
+    
+};
+
+</pre>
+<p>
+You can create threads with an id that suits you best, it could be based on time,
+it could a unique number, it could be a string, it could be whatever you need it to be.
+Once you define these things, you can supply an Executor with your custom ThreadFactory.
+<p>
+<pre>
+
+ConcurrentExecutor&lt;FastMutex, NamedThreadFactory&gt; executor;
+executor.execute(new Task());
+
+</pre>
+<p>
+That executor will then use the Thread class you've defined.
+
+

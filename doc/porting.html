@@ -1,0 +1,658 @@
+<html>
+<head>
+<title>ZThreads - Porting Guide</title>
+<style>
+.shade    { font-size: 10pt; font-weight: bold; background-color: #dddddd }
+.active   { font-size: 10pt; font-weight: bold; background-color: #777777 }
+</style>
+</head>
+<body bgcolor="#ffffff">
+<center><h1>ZThreads - Porting Guide</h1></center>
+<hr>
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+<tr><td>
+<a href="#introduction">Introduction</a>
+</td></tr><tr><td>
+<a href="#layout">Layout</a>
+</td></tr><tr><td>
+<a href="#whatsittake">What Does It Take?</a>
+</td></tr><tr><td>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td></tr><tr><td>
+&nbsp;&nbsp;-&nbsp;&nbsp;<a href="#fastlock">FastLock Concept</a>
+</td></tr><tr><td>
+&nbsp;&nbsp;-&nbsp;&nbsp;<a href="#monitor">Monitor Concept</a>
+</td></tr><tr><td>
+&nbsp;&nbsp;-&nbsp;&nbsp;<a href="#threadops">ThreadOps Concept</a>
+</td></tr><tr><td>
+&nbsp;&nbsp;-&nbsp;&nbsp;<a href="#tss">TSS Concept</a>
+</td></tr><tr><td>
+&nbsp;&nbsp;&nbsp;&nbsp;
+</td></tr><tr><td>
+&nbsp;&nbsp;-&nbsp;&nbsp;<a href="#fastrecursivelock">FastRecursiveLock Concept (<i>optional</i>)</a>
+</td></tr><tr><td>
+&nbsp;&nbsp;-&nbsp;&nbsp;<a href="#TimeStrategy">TimeStrategy Concept (<i>optional</i>)</a>
+</td></tr>
+</table>
+
+<hr>
+
+<a name="introduction"></a>
+<h1>Introduction</h1>
+The purpose of this guide is to explain exactly what it takes to add support 
+for other platforms to ZThreads. The 2.2.0 release of the library was completely
+reorganized and redocumented to help ease this process. Porting to new
+systems is very easy. Hopefully, this guide will help people intrested in
+doing this quickly. I hope to gain support for platforms I do not personally
+have access to, such as BeOS, MacOS, etc. 
+<p>
+Please don't hesitate to contact me with any questions you have about adding
+new support to ZThreads.
+<p>
+<a name="layout"></a>
+<h1>Layout</h1>
+This is a general description of the layout of the code. The intention here is to
+let you know where to look for things. I'm providing a enough information here
+to get you started adding a new implementation, but I'm assuming your somewhat
+familiar with compiling and linking on your platform.
+<p>
+The source code has been restructured to ease both compliation and to reduce the
+number of dependancies between files. The advantage to this is that it eases
+maintence, it simplifies the building process and it simplifies adding new 
+implementations to the library.
+<p>
+All platform specific code resides in a subdirectory of <i>src</i>. For example,
+<i>win32</i> houses the Win32 code, and so on.
+
+<pre>
+incluce/zthread
+src/
+  posix/
+  win32/
+  win9x/
+  vanilla/  
+</pre>
+
+The configuration of the library is controled through header files. Specifically,
+<i>zthread/Config.h</i> and <i>src/config.h</i> (generated if you use autoconf to configure
+the library). I would recommend using autoconf if possible, however, if your platform
+isn't UNIX-like, then you may have trouble doing so. For those cases, all the same
+parameters autoconf detects can be adjusted manually by editing the <i>zthread/Config.h</i>
+file. The <i>zthread/Config.h</i> file is currently arranged to to try an do the best
+job it can guessing what implementation is best for your system.
+<p>
+To compile ZThreads, simply build all the .cxx files in the <i>src</i> directory
+only, into a library. These files will automatically #include the correct files
+from the correct subdirectories (based on your configuration)
+<p>
+In order to add new implementations, simply create a new subdirectory and place your 
+new code there. This code should be comprised of at least the four required primatives
+described in this document.
+
+<pre>
+incluce/zthread
+src/
+  posix/
+  win32/
+  win9x/
+  vanilla/
+  <i><b>new-platform/</b></i>
+</pre>
+<p>
+In the <i>src</i> directory, you'll find files that are named after the primatives
+you'll be implementing (Monitor.cxx, Monitor.h, FastLock.h, etc.) These files simply
+contain a series of #ifdef's that select the correct files from the correct subdirectories.
+After adding a few lines to these files, you'll be ready to compile support for your 
+new platform.
+<p>
+<a name="whatsittake"></a>
+<h1>What Does It Take?</h1>
+
+What does it take to implement this type of library? Well, the initial implementation
+was a bit different from what you'll find today. I've boiled things down to try and
+simplify the internals quite a bit since the first implementation.
+The library is implemented on top of several important synchronization primatives 
+These primatives are relatively simple and can be implemented correctly on any 
+platform, no matter what the native thread model is. This task is not as daunting
+as you might think at first. The primatives are very basic, all of the more advanced
+features provided by the library are handled at a higher level.
+<p>
+Classes need to be provided for these these things, but there is no interface
+they must implement that dictates the required methods and effects.
+Because of this, I will describe the requirements for these primatives 
+in terms of <i>Concepts</i>. The pre-conditions and post-conditions desribe
+the excepected use in more detail, any error checking for these conditions should be 
+done in terms of assertions for debug mode only.
+<p>
+There is a set of tests that is included with the library that you may find 
+useful when testing your implementation of these primatives. These tests are not
+complete - but they are a helpful and good start.
+<hr>
+
+<a name="fastlock"></a>
+<h1>FastLock Concept</h1>
+The <i>FastLock</i> is the easier of the two synchronization primatives to implement. 
+A <i>FastLock</i> can simply be implemented using a spin lock, or by using whatever 
+locking primative your platform supports. This object encapsulates acquire
+(lock), tryAcquire (try lock) and release (unlock) operations. 
+<p>
+The library includes several strategies for implementing this primative on Win32 and on POSIX systems
+which may be helpful in finding an approach that will work for your system
+
+<p>
+<table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
+<tr>
+<td><b>Expression</b></td>
+<td><b>Requirement</b></td>
+</tr>
+
+<tr>
+<td>FastLock l;</td>
+<td>
+<b>Effect:</b>&nbsp;Construct a new FastLock.<br> 
+<b>Detail:</b>&nbsp;The Monitor is NonCopyable
+</tr>
+
+<tr>
+<td>(&l)->~FastLock();</td>
+<td>
+<b>Effect:</b>&nbsp;Destroy a FastLock.<br> 
+<i>Pre Condition:</i>&nbsp;No thread should not have acquire()d the lock when this object is destroyed.<br> 
+</tr>
+
+<tr>
+<td>l.acquire();</td>
+<td>
+<b>Effect:</b>&nbsp;Acquire an exclusive lock.<br>
+<b>Detail:</b>&nbsp;Blocks the calling thread until an exclusive lock can be obtained. This may block indefinently.<br>
+<b>Return:</b>&nbsp;void<br>
+<i>Pre Condition:</i>&nbsp;The calling thread should not have already acquire()d the lock.<br> 
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller release()es it.<br> 
+</tr>
+
+<tr>
+<td>l.tryAcquire();</td>
+<td>
+<b>Effect:</b>&nbsp;Attempt to acquire an exclusive lock.<br>
+<b>Detail:</b>&nbsp;May <b>not</b> block the calling thread indefinently. If an exclusive lock can be obtained, without blocking, then that exclusive lock is obtained on the the native object and true is returned immediately. Otherwise false is returned.<br>
+<b>Return:</b>&nbsp;bool<br> 
+<i>Pre Condition:</i>&nbsp;The calling thread should not have already acquire()d the lock.<br> 
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller release()es it, only if this function returned true.
+</td>
+</tr>
+
+<tr>
+<td>l.release();</td>
+<td>
+<b>Effect:</b>&nbsp;Attempt to release an exclusive lock.<br>
+<b>Detail:</b>&nbsp;May <b>not</b> block the calling thread indefinently. An exclusive lock on teh native object is released, allowing it to be acquired by another thread.<br>
+<b>Return:</b>&nbsp;void<br> 
+<i>Pre Condition:</i>&nbsp;The calling thread should have already acquire()d the lock.<br> 
+</td>
+
+</tr>
+</table>
+<p>
+
+Some test cases are provided that will give your mutex a workout. Its recommended
+that you run those to be sure the new implementation works correctly.
+
+<hr>
+
+<a name="monitor"></a>
+<h1>Monitor Concept</h1>
+
+The <i>Monitor</i> is the hardest synchronization primative to implement. Its responsible for
+maintaining a somewhat complex state, as well as blocking and releasing threads. Details for
+maintaing the State are encapsulated in the <i>Status</i> class, the <i>Monitor</i> concept must
+simply apply the right transitions to an instance of that class.  Each thread owns and waits on only one monitor. 
+The outline below specifies whch methods may potentially be called by multiple threads. Access
+to the status of the <i>Monitor</i> must be serialized within each of the methods described
+below. No changes should be made to the <i>Status</i> object when adding a new implementation..
+<p>
+The library includes implementations of this primative for both Win32 and on POSIX systems.
+Looking at these implementations is strongyl recommended when implementating a new one.
+
+<p>
+<table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
+<tr>
+<td><b>Expression</b></td>
+<td><b>Requirement</b></td>
+</tr>
+
+<tr>
+<td>Monitor m;</td>
+<td>
+<b>Effect:</b>&nbsp;Construct a new Monitor.<br> 
+<b>Detail:</b>&nbsp;The Monitor must extend the <i>Status</i> class.<br>
+<b>Detail:</b>&nbsp;The Monitor is NonCopyable
+</tr>
+
+<tr>
+<td>(&m)->~Monitor();</td>
+<td>
+<b>Effect:</b>&nbsp;Destroy a Monitor.<br> 
+<i>Pre Condition:</i>&nbsp;No thread should be wait()ing on this monitor.<br> 
+</tr>
+
+<tr>
+<td>l.acquire();</td>
+<td>
+<b>Effect:</b>&nbsp;Acquire an exclusive lock.<br>
+<b>Detail:</b>&nbsp;Blocks the calling thread until an exclusive lock can be obtained. This may block indefinently.<br>
+<b>Return:</b>&nbsp;void<br>
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller release()es it.<br> 
+<b>Used by:</b>&nbsp;Any thread
+</tr>
+
+<tr>
+<td>l.tryAcquire();</td>
+<td>
+<b>Effect:</b>&nbsp;Attempt to acquire an exclusive lock.<br>
+<b>Detail:</b>&nbsp;May <b>not</b> block the calling thread indefinently. If an exclusive lock can be obtained, without blocking, then that exclusive lock is obtained on the the native object and true is returned immediately. Otherwise false is returned.<br>
+<b>Return:</b>&nbsp;bool<br> 
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller release()es it, only if this function returned true.<br>
+<b>Used by:</b>&nbsp;Any thread
+</td>
+</tr>
+
+<tr>
+<td>l.release();</td>
+<td>
+<b>Effect:</b>&nbsp;Attempt to release an exclusive lock.<br>
+<b>Detail:</b>&nbsp;May <b>not</b> block the calling thread indefinently. An exclusive lock on teh native object is released, allowing it to be acquired by another thread.<br>
+<b>Return:</b>&nbsp;void<br> 
+<i>Pre Condition:</i>&nbsp;The calling thread should have already acquire()d the lock.<br> 
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller calls release() for each time it called acquire().<br>
+<b>Used by:</b>&nbsp;Any thread
+</td>
+</tr>
+
+<tr>
+<td>l.wait();</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically release() the exclusive lock and block the current thread until ANYTHING is pending() <br>
+<b>Detail:</b>&nbsp;This may block indefinently.<br>
+<b>Return:</b>&nbsp;<i>Status</i>::STATE - the next() state<br>
+<i>Pre Condition:</i>&nbsp;The external lock must be held when this function is called.<br>
+<i>Post Condition:</i>&nbsp;The external lock must be held when this function is returns.<br>
+<i>Post Condition:</i>&nbsp;Spurrious wakeups are not acceptable, this function must return <b>only</b> when pending(ANYTHING) returns a valid STATE.<br>
+<b>Used by:</b>&nbsp;OWNER ONLY
+</td>
+</tr>
+
+<tr>
+<td>l.wait(unsigned long ms);</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically release() the exclusive lock and block the current thread until ANYTHING is pending(), for at most <i>ms</i> milliseconds.<br>
+<b>Detail:</b>&nbsp;This may block indefinently only if<i>ms</i> is 0.<br>
+<b>Return:</b>&nbsp;<i>Status</i>::STATE - the next() state<br>
+<i>Pre Condition:</i>&nbsp;The external lock must be held when this function is called.<br>
+<i>Post Condition:</i>&nbsp;The external lock must be held when this function is returns.<br>
+<i>Post Condition:</i>&nbsp;Spurrious wakeups are not acceptable, this function must return <b>only</b> when pending(ANYTHING) returns a valid STATE.<br>
+<b>Used by:</b>&nbsp;OWNER ONLY
+</tr>
+
+<tr>
+<td>l.cancel();</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically update the <i>canceled</i> status.<br>
+<b>Detail:</b>&nbsp;This may <b>not</b> block indefinently. If the CANCELED status is not set, then push(CANCELED).If the INTERRUPTED status not pending then push(INTERRUPTED) and signal the wait()er (if it exists).<br>
+<b>Return:</b>&nbsp;bool - true if the status was updated.<br>
+<b>Used by:</b>&nbsp;Any thread.
+</td>
+</tr>
+
+<tr>
+<td>l.interrupt();</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically update the <i>interrupted</i> status.<br>
+<b>Detail:</b>&nbsp;This may <b>not</b> block indefinently. If the INTERRUPTED status is not pending(), then push(INTERRUPTED) and signal the wait()er (if it exists).<br>
+<b>Return:</b>&nbsp;bool - true if the status was updated.<br>
+<b>Used by:</b>&nbsp;Any thread.
+</td>
+</tr>
+
+<tr>
+<td>l.notify();</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically update the <i>signaled</i> status.<br>
+<b>Detail:</b>&nbsp;This may <b>not</b> block indefinently. If the INTERRUPTED state is not pending(), then push(SIGNALED) and signal the wait()er (if it exists).<br>
+<b>Return:</b>&nbsp;bool - true if the status was updated.<br>
+<b>Used by:</b>&nbsp;Any thread.
+</td>
+</tr>
+
+
+<tr>
+<td>l.isInterrupted();</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically test, and possibly update, the <i>interrupted</i> status.<br>
+<b>Detail:</b>&nbsp;This may <b>not</b> block indefinently.<br>
+<b>Return:</b>&nbsp;bool - result of pending(INTERRUPTED).<br>
+<i>Post Condition:</i>&nbsp;If called from the OWNER thread, the INTERRUPTED state is cleared.
+<b>Used by:</b>&nbsp;OWNER thread.
+</td>
+</tr>
+
+<tr>
+<td>l.isCanceled();</td>
+<td>
+<b>Effect:</b>&nbsp;Atomically test, the <i>canceled</i> status.<br>
+<b>Detail:</b>&nbsp;This may <b>not</b> block indefinently.<br>
+<b>Return:</b>&nbsp;bool - result of check(CANCELED)<BR>
+<i>Post Condition:</i>&nbsp;If called from the OWNER thread, the INTERRUPTED state is cleared.
+<b>Used by:</b>&nbsp;Any thread.
+</td>
+</tr>
+
+</table>
+<p>
+
+That's it. All you need to do now is to update the configuration and run the test cases
+to make sure you've implemented this primative correctly.
+<nr>
+
+<a name="threadops"></a>
+<h1>ThreadOps Concept</h1>
+The <i>ThreadOps</i> primative is responsible for providing access to only the most
+basic native thread operations.
+
+<p>
+<table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
+<tr>
+<td><b>Expression</b></td>
+<td><b>Requirement</b></td>
+</tr>
+
+<td>ThreadOps t;</td>
+<td>
+<b>Effect:</b>&nbsp;Construct a new ThreadOps.<br> 
+<b>Detail:</b>&nbsp;This ThreadOps is not associated with any particular thread.<br> 
+</tr>
+
+<tr>
+<td>(&t)->~ThreadOps();</td>
+<td>
+<b>Effect:</b>&nbsp;Destroy a TSS.<br> 
+<i>Post-Condition:</i>&nbsp;join() should be called prior to the destructor if this object was used to spawn a native thread. 
+</tr>
+<tr>
+<td>ThreadOps::INVALID;</td>
+<td>
+<b>Effect:</b>&nbsp;Provide access to a staitc const ThreadOps that has been created with the default constructor. <br> 
+<i>Post-Condition:</i>&nbsp;Can't be used for anything other than comparison.
+</tr>
+<tr>
+<td>(&t)->==(t);</td>
+<td>
+<b>Effect:</b>&nbsp;Provide const comparison (==) operator that compares a ThreadOps to a const ThreadOps&. <br> 
+<b>Return:</b>&nbsp;true if the two objects refer to the same native thread.
+</tr>
+<tr>
+<td>ThreadOps::self();</td>
+<td>
+<b>Effect:</b>&nbsp;Create a ThreadOps that is associated with the currently executing native thread.<br> 
+<i>Post-Condition:</i>&nbsp;Can't be used for anything other than comparison.
+</tr>
+<tr>
+<td>ThreadOps::activate(t);</td>
+<td>
+<b>Effect:</b>&nbsp;Activate a ThreadOps, associating it with the currently executing native thread.<br> 
+<i>Pre-Condition:</i>&nbsp;A ThreadOps can't be activated twice.
+</tr>
+<tr>
+<td>ThreadOps::isCurrent(t);</td>
+<td>
+<b>Effect:</b>&nbsp;Compare a ThreadOps with the currently executing native thread.<br> 
+<b>Return:</b>&nbsp;true if the ThreadOps was activated from the currently executing native thread.
+</tr>
+<tr>
+<td>ThreadOps::join(t);</td>
+<td>
+<b>Effect:</b>&nbsp;Join the native thread associated with this ThreadOps.<br> 
+<b>Return:</b>&nbsp;true if successful, otherwise false.<br>
+<i>Pre-Condition:</i>&nbsp;The ThreadOps must have been used to spawn a native thread.<br>
+<i>Pre-Condition:</i>&nbsp;The ThreadOps must not have been join()ed already.<br>
+</tr>
+<tr>
+<td>ThreadOps::yield();</td>
+<td>
+<b>Effect:</b>&nbsp;yield the current threads timeslice, allowing the scheduler to switch to another thread sooner.<br> 
+</tr>
+<tr>
+<td>Priority p; ThreadOps::setPriority(t, p);</td>
+<td>
+<b>Effect:</b>&nbsp;Update the effective priority of the native thread represented by the ThreadOps.<br> 
+<b>Return:</b>&nbsp;true if successful, otherwise false.<br>
+</tr>
+<tr>
+<td>Priority p; ThreadOps::getPriority(t, p);</td>
+<td>
+<b>Effect:</b>&nbsp;Get the effective priority of the native thread represented by the ThreadOps.<br> 
+<b>Return:</b>&nbsp;true if successful, otherwise false.<br>
+</tr>
+<tr>
+<td>Runnable* r; t.spawn(r);</td>
+<td>
+<b>Effect:</b>&nbsp;Execute the runnable task from the context of the native thread associated with the ThreadOps.<br> 
+<b>Return:</b>&nbsp;true if successful, otherwise false.<br>
+<i>Pre-Condition:</i>&nbsp;The ThreadOps must not been used to spawn a native thread already.<br>
+<i>Pre-Condition:</i>&nbsp;The ThreadOps must not have been join()ed already.<br>
+</tr>
+
+</table>
+<p>
+
+<hr>
+
+<a name="tss"></a>
+<h1>TSS Concept</h1>
+The <i>TSS</i> primative is a template class that provides simple access to an
+operating systems thread-specific-storage. ZThreads provides a rich set of classes
+that greatly enhance the TSS provided to an application; fortuneately, none of that
+is implemented in the TSS primaitve - so its really very simple to implement. I'm not
+familair with any platforms that do not support TSS, however it should be possible
+to emulate if you are porting to such a platform.
+
+<p>
+<table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
+<tr>
+<td><b>Expression</b></td>
+<td><b>Requirement</b></td>
+</tr>
+<tr>
+<td>TSS t;</td>
+<td>
+<b>Effect:</b>&nbsp;Construct a new TSS.<br> 
+</tr>
+
+<tr>
+<td>(&t)->~TSS();</td>
+<td>
+<b>Effect:</b>&nbsp;Destroy a TSS.<br> 
+</tr>
+
+<td>t.set(T*);</td>
+<td>
+<b>Effect:</b>&nbsp;Store a pointer value of type T in the native TSS.<br> 
+<b>Return:</b>&nbsp;A pointer value of type T that was previously stored in the native TSS.<br> 
+</tr>
+
+<tr>
+<td>t.get(T*);</td>
+<td>
+<b>Effect:</b>&nbsp;Retrieve a pointer value of type T from the native TSS.<br> 
+<b>Return:</b>&nbsp;void
+</tr>
+
+</table>
+
+<p>
+
+That is all that is required. It can be used simply,
+
+<pre>
+
+TSS&lt;int&gt; tss;
+tss.set(new int(9));
+
+cout &lt;&lt; *tss.get() &lt;&lt; endl;
+
+Output: 9
+
+</pre>
+
+<hr>
+
+
+<a name="fastrecursivelock"></a>
+<h1>FastRecursiveLock Concept (<i>optional</i>)</h1>
+The <i>FastRecursiveLock</i> is similar to the <i>FastLock</i>. The difference is
+that it may be acquire()d repeatedly by the same thread. It must be release()d
+as many times as it was acquired. Implementing this is optional, ZThreads provides
+a vanilla implementation based on the required <i>FastLock</i>. 
+<p>
+The library includes several strategies for implementing this primative on Win32 and on POSIX systems
+which may be helpful in finding an approach that will work for your system
+<p>
+<table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
+<tr>
+<td><b>Expression</b></td>
+<td><b>Requirement</b></td>
+</tr>
+
+<tr>
+<td>FastRecursiveLock l;</td>
+<td>
+<b>Effect:</b>&nbsp;Construct a new FastRecursiveLock.<br> 
+<b>Detail:</b>&nbsp;The Monitor is NonCopyable
+</tr>
+
+<tr>
+<td>(&l)->~FastRecursiveLock();</td>
+<td>
+<b>Effect:</b>&nbsp;Destroy a FastRecursiveLock.<br> 
+<i>Pre Condition:</i>&nbsp;No thread should not have acquire()d the lock when this object is destroyed.<br> 
+</tr>
+
+<tr>
+<td>l.acquire();</td>
+<td>
+<b>Effect:</b>&nbsp;Acquire an exclusive lock.<br>
+<b>Detail:</b>&nbsp;Blocks the calling thread until an exclusive lock can be obtained. This may block indefinently.<br>
+<b>Return:</b>&nbsp;void<br>
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller release()es it.<br> 
+</tr>
+
+<tr>
+<td>l.tryAcquire();</td>
+<td>
+<b>Effect:</b>&nbsp;Attempt to acquire an exclusive lock.<br>
+<b>Detail:</b>&nbsp;May <b>not</b> block the calling thread indefinently. If an exclusive lock can be obtained, without blocking, then that exclusive lock is obtained on the the native object and true is returned immediately. Otherwise false is returned.<br>
+<b>Return:</b>&nbsp;bool<br> 
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller release()es it, only if this function returned true.
+</td>
+</tr>
+
+<tr>
+<td>l.release();</td>
+<td>
+<b>Effect:</b>&nbsp;Attempt to release an exclusive lock.<br>
+<b>Detail:</b>&nbsp;May <b>not</b> block the calling thread indefinently. An exclusive lock on teh native object is released, allowing it to be acquired by another thread.<br>
+<b>Return:</b>&nbsp;void<br> 
+<i>Pre Condition:</i>&nbsp;The calling thread should have already acquire()d the lock.<br> 
+<i>Post Condition:</i>&nbsp;No other thread may acquire the native lock until the caller calls release() for each time it called acquire().
+</td>
+
+</tr>
+</table>
+<p>
+
+Some test cases are provided that will give your mutex a workout. Its recommended
+that you run those to be sure the new implementation works correctly.
+
+<hr>
+
+<a name="TimeStrategy"></a>
+<h1>TimeStrategy Concept (<i>optional</i>)</h1>
+The <i>TimeStrategy</i> concept is used to provide access to a timer with millisecond
+resolution. Most systems are equiped with a flavor of ftime() or gettimeofday()
+and there are <i>TimeStrategy</i> implementations included that use those functions.
+However, some people may want to use a more precise timer, or may be intrested
+in adding nanosecond resolution to the library. For those people, the TimerOps
+concept is described below.
+
+<p>
+<table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
+<tr>
+<td><b>Expression</b></td>
+<td><b>Requirement</b></td>
+</tr>
+
+<tr>
+<td>TimeStrategy t;</td>
+<td>
+<b>Effect:</b>&nbsp;Construct a new TimeStrategy.<br> 
+<b>Detail:</b>&nbsp;The TimeStrategy should represent the current time.<br> 
+</tr>
+
+<tr>
+<td>(&l)->~TimeStrategy();</td>
+<td>
+<b>Effect:</b>&nbsp;Destroy a TimeStrategy.<br> 
+</tr>
+
+<tr>
+<td>t.seconds();</td>
+<td>
+<b>Effect:</b>&nbsp;Get the seconds value.<br> 
+<b>Return:</b>&nbsp;unsigned long 
+</tr>
+
+<tr>
+<td>t.milliseconds();</td>
+<td>
+<b>Effect:</b>&nbsp;Get the milliseconds value.<br> 
+<b>Return:</b>&nbsp;unsigned long 
+</tr>
+
+<tr>
+<td>unsigned long s; t.seconds(s);</td>
+<td>
+<b>Effect:</b>&nbsp;Set the seconds value.<br> 
+<b>Return:</b>&nbsp;unsigned long The previous seconds value.<br> 
+</tr>
+
+<tr>
+<td>unsigned long ms; t.milliseconds(ms);</td>
+<td>
+<b>Effect:</b>&nbsp;Set the milliseconds value.<br> 
+<b>Return:</b>&nbsp;unsigned long The previous milliseconds value.<br> 
+</tr>
+
+
+</table>
+<p>
+
+<hr>
+
+<!-- Spacer -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr><td height="1"><img width="100%" height="1" src="black.gif"></td></tr>
+</table>
+
+<!-- Footer Text -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr class="shade">
+  <td valign="middle" align="left"><font face="Verdana, Arial, Sans-serif" size="1">&nbsp;Copyright &copy; 2000 - 2002,&nbsp;&nbsp;Eric Crahen &lt;crahen at cs dot buffalo dot edu&gt; - All rights reserved.</font></td>
+</tr>
+<tr><td height="1"><img width="100%" height="1" src="black.gif"></td></tr>
+<tr class="shade">
+  <td valign="middle" align="left"><font face="Verdana, Arial, Sans-serif" size="1">
+  Permission to use, copy, modify, distribute and sell this documentation for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies and that both that copyright notice and this permission notice appear in supporting documentation. Eric Crahen makes no representations about the suitability of this software for any purpose. It is provided "as is" without express or implied warranty.
+  </font></td>
+</tr>
+</table>
+
+</body>

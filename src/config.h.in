@@ -1,0 +1,91 @@
+/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+
+/* Define if you have the <asm/atomic.h> header file. */
+#undef HAVE_ASM_ATOMIC_H
+
+/* _beginthreadex() */
+#undef HAVE_BEGINTHREADEX
+
+/* Defined if pthread_condattr_setkind_np() is available */
+#undef HAVE_CONDATTR_SETKIND_NP
+
+/* Defined if pthread_condattr_settype() is available */
+#undef HAVE_CONDATTR_SETTYPE
+
+/* Define if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
+/* Define if you have the <errno.h> header file. */
+#undef HAVE_ERRNO_H
+
+/* ftime() */
+#undef HAVE_FTIME
+
+/* Define if you have the <inttypes.h> header file. */
+#undef HAVE_INTTYPES_H
+
+/* Define if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
+
+/* Defined if pthread_setkind_np() is available */
+#undef HAVE_MUTEXATTR_SETKIND_NP
+
+/* Defined if pthread_mutexattr_settype() is available */
+#undef HAVE_MUTEXATTR_SETTYPE
+
+/* Defined if pthread_keycreate() is available */
+#undef HAVE_PTHREADKEYCREATE
+
+/* Defined if pthread_key_create() is available */
+#undef HAVE_PTHREADKEY_CREATE
+
+/* Defined if pthread_sigmask() is available */
+#undef HAVE_PTHREAD_SIGMASK
+
+/* Defined if pthread_yield() is available */
+#undef HAVE_PTHREAD_YIELD
+
+/* Defined if -lrt is needed for RT scheduling */
+#undef HAVE_SCHED_RT
+
+/* Defined if sched_yield() is available */
+#undef HAVE_SCHED_YIELD
+
+/* Define if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
+
+/* Define if you have the <stdlib.h> header file. */
+#undef HAVE_STDLIB_H
+
+/* Define if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
+
+/* Define if you have the <string.h> header file. */
+#undef HAVE_STRING_H
+
+/* Define if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
+
+/* Define if you have the <sys/types.h> header file. */
+#undef HAVE_SYS_TYPES_H
+
+/* Define if you have the <unistd.h> header file. */
+#undef HAVE_UNISTD_H
+
+/* MSVCRT _ftime() */
+#undef HAVE_WIN32_FTIME
+
+/* Name of package */
+#undef PACKAGE
+
+/* Define if you have the ANSI C header files. */
+#undef STDC_HEADERS
+
+/* Version number of package */
+#undef VERSION
+
+/* No interrupt() hooks */
+#undef ZTHREAD_DISABLE_INTERRUPT
+
+/* No OS priority support */
+#undef ZTHREAD_DISABLE_PRIORITY
