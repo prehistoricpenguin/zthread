@@ -214,7 +214,7 @@ namespace ZThread {
         --_activeReaders;
 
         wakeReader = (_waitingReaders > 0);
-        wakeWriter = (_waitingReaders > 0);
+        wakeWriter = (_waitingWriters > 0);
 
       }
 
@@ -292,7 +292,7 @@ namespace ZThread {
         --_activeWriters;
       
         wakeReader = (_waitingReaders > 0);
-        wakeWriter = (_waitingReaders > 0);
+        wakeWriter = (_waitingWriters > 0);
 
       }
 
