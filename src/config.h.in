@@ -9,12 +9,6 @@
 /* _beginthreadex() */
 #undef HAVE_BEGINTHREADEX
 
-/* Defined if pthread_condattr_setkind_np() is available */
-#undef HAVE_CONDATTR_SETKIND_NP
-
-/* Defined if pthread_condattr_settype() is available */
-#undef HAVE_CONDATTR_SETTYPE
-
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
@@ -27,29 +21,8 @@
 /* Define to 1 if you have the <memory.h> header file. */
 #undef HAVE_MEMORY_H
 
-/* Defined if pthread_setkind_np() is available */
-#undef HAVE_MUTEXATTR_SETKIND_NP
-
-/* Defined if pthread_mutexattr_settype() is available */
-#undef HAVE_MUTEXATTR_SETTYPE
-
-/* Defined if pthread_keycreate() is available */
-#undef HAVE_PTHREADKEYCREATE
-
-/* Defined if pthread_key_create() is available */
-#undef HAVE_PTHREADKEY_CREATE
-
-/* Defined if pthread_sigmask() is available */
-#undef HAVE_PTHREAD_SIGMASK
-
-/* Defined if pthread_yield() is available */
-#undef HAVE_PTHREAD_YIELD
-
-/* Defined if -lrt is needed for RT scheduling */
-#undef HAVE_SCHED_RT
-
-/* Defined if sched_yield() is available */
-#undef HAVE_SCHED_YIELD
+/* defined when pthreads is available */
+#undef HAVE_POSIX_THREADS
 
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H

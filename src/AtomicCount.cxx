@@ -32,7 +32,7 @@
 // Select the correct AtomicCount implementation based on
 // what the complilation environment has defined
 
-#if defined(__linux__) && defined(HAVE_ASM_ATOMIC_H)
+#if defined(HAVE_ATOMIC_LINUX)
 #  include "linux/AtomicCount.cxx"
 #elif defined(ZT_WIN32)
 #  include "win32/AtomicCount.cxx"

@@ -35,7 +35,7 @@ namespace ZThread {
  * @class Future
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-10T09:21:16-0400>
+ * @date <2002-11-22T05:35:26-0500>
  * @version 2.2.3
  *
  * A Future acts as a placeholder for a result that is being calculated, or 
