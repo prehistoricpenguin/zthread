@@ -153,23 +153,28 @@ class BoundedQueue : public Queue<T> {
    * @post if the Queue was empty, threads blocked by a next() method will 
    * be awakend if no exception is thrown
    */
-  virtual void add(T item, unsigned long timeout) 
+  virtual bool add(T item, unsigned long timeout) 
     /* throw(Synchronization_Exception) */ {
 
-    Guard<LockType> g(_lock, timeout);
-      
-    // Wait for the capacity of the Queue to drop 
-    while ((_queue.size() == _capacity) && !_canceled)
-      if(!_notFull.wait(timeout))
-       throw Timeout_Exception();
+    try {
 
-    if(_canceled)
-      throw Cancellation_Exception();
-
-    _queue.push_back(item);
-    _notEmpty.signal(); // Wake any waiters
+      Guard<LockType> g(_lock, timeout);
       
+      // Wait for the capacity of the Queue to drop 
+      while ((_queue.size() == _capacity) && !_canceled)
+        if(!_notFull.wait(timeout))
+          return false;
+      
+      if(_canceled)
+        throw Cancellation_Exception();
+      
+      _queue.push_back(item);
+      _notEmpty.signal(); // Wake any waiters
+      
+    } catch(TimeOut_Exception&) { return false; }
     
+    return true;
+
   }
 
 
