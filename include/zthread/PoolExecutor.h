@@ -36,7 +36,7 @@ namespace ZThread {
 /**
  * @class PoolExecutor
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-29T07:57:47-0700>
  * @version 2.2.2
  *

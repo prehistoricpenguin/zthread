@@ -29,7 +29,7 @@ namespace ZThread {
 
 /**
  * @class Holder
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-25T21:27:07-0400>
  *
  * A Holder is, well, exactly that; an object used to hold a value

@@ -41,7 +41,7 @@ extern "C" void* _dispatch(void*);
 
 /**
  * @class ThreadOps
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-29T11:39:14-0400>
  * @version 2.2.8
  *

@@ -23,7 +23,7 @@
 #define __ZTEXCEPTIONS_H__
 
 /**
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-01T21:06:07-0400>
  * @version 2.2.0
  *

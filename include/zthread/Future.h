@@ -34,7 +34,7 @@ namespace ZThread {
 /**
  * @class Future
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-11-22T05:35:26-0500>
  * @version 2.2.3
  *

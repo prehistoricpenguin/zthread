@@ -32,7 +32,7 @@ namespace ZThread {
 /**
  * @class SynchronousExecutor
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-29T07:57:31-0700>
  * @version 2.2.2
  *

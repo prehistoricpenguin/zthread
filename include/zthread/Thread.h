@@ -34,7 +34,7 @@ class ThreadImpl;
 /**
  * @class Thread
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-07-13T10:10:33-0400>
  * @version 2.2.11
  *
@@ -219,7 +219,7 @@ class ZTHREAD_API Thread : public Cancelable, public Runnable, private NonCopyab
    * the local stack. It's used to manipulate the current thread
    * without affecting the reference count.
    */
-  class Reference {
+  class ZTHREAD_API Reference {
 
     friend class Thread;
 

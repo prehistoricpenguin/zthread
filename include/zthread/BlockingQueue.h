@@ -32,7 +32,7 @@ namespace ZThread {
 
 /**
  * @class BlockingQueue
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-29T07:52:35-0700>
  * @version 2.2.8
  *

@@ -2,75 +2,75 @@
   I'd like to create a list of projects that use or have used ZThreads; many
   of you have already contacted me and I am very grateful for that. I think it
   might be intresting for other people to see who as used ZThreads and for what
-  so if you'd like to get your project listed send me some mail. 
+  so if you'd like to get your project listed send me some mail.
 
 ------------------------------------------------------------------------------
 
-                               ZTHREADS 2.2.10
-                               by Eric Crahen 
-                           <crahen@cs.buffalo.edu>
+                               ZTHREADS 2.2.11
+                               by Eric Crahen
+                           <zthread@code-foo.com>
                         http://zthread.sourceforge.net
 
 
 OVERVIEW:
 
-    Concurrency has become an increasingly important aspect of software today. 
-  The ZThread package is an advanced object-oriented, cross-platform, C++ 
-  threading and synchronization library that has been designed and implemented 
-  by the author and released under the GPL. It provides a high level 
-  abstraction of the native threading mechanisms to offer a great deal of 
-  flexibility and control. 
+    Concurrency has become an increasingly important aspect of software today.
+  The ZThread package is an advanced object-oriented, cross-platform, C++
+  threading and synchronization library that has been designed and implemented
+  by the author and released under the GPL. It provides a high level
+  abstraction of the native threading mechanisms to offer a great deal of
+  flexibility and control.
 
-    This software features interruptible Thread and Runnable objects for C++, 
-  control objects and implementations of concurrency design patterns. This 
-  includes semaphores, mutexes, condition variabes as well as other more 
+    This software features interruptible Thread and Runnable objects for C++,
+  control objects and implementations of concurrency design patterns. This
+  includes semaphores, mutexes, condition variabes as well as other more
   complex components.
 
-    Existing threading APIs do not provide a consistent and portable means for 
-  exercising control over concurrently executing software. Thread cancellation and termination is 
-  one example of this complexity. ZThreads includes an elegant method of 
-  safely terminating threads without the complications of using cancellation 
-  handlers or other similar constructs. 
+    Existing threading APIs do not provide a consistent and portable means for
+  exercising control over concurrently executing software. Thread cancellation and termination is
+  one example of this complexity. ZThreads includes an elegant method of
+  safely terminating threads without the complications of using cancellation
+  handlers or other similar constructs.
 
-    This is a platform independent architecture that was designed by the 
-  author. Implementations have been provided for POSIX and Win32 platforms. 
-  Building this library was quite different for POSIX than it was for Win32 
-  due to the nature of the functionality each platform naturally provides; 
-  each platform had strong and weak points. They were used to create the most 
-  flexible and efficent abstraction possible. 
+    This is a platform independent architecture that was designed by the
+  author. Implementations have been provided for POSIX and Win32 platforms.
+  Building this library was quite different for POSIX than it was for Win32
+  due to the nature of the functionality each platform naturally provides;
+  each platform had strong and weak points. They were used to create the most
+  flexible and efficent abstraction possible.
 
-    The result is an excellent software layer on which to build mutlithreaded 
-  code. 
+    The result is an excellent software layer on which to build mutlithreaded
+  code.
 
-LICENSE:				
+LICENSE:
 
 	This source has been released under the LGPL. See LGPL.TXT for
   details regarding the license. You can you use this in closed source
-  projects, contact me if you need to discuss a different licencing.  
+  projects, contact me if you need to discuss a different licencing.
 
 COMPILING:
 
     ZT_POSIX, ZT_WIN32 should be defined to specific what platofrm your building
-  on this. This is mainly so the right modifiers can be placed on class and 
+  on this. This is mainly so the right modifiers can be placed on class and
   function definitions to export things from a DLL properly if your using the
   WIN32 implementation. If you leave these flags out ZThreads will try to guess.
 
     See BUILDING for more details.
 
 DISTRIBUTION:
-  
+
     If you package ZThreads with your application, that fine with me. You can
   do it in binary form or source form. Don't forget to mention somewhere in
   your documents the LGPL & the credits for the library.
 
-    In the case of development or source release it would be nice if you 
+    In the case of development or source release it would be nice if you
   pointed the other developers to the source distribution of this library.
   This keeps things a little more centralized & current; as well as giving
   this library a little more exposure.
 
-**  
+**
 
-   If you find this library useful, or you release something that uses it, 
+   If you find this library useful, or you release something that uses it,
   please let me know. I'd be curious to see how people have made use of
   this library.
 
@@ -82,6 +82,6 @@ NOTES:
 
 HISTORY:
 
-  So far, this library has been tested on MacOS X, Linux, Tru64 Unix, Win95, Win98, 
-  WinNT, Win2k, SunOS, Solaris and FreeBSD. 
+  So far, this library has been tested on MacOS X, Linux, Tru64 Unix, Win95, Win98,
+  WinNT, Win2k, SunOS, Solaris and FreeBSD.
 

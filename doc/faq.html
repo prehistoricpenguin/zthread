@@ -26,7 +26,7 @@
 
 </table>
 
-
+This document is out of date.
 <hr>
 <a name="q1"></a>
 <h4>1. Why is compiling with Visual Studio is giving me errors?</h4>
@@ -41,7 +41,7 @@ If you see the following error, or one like it,
   reinterpret_cast, C-style cast or function-style cast
 </pre>
 <p>
-it's most likely because you are using an outdated version of the 
+it's most likely because you are using an outdated version of the
 Microsoft Platform SDK. In more recent versions of the Platform SDK,
 Microsoft has changed the signatures of the <i>Interlocked</i> functions.
 You can either <a href="http://www.microsoft.com/msdownload/platformsdk/sdkupdate">upgrade</a>
@@ -51,7 +51,7 @@ implementation by adjusting your zthread/Config.h file.
 <a name="q2"></a>
 <h4>2. Why is there no getId() or getName() function to identify a thread?</h4>
 <p>
-There are a few reasons for this. Most low level APIs expose some method that 
+There are a few reasons for this. Most low level APIs expose some method that
 all you to identify a thread, but these are generally not very portable. Windows
 identifies threads using a <i>DWORD</i>, pthreads identifies threads using an opaque type
 called <i>pthread_t</i>. Deciding to interpret these types as unique number isn't
@@ -79,18 +79,18 @@ class IdGenerator {
 
   Mutex lock;
   unsigned long lastId;
-    
+
 public:
 
   IdGenerator() : lastId(0) {}
-  
+
   unsigned long nextId() {
-  
+
     Guard&lt;Mutex&gt; g(lock);
     return ++lastId;
-    
-  } 
-    
+
+  }
+
 };
 
 // A named thread class
@@ -101,17 +101,17 @@ class NamedThread {
 public:
 
   NamedThread() {
-  
+
     _id = Singleton&lt;IdGenerator&gt;;::instance()-&gt;nextId();
-    
+
   }
-  
+
   virtual ~NamedThread() throw() { }
-  
-  unsigned long getId() { 
+
+  unsigned long getId() {
     return _id;
   }
-  
+
 };
 
 // A factory to produce named threads
@@ -119,11 +119,11 @@ class NamedThreadFactory : public ThreadFactory {
 public:
 
   virtual ~NamedThreadFactory() throw() { }
-  
+
   virtual Thread* create() {
     return new MyThread();
   }
-    
+
 };
 
 </pre>

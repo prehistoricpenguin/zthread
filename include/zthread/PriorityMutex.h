@@ -31,7 +31,7 @@ namespace ZThread {
 
 /**
  * @class PriorityMutex
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-02T08:10:49-0400>
  * @version 2.2.1
  *

@@ -35,7 +35,7 @@ namespace ZThread {
 /**
  * @class BiasedReadWriteLock
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-19T08:38:39-0400>
  * @version 2.2.7
  *  

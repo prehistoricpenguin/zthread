@@ -575,7 +575,7 @@ AC_DEFUN([AM_ACLOCAL_INCLUDE],
 ])
 
 # Select a pthread library & setup some build variables
-# by Eric Crahen <crahen@cs.buffalo.edu>
+# by Eric Crahen <zthread@code-foo.com>
 
 NO_PTHREAD_ERROR=<<EOT
 Please install/update your POSIX threads (pthreads) library. Updates
@@ -827,7 +827,7 @@ dnl Find doxygen if it is available using the paramaeter path;
 dnl otherwise just check the user path. If Doxygen is found the 
 dnl executable is assigned to the DOXYGEN variable.
 
-dnl Eric Crahen <crahen@cs.buffalo.edu>
+dnl Eric Crahen <zthread@code-foo.com>
 
 dnl AM_WITH_DOXYGEN
 AC_DEFUN([AM_WITH_DOXYGEN], 

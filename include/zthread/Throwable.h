@@ -26,7 +26,7 @@ namespace ZThread {
 
 /**
  * @class Throwable
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-04T08:47:37-0400>
  * @version 2.2.0
  * 
@@ -54,7 +54,7 @@ public:
 
 /**
  * @class ThrowableFactory
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-04T08:47:37-0400>
  * @version 2.2.0
  *

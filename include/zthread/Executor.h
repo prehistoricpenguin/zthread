@@ -33,7 +33,7 @@ namespace ZThread {
 /**
  * @class Executor
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-04T07:49:11-0400>
  * @version 2.2.2
  *

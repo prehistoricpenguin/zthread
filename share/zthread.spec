@@ -10,7 +10,7 @@ Release: %rel
 Summary: cross-platform c++ multi-threading framework
 Copyright: LGPL
 Group: Development/Libraries
-Vendor: Eric D. Crahen <crahen@cs.buffalo.edu>
+Vendor: Eric D. Crahen <zthread@code-foo.com>
 Packager: Bastiaan Bakker <bastiaan.bakker@lifeline.nl>
 Url: http://zthread.sourceforge.net/
 

@@ -29,7 +29,7 @@ namespace ZThread {
 
 /**
  * @class Queue
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-01T17:37:24-0400>
  * @version 2.2.0
  *

@@ -36,7 +36,7 @@ namespace ZThread {
 /**
  * @class ConcurrentExecutor
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-19T08:46:14-0400>
  * @version 2.2.2
  *

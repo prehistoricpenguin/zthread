@@ -32,7 +32,7 @@
 namespace ZThread {
 
 /**
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-31T17:13:48-0400>
  * @version 2.2.0
  * @class fifo_list
@@ -45,7 +45,7 @@ public:
 };
 
 /**
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-31T17:13:48-0400>
  * @version 2.2.0
  * @struct priority_order
@@ -70,7 +70,7 @@ struct priority_order : public std::binary_function<ThreadImpl*, ThreadImpl*, bo
 
 
 /**
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-31T17:13:48-0400>
  * @version 2.2.0
  * @class priority_list

@@ -1,5 +1,5 @@
 # Configure paths for ZTHREAD
-# by Eric Crahen <crahen@cs.buffalo.edu>
+# by Eric Crahen <zthread@code-foo.com>
 
 dnl Detect the library and include paths for ZThreads, perform some test
 dnl compilations.

@@ -29,7 +29,7 @@ namespace ZThread {
 /**
  * @class ClassLockable
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-30T17:08:19-0400>
  * @version 2.2.0
  *

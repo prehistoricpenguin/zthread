@@ -2,7 +2,7 @@ dnl Find doxygen if it is available using the paramaeter path;
 dnl otherwise just check the user path. If Doxygen is found the 
 dnl executable is assigned to the DOXYGEN variable.
 
-dnl Eric Crahen <crahen@cs.buffalo.edu>
+dnl Eric Crahen <zthread@code-foo.com>
 
 dnl AM_WITH_DOXYGEN
 AC_DEFUN([AM_WITH_DOXYGEN], 

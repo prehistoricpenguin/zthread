@@ -36,7 +36,7 @@ namespace ZThread {
 
 /**
  * @class TSS
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-28T15:10:04-0700>
  * @version 2.1.6
  *

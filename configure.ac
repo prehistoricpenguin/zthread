@@ -1,4 +1,4 @@
-AC_REVISION($Revision: 1.8 $ZT_VERSION $)
+AC_REVISION($Revision: 1.9 $ZT_VERSION $)
 
 AC_INIT
 AC_CONFIG_SRCDIR([README])
@@ -63,7 +63,7 @@ case "$target" in
     dnl Use the Mac multiprocessing library
     LINKER_OPTIONS="-framework CoreServices"
     ;;
-*) 
+*)
     dnl Assume pthreads
     if test x"$PTHREAD_CFLAGS" != x; then
       COMPILER_OPTIONS="$PTHREAD_CFLAGS"
@@ -77,15 +77,15 @@ esac
 dnl Switch to C++ mode and check for needed C++ headers
 AC_LANG_PUSH([C++])
 
-dnl Configure the compiling options 
+dnl Configure the compiling options
 case "$CXX" in
   *cl.exe)   # Microsoft Visual Studio
   CXXFLAGS="/nologo /MT /W3 /GX /O2 /YX /FD /c"
-  CXXFLAGS="$CXXFLAGS /D \"_MBCS\" /D \"_LIB" /D \"WIN32\" 
+  CXXFLAGS="$CXXFLAGS /D \"_MBCS\" /D \"_LIB" /D \"WIN32\"
   ;;
-  *)         # GNU 
+  *)         # GNU
   CXXFLAGS="$CXXFLAGS -Wall"
-  ;; 
+  ;;
 esac
 
 dnl Header checks
@@ -94,13 +94,13 @@ AC_CHECK_HEADERS(errno.h)
 
 
 dnl Check for debug-mode
-AC_ARG_ENABLE(debug, 
+AC_ARG_ENABLE(debug,
 [  --enable-debug          Enable debug symbols [default=no]],
 
 [
 dnl Enable debug info
 case "$CXX" in
-  *cl.exe) 
+  *cl.exe)
     ;;
   *)
     CXXFLAGS="$CXXFLAGS -g"
@@ -108,7 +108,7 @@ esac
 ],[
 dnl Disable debug info
 case "$CXX" in
-  *cl.exe) 
+  *cl.exe)
     CXXFLAGS="$CXXFLAGS /D NDEBUG"
     ;;
   *)
@@ -121,7 +121,7 @@ dnl Select implementation
 AC_MSG_CHECKING(for target implementation)
 ZT_TYPE="auto"
 
-AC_ARG_ENABLE(win9x, 
+AC_ARG_ENABLE(win9x,
 [  --enable-win9x          Select WIN9X implementation [default=no]],
 [
   if test $ZT_TYPE != auto; then
@@ -131,7 +131,7 @@ AC_ARG_ENABLE(win9x,
   COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_WIN9X"
 ])
 
-AC_ARG_ENABLE(win32, 
+AC_ARG_ENABLE(win32,
 [  --enable-win32          Select WIN32 implementation [default=autodetect]],
 [
   if test $ZT_TYPE != auto; then
@@ -141,7 +141,7 @@ AC_ARG_ENABLE(win32,
   COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_WIN32"
 ])
 
-AC_ARG_ENABLE(posix, 
+AC_ARG_ENABLE(posix,
 [  --enable-posix          Select POSIX implementation [default=autodetect]],
 [
   if test $ZT_TYPE != auto; then
@@ -151,7 +151,7 @@ AC_ARG_ENABLE(posix,
   COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_POSIX"
 ])
 
-AC_ARG_ENABLE(macos, 
+AC_ARG_ENABLE(macos,
 [  --enable-macos          Select MacOS implementation [default=autodetect]],
 [
   if test $ZT_TYPE != auto; then
@@ -170,15 +170,15 @@ AC_MSG_RESULT($ZT_TYPE)
 dnl Configure targets
 SUBDIRS="src"
 
-AC_ARG_ENABLE(examples, 
-[  --enable-examples       Include examples in the project build. [default=yes]],, 
+AC_ARG_ENABLE(examples,
+[  --enable-examples       Include examples in the project build. [default=yes]],,
 [
   SUBDIRS="$SUBDIRS examples"
 ])
 
 dnl Enable tests
-AC_ARG_ENABLE(examples, 
-[  --enable-tests          Include test cases in the project build. [default=yes]],, 
+AC_ARG_ENABLE(examples,
+[  --enable-tests          Include test cases in the project build. [default=yes]],,
 [
   SUBDIRS="$SUBDIRS tests"
 ])
@@ -192,7 +192,7 @@ AC_ARG_ENABLE(io-interrupts, [  --enable-interrupts  Enable interrupt hooks [def
 dnl Check for setsigjmp
 AC_MSG_CHECKING(for sigsetjmp())
 AC_TRY_LINK( [#include <setjmp.h>], [sigjmp_buf t; sigsetjmp(t, 0);],
-[AC_MSG_RESULT(yes)], 
+[AC_MSG_RESULT(yes)],
 [AC_MSG_RESULT(no)
  AC_DEFINE(ZTHREAD_DISABLE_INTERRUPT,,[No interrupt() hooks])
 ])
@@ -222,5 +222,5 @@ AM_PROG_LIBTOOL
 AC_SUBST(SUBDIRS)
 
 
-AC_CONFIG_FILES([Makefile src/Makefile share/zthread-config share/zthread.spec examples/Makefile tests/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile share/zthread-config share/zthread.spec tests/Makefile])
 AC_OUTPUT

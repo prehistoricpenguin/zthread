@@ -33,7 +33,7 @@ namespace ZThread {
 
 /**
  * @class CancelableTask
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-02T11:24:17-0400>
  * @version 2.2.1
  *

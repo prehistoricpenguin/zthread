@@ -39,7 +39,7 @@ class Runnable;
  
 /**
  * @class ThreadOps
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-28T16:42:13-0700>
  * @version 2.2.0
  *

@@ -31,7 +31,7 @@ class FastLock;
 
 /**
  * @class FastMutex
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-30T15:38:35-0400>
  * @version 2.2.0
  *

@@ -34,7 +34,7 @@ class Monitor;
 
 /**
  * @class RecursiveMutexImpl
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-26T09:16:04-0400>
  * @version 2.1.6
  *

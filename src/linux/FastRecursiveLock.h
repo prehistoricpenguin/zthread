@@ -30,7 +30,7 @@ namespace ZThread {
 /**
  * @class FastRecursiveLock
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-27T08:12:25-0400>
  * @version 2.2.0
  *

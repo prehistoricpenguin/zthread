@@ -26,6 +26,7 @@
 </table>
 
 
+This document is out of date.
 <hr>
 <a name="introduction"></a>
 <h1>Introduction</h1>
@@ -37,24 +38,24 @@ to see how you can use this mechanism effectively.
 <h3>Why Do I Need Interruption?</h3>
 
 Sooner or later, when writting a multi-threaded program, a programmer
-will encounter a situation when it would be very convient to let a 
+will encounter a situation when it would be very convient to let a
 thread know that its time to change its course of action. There are a
-multitude of situations where this is desirable. For example, a user 
-may want to exit a program; regardless of what that program is doing, 
+multitude of situations where this is desirable. For example, a user
+may want to exit a program; regardless of what that program is doing,
 you'd like to shut it down safely and quickly. Or a user may decide
 to hit a <i>cancel</i> button, meaning a program needs tell a thread it doesn't
 need to continue doing what it's doing anymore. Other times, a problem can
-be broken down and solved by several threads concurrently; but if one of 
+be broken down and solved by several threads concurrently; but if one of
 these threads encounters an error is usually useful to stop the other
 threads since all of the result would be needed to assemble a meaningful solution.
 
 <p>
 Several methods currently exist that accomplish this task. However,
-none of these methods lend themselves particularlly well to an object-oriented 
-design; and more importantly none of them are very portable. 
+none of these methods lend themselves particularlly well to an object-oriented
+design; and more importantly none of them are very portable.
 <ul>
 <li>
-The Win32 thread model does not have an explicit cancelation mechanism, it does not need one. 
+The Win32 thread model does not have an explicit cancelation mechanism, it does not need one.
 Instead, it provides a very powerful WaitForMultipleEvents() primative. Used in conjection
 with sets of event handles, this really can be quite powerful, if somewhat tricky
 to use. [Beveridge 99]
@@ -62,11 +63,11 @@ to use. [Beveridge 99]
 <p>
 <li>
 POSIX has a thread model with a more ridigid cancellation mechanism. This
-revolves around a program pushing and poping cleanup functions onto a stack. These functions 
-are responsible for releasing any resources a thread may have acquired, and are run in 
+revolves around a program pushing and poping cleanup functions onto a stack. These functions
+are responsible for releasing any resources a thread may have acquired, and are run in
 reverse order when a thread exits normally. This helps a program to maintain a safe state
 when a thread is canceled. Unfortunately, this is not always compatible with C++
-exceptions, and requires a good deal of knowledge about your specifc platform to 
+exceptions, and requires a good deal of knowledge about your specifc platform to
 use correctly. [Butenhof 97], [Lewis et al. 97]
 </li>
 </ul>
@@ -77,8 +78,8 @@ use correctly. [Butenhof 97], [Lewis et al. 97]
 
 Killing a thread is almost garunteed to leave the program in an inconsistent and dangerous state.
 If a thread that has allocated memory, acquired resources or is holding locks is
-suddenly removed there are immediate problems involving memory leaks, resource 
-starvation and deadlock [Fleiner et al. 96]. Because of these problems, ZThreads provides 
+suddenly removed there are immediate problems involving memory leaks, resource
+starvation and deadlock [Fleiner et al. 96]. Because of these problems, ZThreads provides
 no mechanism to simply stop a thread dead in its tracks. Instead, it encourages designing to avoid the need to do so.
 
 
@@ -91,23 +92,23 @@ notify threads of exception conditions so that the thread can handle it in the
 best way possible.
 <p>
 Interruption is a concept that is loosely based on Java's interruption mechanism. [Lea 97]
-Each thread has a internal status associated with it. A thread begins it life 
-without its <i>interrupted</i> status being set. The <b>Thread::interrupt()</b> 
-function is used to set the <i>interrupted</i> status of a thread. A thread in this 
+Each thread has a internal status associated with it. A thread begins it life
+without its <i>interrupted</i> status being set. The <b>Thread::interrupt()</b>
+function is used to set the <i>interrupted</i> status of a thread. A thread in this
 status will recieve some notifcation in one of two ways:
 <p>
 <ol>
 <li>
 A thread may poll its own status using the <b>Thread::interrupted()</b> function. This will
-return false if the thread has not been interrupted or true if it has been. It 
+return false if the thread has not been interrupted or true if it has been. It
 will always clear threads <i>interrupted</i> status.
 </li>
 <p>
 <li>
 A thread may attempt a blocking operation on any synchronization object; typically
 functions extending Lockable::acquire(), Waitable::wait() are places a thread
-might block. If a thread is in <i>interrupted</i> status, this will fail. An 
-<b>Interrupted_Exception</b> will be thrown and the <i>interrupted</i> status of 
+might block. If a thread is in <i>interrupted</i> status, this will fail. An
+<b>Interrupted_Exception</b> will be thrown and the <i>interrupted</i> status of
 that thread is cleared.
 </li>
 </ol>
@@ -117,23 +118,23 @@ This helps ensures that a thread is going to recieve notification as soon as pos
 at a safe location. Interruption will not occur at unexpected places, and it will
 not interrupt affect functions outside the ZThreads library. It provides a communication
 channel, allowing a message to be sent from one thread to the task being run by another.
-Below, you will see how this can be used to create extremely flexible behavior that is 
+Below, you will see how this can be used to create extremely flexible behavior that is
 not as easy to recreate when relying only on a platforms native support.
 
 <a name="how"></a>
 <h3>How Do I Use Interruption?</h3>
 
-Interruption is somewhat open ended by design, but always serves the same purpose. 
-That purpose is to interrupt the task being executed by a thread so that it can 
-change its course of action. Usually, the new course of action is going to be 
-quickly cleanup and exit, but it doesn't have to be. Nothing is forced. 
-This allows the task to respond to interruption in the best way possible. 
-Sometimes this involves just stopping right away and returning. Other times, 
+Interruption is somewhat open ended by design, but always serves the same purpose.
+That purpose is to interrupt the task being executed by a thread so that it can
+change its course of action. Usually, the new course of action is going to be
+quickly cleanup and exit, but it doesn't have to be. Nothing is forced.
+This allows the task to respond to interruption in the best way possible.
+Sometimes this involves just stopping right away and returning. Other times,
 it may try something different whatever you're waiting for now is taking too long.
-Its up to the programmer to decide on these details. The is the source of what 
+Its up to the programmer to decide on these details. The is the source of what
 makes interruption so flexible.
 <p>
-Probably the most common, way to use interruption is to create a Thread that 
+Probably the most common, way to use interruption is to create a Thread that
 will respond to the request by stopping and exiting. This example demonstrates,
 <p>
 <pre>
@@ -142,57 +143,57 @@ class WorkerThread : public Thread {
 
   Mutex lock;
   Condition workReady;
-  
+
 public:
 
   WorkerThread() : workReady(lock) { }
-  
+
   virtual ~WorkerThread() throw() { }
-  
+
   virtual void run() throw() {
-  
+
     try {
-      
-      Guard&lt;Mutex&gt; g(lock);           
+
+      Guard&lt;Mutex&gt; g(lock);
       workReady.wait();
-          
+
       doSomeWork();
-       
+
     } catch(Interrupted_Exception&) {
-      // Thread interrupted, exit                                                               
+      // Thread interrupted, exit
       cout << "Interrupted!" << endl;
     }
-    
+
   }
 
   void doSomeWork() {
-    // ...                                                                                      
+    // ...
   }
-    
+
 };
 
 
 int main() {
 
   try {
-  
+
     // Start the worker thread
     WorkerThread t;
     t.start();
-    
+
     // Let it run for a while
-    
-    
+
+
     // User hits a button, want to exit
     t.interrupt();
     t.join();
-    
+
   } catch(Synchronization_Exception&) {
     // Error starting thread
   }
-    
+
   return 0;
-  
+
 }
 
 </pre>
@@ -211,65 +212,65 @@ class Task : public Runnable {
 public:
 
   virtual void run() throw() {
-  
+
     try {
-    
+
       if(Thread::interrupted())
         throw Interrupted_Exception();
 
       Thread::sleep(1000);
       cout << "Task Complete!" << endl;
-      
+
     } catch(Interrupted_Exception&) {
 
       // Interrupted, clean up & propogate the exception
       <b>Thread::current().interrupt();</b>
       cout << "Task Interrupted!" << endl;
- 
+
     }
 
   }
-  
+
 };
 
 class WorkerThread : public Thread {
 
   MonitoredQueue&lt;Runnable*, FastMutex&gt;& _q;
-  
+
 public:
 
   WorkerThread(MonitoredQueue&lt;Runnable*, FastMutex&gt;& q) : _q(q) { }
-  
+
   virtual ~WorkerThread() throw() { }
-  
+
   // ...
-  
+
   virtual void run() throw() {
-  
+
     Runnable* task = 0;
-    
+
     try {
-      
+
       while(!Thread::interrupted()) {
-      
+
         task = _q.next();
         task->run();
-          
+
         delete task;
-        
+
       }
-       
+
     } catch(Interrupted_Exception&) {
       // Interrupted waiting for tasks, update a log entry
     } catch(Cancellation_Exception&) {
       // Queue canceled, normal exit
     }
-    
+
     if(task)
       delete task;
-      
+
   }
-  
+
 };
 
 #define NUM_TASKS 10
@@ -277,29 +278,29 @@ public:
 int main() {
 
   try {
-  
+
     MonitoredQueue&lt;Runnable*, FastMutex&gt; q;
 
     for(int i=0; i&lt;NUM_TASKS; i++)
       q.add( RunnablePtr(new Task) );
-    
+
     // Start the worker thread
     WorkerThread t(q);
     t.start();
-    
-    // Let it run for a while   
+
+    // Let it run for a while
     Thread::sleep(2000);
 
-    // User hits a button, want to exit. 
+    // User hits a button, want to exit.
     t.interrupt();
     t.join();
-    
+
   } catch(Synchronization_Exception&) {
     // Error starting thread
   }
-    
+
   return 0;
-  
+
 }
 
 </pre>
@@ -314,28 +315,28 @@ class Task : public Runnable {
 public:
 
   virtual void run() throw() {
-  
+
     try {
-    
+
       if(Thread::interrupted())
         throw Interrupted_Exception();
 
       Thread::sleep(1000);
       cout << "Task Complete!" << endl;
-      
+
     } catch(Interrupted_Exception&) {
 
       // Interrupted, clean up & don't propogate the exception
       cout << "Task Interrupted!" << endl;
-      <b>// No exception propogated this time, thread keeps on going</b> 
+      <b>// No exception propogated this time, thread keeps on going</b>
     }
 
   }
-  
+
 };
 </pre>
 <p>
-Interruption can also be used to create a way to specifically cancel 
+Interruption can also be used to create a way to specifically cancel
 induvidual tasks, and not neccessarily the entire thread. This can
 be done easily be extending CancelableTask instead of just Runnable.
 <p>
@@ -345,24 +346,24 @@ class Task : public CancelableTask {
 public:
 
   virtual void doRun() throw() {
-  
+
     try {
-    
+
       if(Thread::interrupted())
         throw Interrupted_Exception();
 
       Thread::sleep(1000);
       cout << "Task Complete!" << endl;
-      
+
     } catch(Interrupted_Exception&) {
 
       // Interrupted, clean up & don't propogate the exception
       cout << "Task Interrupted!" << endl;
- 
+
     }
 
   }
-  
+
 };
 
 
@@ -371,11 +372,11 @@ public:
 int main() {
 
   try {
-  
+
     ConcurrentExecutor&lt;FastMutex&gt; executor;
     vector&lt;Handle&lt;Task&gt;*&gt; pending;
-    
-    // Create the tasks and submit them 
+
+    // Create the tasks and submit them
     for(int i=0; i&lt;NUM_TASKS; i++) {
 
       pending.push_back(new Handle&lt;Task&gt;(new Task));
@@ -394,15 +395,15 @@ int main() {
     executor.cancel();
 
     // Clean up the task handles
-    for(vector&lt;Handle&lt;Task&gt;*&gt;::iterator i = pending.begin(); i != pending.end(); ++i) 
+    for(vector&lt;Handle&lt;Task&gt;*&gt;::iterator i = pending.begin(); i != pending.end(); ++i)
       delete *i;
-    
+
   } catch(Synchronization_Exception&) {
     // Error starting thread
   }
-    
+
   return 0;
-  
+
 }
 
 
@@ -412,16 +413,16 @@ int main() {
 <a name="cancel"></a>
 <h3>Why Does Thread Implement Cancelable?</h3>
 Using only interruption sometimes makes it difficult to determine whether a thread
-was interrupted by the task it was running or whether the thread itself was 
-deliberately interrupted. In order to remove this ambiguity, the Cancelable 
+was interrupted by the task it was running or whether the thread itself was
+deliberately interrupted. In order to remove this ambiguity, the Cancelable
 interface is implemented.
 <p>
 The normal semantics for <b>Thread::cancel()</b> are to interrupt the thread
-and to place thread in <i>canceled</i> status. A thread with <i>canceled</i> status 
-is not forced to shutdown, its not forced to do anything - think of it as a specialized 
-form of interruption. 
+and to place thread in <i>canceled</i> status. A thread with <i>canceled</i> status
+is not forced to shutdown, its not forced to do anything - think of it as a specialized
+form of interruption.
 <p>
-The <b>Thread::canceled()</b> to function will test the current threads <i>canceled</i> status, 
+The <b>Thread::canceled()</b> to function will test the current threads <i>canceled</i> status,
 returning false if the thread was not canceled and returning true if was. Additionaly,
 this function will clear a threads <i>interrupted</i> status but it will never
 clear <i>canceled</i> status.
@@ -436,7 +437,7 @@ to realize that the last interrupt was a request for the thread to exit.
 ZThreads provides a hooking mechanism that will allow platform specific behavior to
 be associated with an invocation of <b>interrupt()</b>. A special <b>ThreadLocal</b>
 object is provided that allows a program to interact with the ZThreads library to
-accomplish this. For POSIX systems, this exposes a buffer into which an address for a 
+accomplish this. For POSIX systems, this exposes a buffer into which an address for a
 sigjmp can be placed.
 
 <pre>
@@ -454,13 +455,13 @@ ZThread::Thread::interruptKey().set(&timeout_jmp);
 // Disable the hook
 ZThread::Thread::interruptKey().set(NULL);
 
-</pre> 
+</pre>
 <p>
-For Win32 systems, this exposes a manual reset event handle that will 
-be set each time an interrupt() occurs. This can be used in conjunction with 
+For Win32 systems, this exposes a manual reset event handle that will
+be set each time an interrupt() occurs. This can be used in conjunction with
 functions like WaitForMutlipleObjects() or WSAEventSelect().
 <p>
-<pre> 
+<pre>
 // A POSIX hook implementing an interruptable for accept()
 
 HANDLE handles[2];
@@ -472,26 +473,26 @@ handles[1] = hSocket;
 switch(::WaitForMultipleObjects(2,handles,TRUE,INFINITE)) {
 case WAIT_OBJECT_0:
   // ZThread::interrupt(), handle it
-case WAIT_OBJECT_0 + 1:  
+case WAIT_OBJECT_0 + 1:
   // Socket ready
 default:
   // ...
 }
 
-</pre> 
- 
+</pre>
+
 <p>
-Many other methods exist for terminating other blocking operations early. 
-For example, a socket can be closed to stop a connect() that is taking too long. 
-Additionally, there are design patterns that can help make this easier to accomplish, 
+Many other methods exist for terminating other blocking operations early.
+For example, a socket can be closed to stop a connect() that is taking too long.
+Additionally, there are design patterns that can help make this easier to accomplish,
 reducing the number of places special attention is required (limiting it only
-to places where poll() or select() is used), by mixing threads with asynchronous I/O. 
+to places where poll() or select() is used), by mixing threads with asynchronous I/O.
 [Schmidt 00]
 <p>
 <p>
 <p>
 The implementation of these concepts is freely available as part of the ZThreads library.
- 
+
 
 <h3>References</h3>
 
@@ -503,7 +504,7 @@ The implementation of these concepts is freely available as part of the ZThreads
 </td>
 <td>
 Fleiner, Claudio, Jerry Feldman, and David Stoutamire  ``<a href="http://www.acl.lanl.gov/Pooma96/abstracts/fleiner.html">Killing Threads Considered Dangerous</a>'',<br>
-POOMA '96 Conference, 1996. 
+POOMA '96 Conference, 1996.
 </td>
 </tr>
 

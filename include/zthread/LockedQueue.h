@@ -31,7 +31,7 @@ namespace ZThread {
 
 /**
  * @class LockedQueue
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-06-10T07:02:13-0400>
  * @version 2.2.1
  *

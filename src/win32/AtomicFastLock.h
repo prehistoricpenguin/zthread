@@ -35,7 +35,7 @@ namespace ZThread {
 /**
  * @class FastLock
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @author Eric Crahen <zthread@code-foo.com>
  * @date <2002-05-24T11:36:51-0400>
  * @version 2.1.6
  *
