@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="ZTHREAD_2_2_7_static" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="ZTHREAD_2_2_8_static" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Static Library" 0x0104
 
-CFG=ZTHREAD_2_2_7_static - Win32 Debug
+CFG=ZTHREAD_2_2_8_static - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "ZTHREAD_2_2_7_static.mak".
+!MESSAGE NMAKE /f "ZTHREAD_2_2_8_static.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "ZTHREAD_2_2_7_static.mak" CFG="ZTHREAD_2_2_7_static - Win32 Debug"
+!MESSAGE NMAKE /f "ZTHREAD_2_2_8_static.mak" CFG="ZTHREAD_2_2_8_static - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "ZTHREAD_2_2_7_static - Win32 Release" (based on "Win32 (x86) Static Library")
-!MESSAGE "ZTHREAD_2_2_7_static - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "ZTHREAD_2_2_8_static - Win32 Release" (based on "Win32 (x86) Static Library")
+!MESSAGE "ZTHREAD_2_2_8_static - Win32 Debug" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -28,7 +28,7 @@ CFG=ZTHREAD_2_2_7_static - Win32 Debug
 CPP=cl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "ZTHREAD_2_2_7_static - Win32 Release"
+!IF  "$(CFG)" == "ZTHREAD_2_2_8_static - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -52,7 +52,7 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo /out:"Release_static/ZThread.lib"
 
-!ELSEIF  "$(CFG)" == "ZTHREAD_2_2_7_static - Win32 Debug"
+!ELSEIF  "$(CFG)" == "ZTHREAD_2_2_8_static - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -80,8 +80,8 @@ LIB32=link.exe -lib
 
 # Begin Target
 
-# Name "ZTHREAD_2_2_7_static - Win32 Release"
-# Name "ZTHREAD_2_2_7_static - Win32 Debug"
+# Name "ZTHREAD_2_2_8_static - Win32 Release"
+# Name "ZTHREAD_2_2_8_static - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
