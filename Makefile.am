@@ -2,7 +2,6 @@
 ## extra files
 EXTRA_DIST = \
 BUILDING \
-THANK.YOU \
 LGPL.TXT \
 depcomp
 
