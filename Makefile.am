@@ -5,9 +5,6 @@ README.1ST \
 BUILDING \
 THANK.YOU \
 LGPL.TXT \
-ZTHREAD_2_2_11.dsw \
-ZTHREAD_2_2_11_shared.dsp \
-ZTHREAD_2_2_11_static.dsp \
 depcomp
 
 
@@ -31,6 +28,10 @@ uninstall-local:
 
 ## include the doc & share directories in the distribution
 dist-hook:
+	cp -pR $(top_srcdir)/build $(distdir)
+	cp -pR $(top_srcdir)/build/VC6 $(distdir)
+	cp -pR $(top_srcdir)/build/VC7 $(distdir)
+	cp -pR $(top_srcdir)/build/DevC\+\+ $(distdir)
 	cp -pR $(top_srcdir)/doc $(distdir)
 	cp -pR $(top_srcdir)/share $(distdir)
 	cp -pR $(top_srcdir)/contrib $(distdir)
