@@ -1,5 +1,5 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
+ *  ZThreads, a platform-independant, multithreading and
  *  synchroniation library
  *
  *  Copyright (C) 2001, 2002 Eric Crahen, See LGPL.TXT for details
@@ -28,16 +28,16 @@ namespace ZThread {
  * @class NonCopyable
  * @author Eric Crahen <crahen@cse.buffalo.edu>
  * @date <2002-05-30T08:34:02-0400>
- * @version 2.2.0
+ * @version 2.2.11
  *
  * Some objects kind of objects should not be copied. This is particularly true
- * of objects involved in providing mutually exclusive access to something 
+ * of objects involved in providing mutually exclusive access to something
  * (e.g. Mutexes, Queues, Semaphores, etc.)
  *
  * Based on Dave Abrahams contribution to the Boost library.
  */
 class NonCopyable {
-  
+
   //! Restrict the copy constructor
   NonCopyable(const NonCopyable&);
 
@@ -47,13 +47,13 @@ class NonCopyable {
 protected:
 
   //! Create a NonCopyable object
-  inline NonCopyable() { }
+  NonCopyable() { }
 
   //! Destroy a NonCopyable object
-  inline ~NonCopyable() { }
+  ~NonCopyable() { }
 
-}; 
+};
 
-} // namespace ZThread 
+} // namespace ZThread
 
 #endif // __ZTNONCOPYABLE_H__

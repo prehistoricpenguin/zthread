@@ -1,5 +1,5 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
+ *  ZThreads, a platform-independant, multithreading and
  *  synchroniation library
  *
  *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
@@ -36,11 +36,11 @@ class ThreadImpl;
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
  * @date <2002-07-13T10:10:33-0400>
- * @version 2.2.9
+ * @version 2.2.11
  *
- * A Thread is a special kind of Runnable object that represents 
+ * A Thread is a special kind of Runnable object that represents
  * a thread of execution in a program. It allows tasks to be
- * started an run concurrently. 
+ * started an run concurrently.
  *
  * There are two kinds of threads. Non-daemon threads and daemon threads.
  * Non-daemon threads must be joined. Non-daemon threads must be joined,
@@ -52,8 +52,8 @@ class ThreadImpl;
  * {
  *   MyThread t;         // Thread object's lifetime begins
  *   t.run();            // Task's effective lifetime begins
- *   t.join();           // Task's effective lifetime ends 
- * }                     // Thread object's lifetime begins 
+ *   t.join();           // Task's effective lifetime ends
+ * }                     // Thread object's lifetime begins
  *
  * @endcode
  *
@@ -65,20 +65,20 @@ class ThreadImpl;
  * {
  *   MyThread t;         // Thread object's lifetime begins
  *   t.setDaemon(true);
- *   t.run();            // Task's effective lifetime begins   
- * }                     // Thread object's lifetime begins 
+ *   t.run();            // Task's effective lifetime begins
+ * }                     // Thread object's lifetime begins
  *
- *                       // Task's effective lifetime ends 
- * 
+ *                       // Task's effective lifetime ends
+ *
  * @endcode
- * 
+ *
  * <b>Using:</b>
  *
  * There are two way to use threads. The first is to extend the Thread class.
  * This creates a heavy-wieght task; because the task is always associated with
  * the overhead of a specific thread. Afterall, it is a Thread.
  *
- * @code 
+ * @code
  *
  * class MyThread : public Thread {
  * public:
@@ -100,12 +100,12 @@ class ThreadImpl;
  *     MyThread t;
  *     t.start();
  *
- *   } catch(Synchronization_Exception&) {  
+ *   } catch(Synchronization_Exception&) {
  *     std::cerr << "error starting thread!" << std::endl;
  *   }
  *
  * }
- * 
+ *
  * @endcode
  *
  * Such a thread can be run using the start() function.
@@ -118,12 +118,12 @@ class ThreadImpl;
  *
  * @endcode
  *
- * The second way is create extend the Runnable class. This creates a 
+ * The second way is create extend the Runnable class. This creates a
  * light-weight task; because it is not associated with any one specific
  * thread. This is an application of the Command pattern.
  *
- * @code 
- * 
+ * @code
+ *
  * class MyRunnable : public Runnable {
  * public:
  *
@@ -136,14 +136,14 @@ class ThreadImpl;
  *  }
  *
  * };
- * 
+ *
  * @endcode
  *
- * When Runnable objects are be submitted to Threads for execution they 
- * are wrapped with a reference counting object (called Handle) to simplify 
- * the task of keeping track of them. These wrappers are created for you 
+ * When Runnable objects are be submitted to Threads for execution they
+ * are wrapped with a reference counting object (called Handle) to simplify
+ * the task of keeping track of them. These wrappers are created for you
  * automatically using the RunnablePtr() function.
- * 
+ *
  * @code
  *
  * // Submit a series of tasks to different threads
@@ -157,7 +157,7 @@ class ThreadImpl;
  *
  * An instance of a Runnable class can also be shared and submitted to several threads;
  * rather than creating a new Runnable object for each thread.
- * 
+ *
  * @code
  *
  * // Submit a single task to different threads
@@ -176,12 +176,12 @@ class ThreadImpl;
  *
  * <b>Interrupting:</b>
  *
- * Threads are interruptible. Each thread has an <i>interrupted</i> status 
+ * Threads are interruptible. Each thread has an <i>interrupted</i> status
  * associated with it. This is set with the interrupt() method. A thread with
- * an <i>interrupted</i> status will throw an Interrupted_Exception if it 
+ * an <i>interrupted</i> status will throw an Interrupted_Exception if it
  * attempts a blocking operation (sleep(), Lockable::acquire(), Waitable::wait(), ...)
- * and its <i>interrupted</i> status will be reset. Calling Thread::interrupted() 
- * will allow the currently executing thread to check and reset its <i>interrupted</i> 
+ * and its <i>interrupted</i> status will be reset. Calling Thread::interrupted()
+ * will allow the currently executing thread to check and reset its <i>interrupted</i>
  * status in a single operation.
  *
  * <b>Canceling:</b>
@@ -189,11 +189,11 @@ class ThreadImpl;
  * Threads are Cancelable objects. A Thread extends the usual cancelation semantics
  * to have the following meaning.
  *
- * <b>Disabling</b> 
+ * <b>Disabling</b>
  *
  * A cancel()ed thread is placed into both <i>interrupted</i> and <i>canceled</i>
  * status. This allows interrupt sensative code to respond to cancel() naturally.
- * The Thread::canceled() function will report the <i>canceled</i> status of a 
+ * The Thread::canceled() function will report the <i>canceled</i> status of a
  * thread and clear its <i>interrupted</i> status. However, <i>canceled</i> status
  * can never be removed.
  *
@@ -202,22 +202,22 @@ class ThreadImpl;
  * A thread that has been cancel()ed is not forced to exit. It behaves as thread
  * that has been interrupted would. By canceling a thread, it is sent a specific
  * message that a request for it to exit has arrived. The thread may then respond
- * by performing a graceful shutdown, performing whatever work is neccessary to do 
+ * by performing a graceful shutdown, performing whatever work is neccessary to do
  * so.
  *
  * By implementing the Cancelable interface to work with the interruption mechanism,
  * it is possible to write very elegant code and to create some flexible task oriented
  * frameworks.
  */
-class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnable { 
+class ZTHREAD_API Thread : public Cancelable, public Runnable, private NonCopyable {
  public:
 
   /**
    * @class Reference
    *
-   * The Thread::Reference class is a class that lives on 
-   * the local stack. It's used to manipulate the current thread 
-   * without affecting the reference count. 
+   * The Thread::Reference class is a class that lives on
+   * the local stack. It's used to manipulate the current thread
+   * without affecting the reference count.
    */
   class Reference {
 
@@ -229,12 +229,12 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
     // Restrict heap allocation
     static void * operator new(size_t size);
     static void * operator new[](size_t size);
-    
+
     Reference();
     Reference& operator=(const Reference&);
 
     Reference(ThreadImpl* impl) : _impl(impl) { }
-    
+
   public:
 
     Reference(const Reference& r) : _impl(r._impl) { }
@@ -244,52 +244,52 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
     void setPriority(Priority p) throw();
 
     Priority getPriority() throw();
-  
+
   }; /* Reference */
 
  private:
-  
+
   //! Used to provide a hook for other libraries
   //static ThreadLocal<void*> _interruptKey;
-  
+
   //! Delegate
   ThreadImpl* _impl;
-  
+
   public:
 
   /**
    * Create a new thread object that can execute tasks in another thread
    * of execution
    *
-   * @exception Initialization_Exception - thrown if there are not 
+   * @exception Initialization_Exception - thrown if there are not
    * enough resources to do this
    */
   Thread() /* throw(Synchronization_Exception) */;
-  
+
   //! Destroy a Thread
   virtual ~Thread() throw();
-  
+
   //! Comparison operator
   inline bool operator==(const Thread& t) const {
     return _impl == t._impl;
   }
-  
+
   //! Comparison operator
   inline bool operator!=(const Thread& t) const {
     return !(*this == t);
   }
-    
+
   //! Comparison operator
   inline bool operator==(const Reference& r) const {
     return _impl == r._impl;
   }
-  
+
   //! Comparison operator
   inline bool operator!=(const Reference& r) const {
     return !(*this == r);
   }
-  
- 
+
+
   /**
    * Wait for the thread represented by this object to exit.
    * Only one thread can wait on any other thread.
@@ -301,24 +301,24 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    * @exception InvalidOp_Exception thrown if the thread cannot be joined
    * @exception Interrupted_Exception thrown if the joining thread has been interrupt()ed
    */
-  bool join(unsigned long timeout = 0) 
+  bool join(unsigned long timeout = 0)
     /* throw(Synchronization_Exception) */;
 
   /**
-   * This can be implemented by subclasses to create a thread with 
+   * This can be implemented by subclasses to create a thread with
    * a built in task. The default behavior is for the task to just
    * return immediately, doing nothing.
    */
-  virtual void run() throw(); 
-  
+  virtual void run() throw();
+
   /**
    * From the context of this Thread, execute the task defined by the given
    * Runnable object.
    *
    * @exception InvalidOp_Exception thrown if a thread has already
-   * been assigned a task and is running; or if this thread has already 
+   * been assigned a task and is running; or if this thread has already
    * been used to run a task.
-   * @exception Synchronization_Exception thrown if there is some other error 
+   * @exception Synchronization_Exception thrown if there is some other error
    * starting the thread
    */
   void run(const RunnableHandle& task)
@@ -345,7 +345,7 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    *
    * @exception Synchronization_Exception thrown if there is an error starting the thread
    */
-  void start() 
+  void start()
     /* throw(Synchronization_Exception) */;
 
   /**
@@ -358,28 +358,28 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
   void setPriority(Priority p) throw();
 
   /**
-   * Get the priority of this Thread. 
-   * 
+   * Get the priority of this Thread.
+   *
    * @return Priority
    */
   Priority getPriority() throw();
 
-  /** 
+  /**
    * Interrupts this thread.
    *
    * If this thread is blocked when this method is called, the thread will
    * abort that blocking operation with an Interrupted_Exception.
    *
    * Otherwise, the <i>interrupted</i> status of the thread is set. This status
-   * is cleared by one of two methods. The first is by attempting another 
-   * blocking operation; this will clear the <i>interrupted</i> status and 
+   * is cleared by one of two methods. The first is by attempting another
+   * blocking operation; this will clear the <i>interrupted</i> status and
    * immediately abort the operation with an Interrupted_Exception. The second
    * is to call isInterrupted() from the context of this thread.
    *
    * A thread is never started in an interrupted state. The interrupted status
    * of a thread will be discarded when the thread starts.
    *
-   * Interrupting a thread that is no longer running will have no effect other 
+   * Interrupting a thread that is no longer running will have no effect other
    * than setting the interrupt status permanently. When a thread exits, that
    * status can no longer be cleared.
    *
@@ -389,7 +389,7 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    * class to take advantage of this hint to implement i/o interruption for thier system.
    */
   virtual bool interrupt() throw();
-    
+
   /**
    * Tests whether the current Thread has been interrupt()ed, clearing
    * its interruption status.
@@ -399,7 +399,7 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
   static bool interrupted() throw();
 
   /**
-   * Tests whether the current Thread has been canceled, and clears the 
+   * Tests whether the current Thread has been canceled, and clears the
    * interrupted status.
    *
    * @return bool true only if the Thread::cancel() has been invoked.
@@ -407,7 +407,7 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
   static bool canceled() throw();
 
   /**
-   * Tests whether this thread has been canceled. If called from the context 
+   * Tests whether this thread has been canceled. If called from the context
    * of this thread, the interrupted status is cleared.
    *
    * @return bool true if the Thread was canceled, otherwise false
@@ -415,7 +415,7 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    * @post There is no serlization garuntee with this method, Its possible
    * for a thread to be canceled immediately after this functions returns.
    */
-  virtual bool isCanceled() 
+  virtual bool isCanceled()
     /* throw(Synchronization_Exception) */;
 
   /**
@@ -446,9 +446,9 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    */
   void setDaemon(bool flag) /* throw(Synchronization_Exception) */;
 
-  /** 
+  /**
    * Put the currently executing thread to sleep for a given amount of
-   * time. 
+   * time.
    *
    * @param timeout - maximum amount of time (milliseconds) this method could block
    *
@@ -456,14 +456,14 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    */
   static void sleep(unsigned long timeout)
      /* throw(Synchronization_Exception) */;
-  
+
   /**
    * Cause the currently executing thread to yield, allowing the scheduler
    * to assign some execution time to another thread.
    */
   static void yield() throw();
 
-  /** 
+  /**
    * Get a reference to the currently executing thread.
    *
    * @return Reference - object representing the current thread.
@@ -483,22 +483,22 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    * handles. Because there are so many ways to use these handles creatively
    * to handle various situation, the interruptKey() on a Win32 system will
    * contain the value of a HANDLE. This handle can be used with functions
-   * like WaitForMutlipleObjects() or WSAEventSelect(), it will be 
+   * like WaitForMutlipleObjects() or WSAEventSelect(), it will be
    * notified with SetEvent() as a thread was interrupted.
    *
    * POSIX details:
    *
-   * SIG_ALRM will be generated and should interrupt any i/o that is 
-   * in progress. Most POSIX functions will return EINTR in such a 
+   * SIG_ALRM will be generated and should interrupt any i/o that is
+   * in progress. Most POSIX functions will return EINTR in such a
    * situation. Example:
    *
    * @code
    *
    * char buf[64];
    * size_t sz = 64;
-   * 
+   *
    * do {
-   * 
+   *
    *   ssize_t n = read(fd, buf, sz);
    *
    *   if(n < 0 && errno == EINTR && Thread::current()->isInterrupted()) {
@@ -507,9 +507,9 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    *   }
    *
    * } while(n < 0 && errno == EINTR);
-   * 
+   *
    * @endcode
-   * 
+   *
    * To write some piece of code that can be notified of a Thread::interrupt()
    * if it is performing some action that does not return EINTR another
    * method is provided. The interruptKey() will contain the address of a
@@ -545,7 +545,7 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    */
 
 }; /* Thread */
-  
+
 } // naemspace ZThread
 
 #endif // __ZTTHREAD_H__

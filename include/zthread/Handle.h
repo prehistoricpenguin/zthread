@@ -92,7 +92,7 @@ Handle<T> RunnablePtr(T* t) {
   return Handle<T>(t); 
 }
 
-}; 
+} 
 
 #endif // __ZTHANDLE_H__
 

@@ -55,7 +55,7 @@ class FastRecursiveLock : private NonCopyable {
   /**
    * Create a new FastRecursiveLock
    */
-    FastRecursiveLock() : _count(0) { 
+  FastRecursiveLock() : _count(0) { 
 
     _hMutex = ::CreateMutex(0, 0, 0);
     assert(_hMutex != NULL);
@@ -70,15 +70,7 @@ class FastRecursiveLock : private NonCopyable {
   }
 
   
-  void acquire();
-
-  void release();
-
-  bool tryAcquire(unsigned long);
-
-}; /* FastRECURSIVELock */
-
-void FastRecursiveLock::acquire() {
+  void acquire() {
 
     if(::WaitForSingleObject(_hMutex, INFINITE) != WAIT_OBJECT_0) {
       assert(0);
@@ -87,31 +79,32 @@ void FastRecursiveLock::acquire() {
 
   }
 
-void FastRecursiveLock::release() {
+  void release() {
 
-  if(::ReleaseMutex(_hMutex) == 0) {
-    assert(0);
-    throw Synchronization_Exception();
+    if(::ReleaseMutex(_hMutex) == 0) {
+      assert(0);
+      throw Synchronization_Exception();
+    }
+
   }
-  
-}
-    
-bool FastRecursiveLock::tryAcquire(unsigned long) {
 
-  switch(::WaitForSingleObject(_hMutex, 0)) {
-    case WAIT_OBJECT_0:
-      return true;
-    case WAIT_TIMEOUT:
-      return false;
-    default:
-      break;
+  bool tryAcquire(unsigned long) {
+
+    switch(::WaitForSingleObject(_hMutex, 0)) {
+      case WAIT_OBJECT_0:
+        return true;
+      case WAIT_TIMEOUT:
+        return false;
+      default:
+        break;
     }
 
     assert(0);
     throw Synchronization_Exception();
 
-}
+  }
 
+}; /* FastRecursiveLock */
 
 } // namespace ZThread
 
