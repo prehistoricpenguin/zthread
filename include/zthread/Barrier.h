@@ -25,6 +25,7 @@
 #include "zthread/Condition.h"
 #include "zthread/Guard.h"
 #include "zthread/Waitable.h"
+#include "zthread/Runnable.h"
 
 namespace ZThread {
 
