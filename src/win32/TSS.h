@@ -74,7 +74,7 @@ class TSS {
   *
   * @exception InvalidOp_exception thrown when the tss is not properly initialized
   */
- inline T get() const throw() {
+ inline T get() const {
 
   if(!_valid)
     throw InvalidOp_Exception();
@@ -91,7 +91,7 @@ class TSS {
   *
   * @exception InvalidOp_exception thrown when the tss is not properly initialized
   */
- inline T set(T value) const throw() {
+ inline T set(T value) const {
 
   T oldValue = get();
   ::TlsSetValue(_key, value);
