@@ -1,7 +1,7 @@
 VERSION 2.2.8:
 
-  Added MacOS support. This has been tested with MacOS X only.
-
+  Added MacOS support. This has been tested with MacOS X only
+	
   Updated BoundedQueue.h
   Updated the vannila primatives
 
