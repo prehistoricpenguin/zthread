@@ -1,3 +1,5 @@
+AC_REVISION($Revision: 1.2 $ZT_VERSION $)
+
 AC_INIT
 AC_CONFIG_SRCDIR([README])
 AC_COPYRIGHT([Eric Crahen, 2000-2002])
@@ -7,7 +9,7 @@ AC_CANONICAL_TARGET
 
 ZT_MAJOR_VERSION=2
 ZT_MINOR_VERSION=2
-ZT_MICRO_VERSION=7
+ZT_MICRO_VERSION=8
 ZT_INTERFACE_AGE=2
 ZT_BINARY_AGE=2
 ZT_VERSION=$ZT_MAJOR_VERSION.$ZT_MINOR_VERSION.${ZT_MICRO_VERSION}
@@ -21,8 +23,6 @@ AC_SUBST(ZT_VERSION)
 
 
 dnl prepare version info
-AC_REVISION($Revision: 1.1 $ZT_VERSION $)
-	
 LT_RELEASE=$ZT_MAJOR_VERSION.$ZT_MINOR_VERSION
 LT_CURRENT=`expr $ZT_MICRO_VERSION - $ZT_INTERFACE_AGE`
 LT_REVISION=$ZT_INTERFACE_AGE
@@ -36,7 +36,7 @@ AC_SUBST(LT_AGE)
 
 AM_INIT_AUTOMAKE(ZThread, $ZT_VERSION)
 
-AM_CONFIG_HEADER(src/config.h:src/config.h.in)
+AM_CONFIG_HEADER(src/config.h)
 AM_ACLOCAL_INCLUDE(share)
 
 dnl Check for support
@@ -47,14 +47,27 @@ LINKER_OPTIONS=""
 
 dnl Check for pthreads support
 AM_WITH_PTHREAD_INFO
-if test x"$PTHREAD_CFLAGS" != x; then
-  COMPILER_OPTIONS="$PTHREAD_CFLAGS"
-fi
-if test x"$PTHREAD_LIBS" != x; then
-  LINKER_OPTIONS="$PTHREAD_LIBS"
-fi
-
 AM_WITH_DOXYGEN
+
+dnl Setup compiler/linker options based on the target type
+case "$target" in
+*-*-mingw32*)
+    dnl MingW32 should use native win32 threads
+    ;;
+*-apple-darwin*)
+    dnl Use the Mac multiprocessing library
+    LINKER_OPTIONS="-framework CoreServices"
+    ;;
+*) 
+    dnl Assume pthreads
+    if test x"$PTHREAD_CFLAGS" != x; then
+      COMPILER_OPTIONS="$PTHREAD_CFLAGS"
+    fi
+    if test x"$PTHREAD_LIBS" != x; then
+      LINKER_OPTIONS="$PTHREAD_LIBS"
+    fi
+    ;;
+esac
 
 dnl Switch to C++ mode and check for needed C++ headers
 AC_LANG_PUSH([C++])

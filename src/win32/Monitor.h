@@ -33,8 +33,8 @@ namespace ZThread {
 /**
  * @class Monitor
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-02T11:39:33-0400>
- * @version 2.2.1
+ * @date <2002-06-29T11:39:01-0400>
+ * @version 2.2.8
  */
 class Monitor : public Status, private NonCopyable {
 
@@ -139,7 +139,7 @@ class Monitor : public Status, private NonCopyable {
    *
    * @see interrupt()
    */
-  void cancel();
+  bool cancel();
 
   /**
    * Test the CANCELED Status, clearing the INTERRUPTED status if set.

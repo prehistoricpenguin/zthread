@@ -4,7 +4,7 @@
 
 namespace ZThread {
 
-const ThreadOps ThreadOps::INVALID; 
+const ThreadOps ThreadOps::INVALID(0); 
 
 /**
  * Detect OS at runtime and attempt to locate the SwitchToThread

@@ -1,3 +1,11 @@
+VERSION 2.2.8:
+
+  Added MacOS support. This has been tested with MacOS X only.
+
+  Updated BoundedQueue.h
+  Updated the vannila primatives
+
+	
 VERSION 2.2.7:
 
   Apply user submitted patch to remove non-nothrow exception specifications. The

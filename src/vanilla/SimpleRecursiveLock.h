@@ -32,8 +32,8 @@ namespace ZThread {
  * @class FastRecursiveLock
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-28T16:40:03-0700>
- * @version 2.2.0
+ * @date <2002-06-29T11:38:40-0400>
+ * @version 2.2.8
  *
  * This implementation of a FastRecursiveLock uses the which ever FastLock
  * that is selected to create a recursive spin lock. 
@@ -100,7 +100,7 @@ public:
   
   inline bool tryAcquire(unsigned long timeout=0) {
 
-    ThreadOps self = ThreadOps::self();
+    ThreadOps self(ThreadOps::self());
     bool wasLocked = false;
 
     _lock.acquire();

@@ -42,8 +42,8 @@ extern "C" void* _dispatch(void*);
 /**
  * @class ThreadOps
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-29T15:21:06-0400>
- * @version 2.2.0
+ * @date <2002-06-29T11:39:14-0400>
+ * @version 2.2.8
  *
  * This class is an abstraction used to perform various operations on a 
  * native POSIX thread.

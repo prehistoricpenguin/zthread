@@ -32,8 +32,8 @@ namespace ZThread {
  * @class FastRecursiveLock
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-28T16:41:49-0700>
- * @version 2.2.0
+ * @date <2002-06-29T11:38:31-0400>
+ * @version 2.2.8
  *
  * This is a vanilla FastRecursiveLock implementation for a
  * system that doesn't provide recurisve locks. This implementation
@@ -67,7 +67,7 @@ class FastRecursiveLock : private NonCopyable {
   
   void acquire() {
 
-    ThreadOps self = ThreadOps::self();
+    ThreadOps self(ThreadOps::self());
 
     // Try to lock the blocking mutex first
     bool wasLocked = _blockingLock.tryAcquire();
@@ -107,7 +107,7 @@ class FastRecursiveLock : private NonCopyable {
   
   bool tryAcquire(unsigned long timeout = 0) {
 
-    ThreadOps self = ThreadOps::self();
+    ThreadOps self(ThreadOps::self());
 
     // Try to lock the blocking mutex first
     bool wasLocked = _blockingLock.tryAcquire();

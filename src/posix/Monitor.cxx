@@ -181,17 +181,17 @@ bool Monitor::isCanceled() {
 
 }
 
-void Monitor::cancel() {
+bool Monitor::cancel() {
 
   // Serialize access to the state
   pthread_mutex_lock(&_waitLock);
 
-  bool wasInterruptable = !pending(INTERRUPTED);
+  bool wasInterrupted = !pending(INTERRUPTED);
   bool hadWaiter = _waiting;
  
   push(CANCELED);
 
-  if(wasInterruptable) {
+  if(wasInterrupted) {
  
     // Update the state & wake the waiter if there is one
     push(INTERRUPTED);
@@ -202,6 +202,8 @@ void Monitor::cancel() {
   }
 
   pthread_mutex_unlock(&_waitLock);
+
+  return wasInterrupted;
 
 }
 

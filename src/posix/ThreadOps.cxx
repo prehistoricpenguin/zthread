@@ -33,8 +33,7 @@
 
 namespace ZThread {
 
-const ThreadOps ThreadOps::INVALID; 
-
+const ThreadOps ThreadOps::INVALID(0); 
 
 bool ThreadOps::join(ThreadOps* ops) {
 
