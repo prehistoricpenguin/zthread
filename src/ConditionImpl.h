@@ -31,9 +31,9 @@ namespace ZThread {
 
 /**
  * @class ConditionImpl
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-01T21:10:03-0400>
- * @version 2.2.0
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:00:21-0500>
+ * @version 2.2.11
  *
  * The ConditionImpl template allows how waiter lists are sorted
  * to be parameteized
@@ -66,8 +66,21 @@ class ConditionImpl {
   /**
    * Destroy this ConditionImpl, release its resources
    */
-  ~ConditionImpl() throw() {
+  ~ConditionImpl() throw();
 
+  void signal();
+
+  void broadcast();
+
+  void wait();
+
+  bool wait(unsigned long timeout);
+
+};
+
+
+template <typename List> 
+ConditionImpl<List>::~ConditionImpl() throw() {
 
 #ifndef NDEBUG
 
@@ -84,11 +97,11 @@ class ConditionImpl {
   }
 
 
-  /**
-   * Signal the condition variable, waking one thread if any.
-   */
-  void signal() 
-    /* throw(Synchronization_Exception) */ {
+/**
+ * Signal the condition variable, waking one thread if any.
+ */
+template <typename List> 
+void ConditionImpl<List>::signal() {
 
     Guard<FastLock> g1(_lock);
 
@@ -136,12 +149,12 @@ class ConditionImpl {
 
   }
 
-  /**
-   * Broadcast to the condition variable, waking all threads waiting at the time of
-   * the broadcast.
-   */
-  void broadcast() 
-    /* throw(Synchronization_Exception) */ {
+/**
+ * Broadcast to the condition variable, waking all threads waiting at the time of
+ * the broadcast.
+ */
+template <typename List> 
+void ConditionImpl<List>::broadcast() {
 
     Guard<FastLock> g1(_lock);
 
@@ -185,17 +198,17 @@ class ConditionImpl {
 
   }
 
-  /** 
-   * Cause the currently executing thread to block until this ConditionImpl has
-   * been signaled, the threads state changes.
-   *
-   * @param predicate Lockable& 
-   *
-   * @exception Interrupted_Exception thrown when the caller status is interrupted
-   * @exception Synchronization_Exception thrown if there is some other error.
-   */
-  void wait() 
-    /* throw(Synchronization_Exception) */ {
+/** 
+ * Cause the currently executing thread to block until this ConditionImpl has
+ * been signaled, the threads state changes.
+ *
+ * @param predicate Lockable& 
+ *
+ * @exception Interrupted_Exception thrown when the caller status is interrupted
+ * @exception Synchronization_Exception thrown if there is some other error.
+ */
+template <typename List> 
+void ConditionImpl<List>::wait() {
 
     // Get the monitor for the current thread
     ThreadImpl* self = ThreadImpl::current();
@@ -265,20 +278,20 @@ class ConditionImpl {
   }
 
 
-  /**
-   * Cause the currently executing thread to block until this ConditionImpl has
-   * been signaled, or the timeout expires or the threads state changes.
-   *
-   * @param _predicateLock Lockable& 
-   * @param timeout maximum milliseconds to block.
-   *
-   * @return bool
-   *
-   * @exception Interrupted_Exception thrown when the caller status is interrupted
-   * @exception Synchronization_Exception thrown if there is some other error.
-   */
-  bool wait(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */ {
+/**
+ * Cause the currently executing thread to block until this ConditionImpl has
+ * been signaled, or the timeout expires or the threads state changes.
+ *
+ * @param _predicateLock Lockable& 
+ * @param timeout maximum milliseconds to block.
+ *
+ * @return bool
+ *
+ * @exception Interrupted_Exception thrown when the caller status is interrupted
+ * @exception Synchronization_Exception thrown if there is some other error.
+ */
+template <typename List> 
+bool ConditionImpl<List>::wait(unsigned long timeout) {
   
     // Get the monitor for the current thread
     ThreadImpl* self = ThreadImpl::current();
@@ -357,8 +370,6 @@ class ConditionImpl {
     return true;
 
   }
-
-};
 
 } // namespace ZThread
 

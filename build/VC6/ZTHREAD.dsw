@@ -1,0 +1,101 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "CONDITION_EXAMPLE"=.\CONDITION_EXAMPLE.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ZTHREAD_STATIC
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "MUTEX_EXAMPLE"=.\MUTEX_EXAMPLE.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ZTHREAD_STATIC
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "SEMAPHORE_EXAMPLE"=.\SEMAPHORE_EXAMPLE.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ZTHREAD_STATIC
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "THREAD_EXAMPLE"=.\THREAD_EXAMPLE.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name ZTHREAD_STATIC
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ZTHREAD_SHARED"=.\ZTHREAD_SHARED.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ZTHREAD_STATIC"=.\ZTHREAD_STATIC.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

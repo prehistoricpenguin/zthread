@@ -36,8 +36,8 @@ class Runnable;
 
 /**
  * @class ThreadOps
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-29T11:39:07-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T04:21:15-0500>
  * @version 2.2.8
  *
  * This class is an abstraction used to perform various operations on a 
@@ -150,6 +150,6 @@ protected:
 };
 
 
-};
+}
 
 #endif

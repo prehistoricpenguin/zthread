@@ -64,4 +64,16 @@ void* AbstractThreadLocal::set(void* newValue) const throw() {
 
 }
 
+
+void AbstractThreadLocal::destroyValue(void*) const throw() {
+}
+  
+bool AbstractThreadLocal::propogateValue() const throw() {
+  return false;
+}
+
+void* AbstractThreadLocal::childValue(void*) const throw() {
+  return (void*)0;
+}
+
 } // namespace ZThread 

@@ -41,15 +41,18 @@ class Launcher : public Runnable {
 public:
   
   Launcher(ThreadImpl* a, ThreadImpl* b, const RunnableHandle& c) : x(a), y(b), z(c) {}
-  virtual ~Launcher() throw() {}
-  
+
+  ~Launcher() throw() {}
+
   virtual void run() throw() {
     
     y->dispatch(x,y,z);
-    
-  }
   
+  }
+
 };
+ 
+
 
 /**
  * Initialize a new ThreadImpl object, giving it a default priority.
@@ -76,6 +79,40 @@ ThreadImpl::~ThreadImpl()
 
   ZTDEBUG("Thread destroyed.\n");
 
+}
+
+Monitor& ThreadImpl::getMonitor() {
+  return _monitor;
+}
+
+void ThreadImpl::cancel() throw() { 
+  _monitor.cancel(); 
+}
+
+bool ThreadImpl::interrupt() throw() { 
+  return _monitor.interrupt(); 
+}
+
+bool ThreadImpl::isInterrupted() throw() {
+  return _monitor.isInterrupted();
+}
+
+bool ThreadImpl::isCanceled() throw() {
+  return _monitor.isCanceled();
+}
+
+
+Priority ThreadImpl::getPriority() const {
+  return _priority;  
+}
+
+ThreadLocalMap& ThreadImpl::getThreadLocalMap() {
+  return _localValues;
+}
+
+
+bool ThreadImpl::isReference() throw() {
+  return _state.isReference();
 }
 
 /**
@@ -291,8 +328,7 @@ ThreadImpl* ThreadImpl::current() throw() {
  * @post the calling thread is blocked by waiting on the internal condition
  * variable. This can be signaled in the monitor of an interrupt
  */
-void ThreadImpl::sleep(unsigned long ms) 
-  /* throw(Synchronization_Exception) */ {
+void ThreadImpl::sleep(unsigned long ms) {
 
   // Make sleep()ing for 0 milliseconds equivalent to a yield.
   if(ms == 0) {
@@ -349,8 +385,7 @@ void ThreadImpl::yield() throw() {
 
 }
 
-void ThreadImpl::run(const RunnableHandle& task) 
-  /* throw(Synchronization_Exception) */ {
+void ThreadImpl::run(const RunnableHandle& task) {
 
   Guard<Monitor> g1(_monitor);
 

@@ -33,49 +33,48 @@
 
 namespace ZThread {
 
+  /**
+   * @class FastLock
+   *
+   * @author Eric Crahen <crahen at code-foo dot com>
+   * @date <2002-12-21T04:49:26-0500>
+   * @version 2.2.11
+   *
+   * This FastLock implementation is based on a Win32 Mutex
+   * object. This will perform better under high contention, 
+   * but will not be as fast as the spin lock under reasonable
+   * circumstances.
+   */ 
+  class FastLock : private NonCopyable {
 
-/**
- * @class FastLock
- *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-27T08:52:14-0400>
- * @version 2.2.4
- *
- * This FastLock implementation is based on a Win32 Mutex
- * object. This will perform better under high contention, 
- * but will not be as fast as the spin lock under reasonable
- * circumstances.
- */ 
-class FastLock : private NonCopyable {
-
-  HANDLE _hMutex;
+    HANDLE _hMutex;
 #ifndef NDEBUG
-  volatile bool _locked;
+    volatile bool _locked;
 #endif
 
   public:
   
-  /**
-   * Create a new FastLock
-   */
-  FastLock() { 
+    /**
+     * Create a new FastLock
+     */
+    FastLock() { 
 
 #ifndef NDEBUG
-  _locked = false;
+      _locked = false;
 #endif
 
-    _hMutex = ::CreateMutex(0, 0, 0);
-    assert(_hMutex != NULL);
-    if(_hMutex == NULL)
-      throw Initialization_Exception();
+      _hMutex = ::CreateMutex(0, 0, 0);
+      assert(_hMutex != NULL);
+      if(_hMutex == NULL)
+        throw Initialization_Exception();
 
-  }
+    }
 
   
-  ~FastLock() {
-    ::CloseHandle(_hMutex);
-  }
-
+    ~FastLock() {
+      ::CloseHandle(_hMutex);
+    }
+  
   void acquire() {
 
     if(::WaitForSingleObject(_hMutex, INFINITE) != WAIT_OBJECT_0) {
@@ -92,7 +91,7 @@ class FastLock : private NonCopyable {
     while(_locked)
       ThreadOps::yield();
 
-  _locked = true;
+    _locked = true;
 
 #endif
 
@@ -110,38 +109,39 @@ class FastLock : private NonCopyable {
     }
 
   }
-    
-  bool tryAcquire(unsigned long timeout=0) {
+
+
+  bool tryAcquire(unsigned long timeout = 0) {
 
     switch(::WaitForSingleObject(_hMutex, timeout)) {
-    case WAIT_OBJECT_0:
-
+      case WAIT_OBJECT_0:
+      
 #ifndef NDEBUG
 
-    // Simulate deadlock to provide consistent behavior. This
-    // will help avoid errors when porting. Avoiding situations
-    // where a FastMutex mistakenly behaves as a recursive lock.
+        // Simulate deadlock to provide consistent behavior. This
+        // will help avoid errors when porting. Avoiding situations
+        // where a FastMutex mistakenly behaves as a recursive lock.
 
-    while(_locked)
-      ThreadOps::yield();
-
-  _locked = true;
+        while(_locked)
+          ThreadOps::yield();
+      
+        _locked = true;
 
 #endif
 
-      return true;
-    case WAIT_TIMEOUT:
-      return false;
-    default:
-      break;
+        return true;
+      case WAIT_TIMEOUT:
+        return false;
+      default:
+        break;
     }
 
     assert(0);
     throw Synchronization_Exception();
 
- }
-  
-}; /* FastLock */
+  }
+
+ };
 
 } // namespace ZThread
 

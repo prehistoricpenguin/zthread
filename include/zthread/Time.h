@@ -28,9 +28,9 @@ namespace ZThread {
 
 /**
  * @class Time
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T10:54:39-0400>
- * @version 2.2.0
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:43:27-0500>
+ * @version 2.2.11
  *
  * The Time class provides access to time values relative to when the program
  * was started. In otherwords, this class might be thought of as a timer that
@@ -133,27 +133,7 @@ class ZTHREAD_API Time {
    * @param millis - number of milliseconds to subtract from this Time object
    * @return const Time& this object
    */
-  const Time& operator-=(unsigned long millis) {   
-
-    if(_milliseconds > millis)
-      _milliseconds -= millis;
-    
-    else {
-
-      while(_seconds > 0 && _milliseconds < millis) {
-
-        _milliseconds += 1000;    
-        _seconds -= 1;
-
-      }
-
-      _milliseconds = (_milliseconds < millis) ? 0 : (_milliseconds - millis);
-        
-    }
-
-    return *this;
-
-  }
+  const Time& operator-=(unsigned long millis);
 
   /**
    * Add the value of another Time object to this one.
@@ -178,43 +158,68 @@ class ZTHREAD_API Time {
    * @param t - Time object whose value should be substracted from this object
    * @return const Time& this object
    */
-  const Time& operator-=(const Time& t) {
-
-    unsigned long millis = t.milliseconds();
-    unsigned long secs = t.seconds();
-
-    if(_seconds >= secs) {
-      
-      if(_milliseconds > millis) {
-	_milliseconds -= millis;
-	_seconds -= secs;
-	
-      } else {
-	
-	while(_seconds > 0 && _milliseconds < millis) {
-	  
-	  _milliseconds += 1000;    
-	  _seconds -= 1;
-	  
-	}
-	
-	_milliseconds = (_milliseconds < millis) ? 0 : (_milliseconds - millis);
-	_seconds = (_seconds < secs) ? 0 : (_seconds - secs);
-	
-      } 
-    
-    } else {
-      
-      _milliseconds = 0;
-      _seconds = 0;
-
-    }
-	
-    return *this;
-
-  }
+  const Time& operator-=(const Time& t);
 
 };
+
+const Time& Time::operator-=(unsigned long millis) {   
+
+    if(_milliseconds > millis)
+      _milliseconds -= millis;
+    
+    else {
+
+      while(_seconds > 0 && _milliseconds < millis) {
+
+        _milliseconds += 1000;    
+        _seconds -= 1;
+
+      }
+
+      _milliseconds = (_milliseconds < millis) ? 0 : (_milliseconds - millis);
+        
+    }
+
+    return *this;
+
+}
+
+const Time& Time::operator-=(const Time& t) {
+
+  unsigned long millis = t.milliseconds();
+  unsigned long secs = t.seconds();
+  
+  if(_seconds >= secs) {
+    
+    if(_milliseconds > millis) {
+      _milliseconds -= millis;
+      _seconds -= secs;
+      
+    } else {
+      
+      while(_seconds > 0 && _milliseconds < millis) {
+        
+        _milliseconds += 1000;    
+        _seconds -= 1;
+        
+      }
+      
+      _milliseconds = (_milliseconds < millis) ? 0 : (_milliseconds - millis);
+      _seconds = (_seconds < secs) ? 0 : (_seconds - secs);
+      
+    } 
+    
+  } else {
+    
+    _milliseconds = 0;
+    _seconds = 0;
+    
+  }
+  
+  return *this;
+  
+}
+
 
 } // namespace ZThread
 

@@ -46,8 +46,8 @@ namespace ZThread {
 
 /**
  * @class LocalStaticInstantiation
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-19T07:21:52-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T13:22:09-0500>
  * @version 2.2.0 
  *
  * The LocalStaticInstantiation policy allows the creation 
@@ -91,8 +91,8 @@ class StaticInstantiationHelper {
 
 /**
  * @class StaticInstantiation
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-19T07:21:52-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T13:22:09-0500>
  * @version 2.2.0 
  *
  * The StaticInstantiation policy allows the creation 
@@ -129,27 +129,29 @@ class Destroyer {
     assert(doomed);
   }
   
-  ~Destroyer() {
-    
-    try {
-      
-      if(doomed)
-        delete doomed;
-      
-    } catch(...) { }
-    
-    doomed = 0;
-    
-  }   
-  
+  ~Destroyer();
+
 };
 
- 
+template <class T>
+Destroyer<T>::~Destroyer() {
+  
+  try {
+    
+    if(doomed)
+      delete doomed;
+    
+  } catch(...) { }
+  
+  doomed = 0;
+  
+}   
+
 
 /**
  * @class LazyInstantiation
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-19T07:21:52-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T13:22:09-0500>
  * @version 2.2.0
  *
  * The LazyInstantiation policy allows the creation 
@@ -171,11 +173,10 @@ protected:
    */
   template <class T>
   static void create(T*& ptr) {
-
+  
     ptr = new T;
-    
     static Destroyer<T> destroyer(ptr);
-
+  
   }
 
 };
@@ -183,8 +184,8 @@ protected:
   
 /**
  * @class Singleton
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-19T07:21:52-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T13:22:09-0500>
  * @version 2.2.0 
  *
  * Based on the work of John Vlissidles in his book 'Pattern Hatching'
@@ -218,7 +219,12 @@ public:
    *
    * @return T* single instance 
    */
-  static T* instance() {
+  static T* instance();
+
+};
+
+template <class T, class InstantiationPolicy, class LockType>
+T* Singleton<T, InstantiationPolicy, LockType>::instance() {
 
     // Uses local static storage to avoid static construction
     // sequence issues. (regaring when the lock is created)
@@ -236,8 +242,6 @@ public:
     return const_cast<T*>(ptr);
     
   }
-
-};
 
 
 };

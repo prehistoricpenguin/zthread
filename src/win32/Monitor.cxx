@@ -31,7 +31,7 @@ Monitor::STATE Monitor::wait(unsigned long ms) {
   if(_owner == 0)
     _owner = ::GetCurrentThreadId();
 
-  STATE state(INVALID);
+  STATE state; //(INVALID);
   
   // Serialize access to the state of the Monitor
   // and test the state to determine if a wait is needed.
@@ -59,7 +59,6 @@ Monitor::STATE Monitor::wait(unsigned long ms) {
 
   // Wait, ignoring signals
   _waiting = true;
-  int status = 0;
 
   // Block until the event is set.  
   _waitLock.release();
@@ -115,12 +114,12 @@ bool Monitor::interrupt() {
     if(hadWaiter) {
 
       // Blocked on a synchronization object
-      if(::SetEvent(_handle) == NULL) {
+      if(::SetEvent(_handle) == FALSE) {
         assert(0);
       }
 
     } else 
-      wasInterruptable = (!_owner == ::GetCurrentThreadId());
+      wasInterruptable = !(_owner == ::GetCurrentThreadId());
             
   }
 
@@ -161,7 +160,7 @@ bool Monitor::notify() {
     
     // If there is a waiter then send the signal.
     if(_waiting) 
-      if(::SetEvent(_handle) == NULL) {
+      if(::SetEvent(_handle) == FALSE) {
         assert(0);
       }
 
@@ -190,8 +189,8 @@ bool Monitor::cancel() {
     push(INTERRUPTED);
     
     // If there is a waiter then send the signal.
-    if(_waiting) 
-      if(::SetEvent(_handle) == NULL) {
+    if(hadWaiter) 
+      if(::SetEvent(_handle) == FALSE) {
         assert(0);
       }
     

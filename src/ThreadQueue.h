@@ -36,9 +36,9 @@ class ThreadImpl;
   
 /**
  * @class ThreadQueue
- * @version 2.2.9
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-07-12T15:35:52-0400>
+ * @version 2.2.11
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T09:29:28-0500>
  *
  * A ThreadQueue accumulates references to daemon and reference threads.
  * These are threads that are running outside the scope of the Thread
@@ -172,7 +172,15 @@ class ThreadQueue : public Singleton<ThreadQueue> {
    *
    * @post the reference count is updated.
    */
-  void poll() {
+  void poll();
+
+ private:
+
+  void pollReferenceThreads();
+
+};
+
+  void ThreadQueue::poll() {
 
     Guard<FastLock> g(_lock);
 
@@ -195,9 +203,7 @@ class ThreadQueue : public Singleton<ThreadQueue> {
 
   }
 
- private:
-  
-  void pollReferenceThreads() {
+  void ThreadQueue::pollReferenceThreads() {
 
     // Flush the reference threads once they are no longer neccessary
     for(List::iterator i = _referenceThreads.begin(); i != _referenceThreads.end(); ++i) {
@@ -208,8 +214,6 @@ class ThreadQueue : public Singleton<ThreadQueue> {
     }
     
   }
-
-};
 
 } // namespace ZThread
 

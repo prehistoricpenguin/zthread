@@ -32,9 +32,9 @@ namespace ZThread {
 
 /**
  * @class Monitor
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-29T11:39:01-0400>
- * @version 2.2.8
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:52:49-0500>
+ * @version 2.2.11
  */
 class Monitor : public Status, private NonCopyable {
 

@@ -29,9 +29,9 @@ namespace ZThread {
 /**
  * @class Cancelable
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-02T09:13:37-0400>
- * @version 2.2.0
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:41:35-0500>
+ * @version 2.2.11
  *
  * The Cancelable interface defines a common method of adding general <i>disable-and-exit</i>
  * semantics to some object. By cancel()ing a Cancelable object, a request is
@@ -72,7 +72,7 @@ class Cancelable {
 public:
 
   //! Destroy a Cancelable object.
-  virtual ~Cancelable() throw() {}
+	virtual ~Cancelable() throw() {}
 
   /**
    * Canceling a Cancelable object is an indication that some part of its 
@@ -102,6 +102,7 @@ public:
     /* throw(Synchronization_Exception) */ = 0;
 
 };
+
 
 } // namespace ZThread
 

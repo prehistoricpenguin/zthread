@@ -36,9 +36,9 @@ namespace ZThread {
 /**
  * @class FastRecursiveLock
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-27T08:52:14-0400>
- * @version 2.2.4
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:44:02-0500>
+ * @version 2.2.11
  *
  * This FastRecursiveLock implementation is based on a Win32 Mutex
  * object. This will perform better under high contention, 
@@ -69,7 +69,16 @@ class FastRecursiveLock : private NonCopyable {
     ::CloseHandle(_hMutex);
   }
 
-  void acquire() {
+  
+  void acquire();
+
+  void release();
+
+  bool tryAcquire(unsigned long);
+
+}; /* FastRECURSIVELock */
+
+void FastRecursiveLock::acquire() {
 
     if(::WaitForSingleObject(_hMutex, INFINITE) != WAIT_OBJECT_0) {
       assert(0);
@@ -78,18 +87,18 @@ class FastRecursiveLock : private NonCopyable {
 
   }
 
-  void release() {
+void FastRecursiveLock::release() {
 
-    if(::ReleaseMutex(_hMutex) == 0) {
-      assert(0);
-      throw Synchronization_Exception();
-    }
-
+  if(::ReleaseMutex(_hMutex) == 0) {
+    assert(0);
+    throw Synchronization_Exception();
   }
+  
+}
     
-  bool tryAcquire(unsigned long timeout=0) {
+bool FastRecursiveLock::tryAcquire(unsigned long) {
 
-    switch(::WaitForSingleObject(_hMutex, 0)) {
+  switch(::WaitForSingleObject(_hMutex, 0)) {
     case WAIT_OBJECT_0:
       return true;
     case WAIT_TIMEOUT:
@@ -101,9 +110,8 @@ class FastRecursiveLock : private NonCopyable {
     assert(0);
     throw Synchronization_Exception();
 
- }
-  
-}; /* FastRECURSIVELock */
+}
+
 
 } // namespace ZThread
 

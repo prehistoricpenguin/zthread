@@ -29,9 +29,9 @@ namespace ZThread {
 
 /**
  * @class AbstractThreadLocal
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T17:33:30-0400>
- * @version 2.2.0
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T04:43:30-0500>
+ * @version 2.2.11
  *
  * This defines a common base class that helps to support the behavior 
  * ThreadLocal objects.
@@ -64,9 +64,7 @@ class ZTHREAD_API AbstractThreadLocal : private NonCopyable {
    *
    * @param void* - related initialization value
    */
-  virtual void* childValue(void* parentValue) const throw() {
-    return (void*)0;
-  }
+  virtual void* childValue(void* parentValue) const throw();
 
 
   /** 
@@ -76,9 +74,7 @@ class ZTHREAD_API AbstractThreadLocal : private NonCopyable {
    * @param bool - true if this value should propgate, otherwise false. Unless
    * overidden, this method will always return false
    */
-  virtual bool propogateValue() const throw() {
-    return false;
-  }
+  virtual bool propogateValue() const throw();
 
   /**
    * Invoked by the framework when a thread that has set a value for a ThreadLocal
@@ -90,9 +86,7 @@ class ZTHREAD_API AbstractThreadLocal : private NonCopyable {
    * @param currentValue - value associated with the current thread and this 
    * object. 
    */
-  virtual void destroyValue(void* currentValue) const throw() {
-    // Do nothing by default
-  }
+  virtual void destroyValue(void* currentValue) const throw();
 
  protected:
 
@@ -115,7 +109,6 @@ class ZTHREAD_API AbstractThreadLocal : private NonCopyable {
   void* set(void*) const throw();
 
 };
-
 
 } // __ZTABSTRACTTHREADLOCAL_H__
 

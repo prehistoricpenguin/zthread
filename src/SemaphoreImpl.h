@@ -36,9 +36,9 @@ class Monitor;
 
 /**
  * @class SemaphoreImpl
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-01T21:09:43-0400>
- * @version 2.2.1
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:37:42-0500>
+ * @version 2.2.11
  *
  * The SemaphoreImpl template allows how waiter lists are sorted
  * to be parameteized
@@ -78,11 +78,25 @@ class SemaphoreImpl {
     /* throw(Synchronization_Exception) */ 
     : _count(count), _maxCount(maxCount), _checked(checked), _entryCount(0) { }
 
+
+  ~SemaphoreImpl() throw();
+
+  void acquire();
+  
+  void release();
+
+  bool tryAcquire(unsigned long timeout);
+ 
+  int count();
+
+}; 
+
+
   /**
    * Destroy this SemaphoreImpl and release its resources. 
    */
-  ~SemaphoreImpl()
-    throw() {
+template <typename List> 
+SemaphoreImpl<List>::~SemaphoreImpl() throw() {
 
 #ifndef NDEBUG
 
@@ -97,14 +111,28 @@ class SemaphoreImpl {
 
   }
 
+
+  /**
+   * Get the count for the Semaphore
+   *
+   * @return int
+   */
+template <typename List> 
+int SemaphoreImpl<List>::count() {
+
+  Guard<FastLock> g(_lock);
+  return _count;
+  
+}
+
   /**
    * Decrement the count, blocking when that count becomes 0 or less.
    * 
    * @exception Interrupted_Exception thrown when the caller status is interrupted
    * @exception Synchronization_Exception thrown if there is some other error.
    */
-  void acquire() 
-    /* throw(Synchronization_Exception) */ {
+template <typename List> 
+void SemaphoreImpl<List>::acquire() {
 
     // Get the monitor for the current thread
     ThreadImpl* self = ThreadImpl::current();
@@ -171,8 +199,8 @@ class SemaphoreImpl {
    * @exception Interrupted_Exception thrown when the caller status is interrupted
    * @exception Synchronization_Exception thrown if there is some other error.
    */
-  bool tryAcquire(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */ {
+template <typename List> 
+bool SemaphoreImpl<List>::tryAcquire(unsigned long timeout) {
  
     // Get the monitor for the current thread
     ThreadImpl* self = ThreadImpl::current();
@@ -249,8 +277,8 @@ class SemaphoreImpl {
    * @exception InvalidOp_Exception thrown if the maximum count is exceeded while
    * the checked flag is set.
    */
-  void release() 
-    /* throw(Synchronization_Exception) */ {
+template <typename List> 
+void SemaphoreImpl<List>::release()  {
 
     Guard<FastLock> g1(_lock);
 
@@ -304,24 +332,6 @@ class SemaphoreImpl {
     }
   
   }
-
-  /**
-   * Get the count for the Semaphore
-   *
-   * @return int
-   */
-  int count() throw() {
-
-    Guard<FastLock> g(_lock);
-    return _count;
-
-  }
-
-
- 
-
-}; 
-
 
 class FifoSemaphoreImpl : public SemaphoreImpl<fifo_list> { 
 public:

@@ -33,9 +33,9 @@ typedef CountedPtr<Runnable> RunnableHandle;
 /**
  * @class Handle
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-10T09:15:24-0400>
- * @version 2.2.5
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T13:28:04-0500>
+ * @version 2.2.11
  *
  * Handles are used to reference count Runnable objects using a
  * CountedPtr. Handles are immutable, once created you cannot change
@@ -61,15 +61,30 @@ class Handle : public CountedPtr<Runnable> {
   //! Create a Handle
   Handle(const Handle& h) : CountedPtr<Runnable>(h) { }
 
-  virtual ~Handle() throw() { }
+  virtual ~Handle() throw();
 
   //!
-  T* operator->() throw() { return reinterpret_cast<T*>(_instance); }
+  T* operator->() throw();
 
   //!
-  const T* operator->() const throw() { return reinterpret_cast<T*>(_instance); }
+  const T* operator->() const throw();
 
 };
+
+template <typename T>
+Handle<T>::~Handle() throw() { }
+
+  //!
+template <typename T>
+T* Handle<T>::operator->() throw() { 
+  return reinterpret_cast<T*>(_instance); 
+}
+
+  //!
+template <typename T>
+const T* Handle<T>::operator->() const throw() { 
+  return reinterpret_cast<T*>(_instance); 
+}
 
 //! Generate a Handle for some Runnable object
 template<typename T>

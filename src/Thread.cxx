@@ -28,9 +28,9 @@ namespace ZThread {
 /**
  * @class Holder
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-07-13T10:08:16-0400>
- * @version 2.2.2
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:49:58-0500>
+ * @version 2.2.11
  *
  * Holders are used to create submit tasks to a thread without
  * transfering thier ownership to the enclosing Handle(s).
@@ -50,15 +50,21 @@ class Holder : public Runnable {
   explicit Holder(Runnable& task) : _task(task) { }
   
   //!
-  virtual ~Holder() throw() {}
+  virtual ~Holder() throw();
   
   //!
-  virtual void run() throw() {
-    _task.run();
-  }
+  virtual void run() throw();
 
 }; // Holder
  
+
+template<typename T>
+Holder<T>::~Holder() throw() { }
+
+template<typename T>
+void Holder<T>::run() throw() {
+  _task.run();
+}
 
 //! Generate a Handle and a Holder for some Runnable object
 template<typename T>
@@ -91,10 +97,9 @@ Priority Thread::Reference::getPriority()
 }
 
   
-  //ThreadLocal<void*> Thread::_interruptKey;
+//ThreadLocal<void*> Thread::_interruptKey;
 
-Thread::Thread() 
-  /* throw(Synchronization_Exception) */ : _impl(new ThreadImpl) { }
+Thread::Thread() : _impl(new ThreadImpl) { }
 
 Thread::~Thread() 
   throw() {
@@ -113,15 +118,13 @@ bool Thread::join(unsigned long timeout)
 
 void Thread::run() throw() { /* NOOP */ }
 
-void Thread::start() 
-  /* throw(Synchronization_Exception) */ {
+void Thread::start() {
 
   run( RunnablePtr(*this) );
 
 }
 
-void Thread::run(const RunnableHandle& task)
-  /* throw(Synchronization_Exception) */ {
+void Thread::run(const RunnableHandle& task) {
 
   _impl->run(task);
 

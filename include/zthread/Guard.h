@@ -39,8 +39,8 @@ namespace ZThread {
 
 /**
  * @class LockHolder
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * This is a simple base class for Guards class. It allows Guards
@@ -79,15 +79,16 @@ class LockHolder {
 
   template <class T>  
   static LockHolder& extract(T& t) {
-    return static_cast<LockHolder&>(t);
+    // Design and Evolution of C++, page 328
+    return (LockHolder&)(t);
   }
 
 };
 
 /**
  * @class CompoundScope
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * Locking policy that aggregates two policies that share a target.
@@ -133,8 +134,8 @@ class CompoundScope {
 
 /**
  * @class LockedScope
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * Locking policy for Lockable objects. This policy acquire()s a Lockable
@@ -199,8 +200,8 @@ class LockedScope {
 
 /**
  * @class UnlockedScope
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * Locking policy for Lockable objects. This policy release()s a Lockable
@@ -254,8 +255,8 @@ class UnlockedScope {
 
 /**
  * @class TimedLockedScope
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * Locking policy that attempts to enterScope some resource
@@ -298,8 +299,8 @@ class TimedLockedScope {
 
 /**
  * @class OverlappedScope
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * Locking policy allows the effective scope of two locks to overlap
@@ -331,8 +332,8 @@ class OverlappedScope {
 
 /**
  * @class Guard
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-30T16:03:16-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T05:28:39-0500>
  * @version 2.2.0
  *
  * Scoped locking utility. This template class can be given a Lockable
@@ -479,18 +480,23 @@ public:
   /**
    * Unlock a given Lockable object with the destruction of this Guard
    */
-  ~Guard() throw() {
-    
-    try {
-
-      if(!isDisabled())
-        LockingPolicy::destroyScope(*this);
-      
-    } catch (...) { /* ignore */ }  
-
-  }
+  ~Guard() throw();
 
 }; /* Guard */
+
+
+template <class LockType, class LockingPolicy>
+Guard<LockType, LockingPolicy>::~Guard() throw() {
+    
+  try {
+    
+    if(!isDisabled())
+      LockingPolicy::destroyScope(*this);
+    
+  } catch (...) { /* ignore */ }  
+  
+}
+
 
 };
 

@@ -29,9 +29,9 @@ namespace ZThread {
 /**
  * @class Waitable
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-04T07:40:39-0400>
- * @version 2.2.1
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T04:50:52-0500>
+ * @version 2.2.11
  *
  * The Waitable interface defines a common method of adding general <i>wait</i> semantics
  * to an object. This is simply defined as waiting for some condition to occur,
@@ -83,7 +83,7 @@ class Waitable {
   public:  
   
   //! Destroy a Waitable object.  
-  virtual ~Waitable() throw() {};
+  virtual ~Waitable() throw() {}
 
   /**
    * Wait()ing on this object will cause the calling thread to be blocked
@@ -135,6 +135,7 @@ class Waitable {
 
   
 };
+
 
 } // namespace ZThread
 

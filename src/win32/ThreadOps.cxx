@@ -80,10 +80,10 @@ bool ThreadOps::yield() {
 bool ThreadOps::setPriority(ThreadOps* impl, Priority p) {
 
   assert(impl);
-
-  bool result = true;
-  
+ 
 #if !defined(ZTHREAD_DISABLE_PRIORITY)
+
+  bool result;
   
   // Convert
   int n;
@@ -101,10 +101,13 @@ bool ThreadOps::setPriority(ThreadOps* impl, Priority p) {
 
   
   result = (::SetThreadPriority(impl->_hThread, n) != THREAD_PRIORITY_ERROR_RETURN);
+  return result;
+
+#else
+
+  return true;
 
 #endif
-
-  return result;
 
 }
 

@@ -37,9 +37,9 @@ namespace ZThread {
 
 /**
  * @class ThreadImpl
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-07-13T09:55:47-0400>
- * @version 2.2.2
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T04:55:36-0500>
+ * @version 2.2.11
  */
 class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
 
@@ -71,41 +71,26 @@ class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
   ~ThreadImpl() throw();  
 
   //! Get a reference to this threads Monitor
-  inline Monitor& getMonitor() {
-    return _monitor;
-  }
+  Monitor& getMonitor();
 
   //! Set the CANCELED status of the monitor
-  inline void cancel() throw() { 
-    _monitor.cancel(); 
-  }
+  void cancel() throw();
 
   //! Set the INTERRUPTED status of the monitor
-  inline bool interrupt() throw() { 
-    return _monitor.interrupt(); 
-  }
+  bool interrupt() throw();
 
   //! Check & clear the INTERRUPTED status of the monitor
-  inline bool isInterrupted() throw() {
-    return _monitor.isInterrupted();
-  }
+  bool isInterrupted() throw();
 
   //! Check the CANCELED status of the monitor
-  inline bool isCanceled() throw() {
-    return _monitor.isCanceled();
-  }
+  bool isCanceled() throw();
 
   //! Get the current priority, not serialized, should be replaced
   //! with an atomic operation
-  inline Priority getPriority() const {
-    return _priority;  
-  }
+  Priority getPriority() const;
 
   //! Get a reference to the ThreadLocalMap
-  inline ThreadLocalMap& getThreadLocalMap() {
-    return _localValues;
-  }
-
+  ThreadLocalMap& getThreadLocalMap();
   
   bool join(unsigned long) 
     /* throw(Synchronization_Exception) */;
@@ -120,9 +105,7 @@ class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
   bool isDaemon() throw();
   
   //! Test for a reference thread 
-  inline bool isReference() throw() {
-    return _state.isReference();
-  }
+  bool isReference() throw();
 
   void setDaemon(bool) 
     /* throw(Synchronization_Exception) */;

@@ -30,8 +30,8 @@ namespace ZThread {
 /**
  * @class CountedPtr
  *
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-10T09:14:50-0400>
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T13:28:50-0500>
  * @version 2.2.5
  *
  * Thread-safe wrapper to implement a counted reference, this
@@ -80,29 +80,43 @@ class CountedPtr {
   /**
    * Destroy the CountedPtr and check for release of the implementation
    */
-  virtual ~CountedPtr() {
-
-    if(_count->decrement()) {
-
-      delete _instance;
-      delete _count;
-
-    }
-    
-  };
+  virtual ~CountedPtr() throw();
   
   /**
    * Get a reference to the underlying implementation
    */
-  T* operator->() throw() { return _instance; }
+  T* operator->() throw();
   
   /**
    * Get a reference to the underlying implementation
    */
-  const T* operator->() const throw() { return _instance; }
+  const T* operator->() const throw();
  
   
 }; 
+
+template <class T>
+CountedPtr<T>::~CountedPtr() throw() {
+
+  if(_count->decrement()) {
+    
+    delete _instance;
+    delete _count;
+    
+  }
+  
+};
+
+
+template <class T>
+T* CountedPtr<T>::operator->() throw() { 
+  return _instance; 
+}
+
+template <class T>
+const T* CountedPtr<T>::operator->() const throw() { 
+  return _instance; 
+}
 
 } // namespace ZThread
 

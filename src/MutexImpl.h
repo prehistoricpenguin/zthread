@@ -34,9 +34,9 @@ namespace ZThread {
 
 
 /**
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-01T21:11:06-0400>
- * @version 2.2.0
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:38:46-0500>
+ * @version 2.2.11
  * @class NullBehavior
  */
 class NullBehavior {
@@ -53,9 +53,9 @@ protected:
 };
 
 /**
- * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-01T21:11:06-0400>
- * @version 2.2.0
+ * @author Eric Crahen <crahen at code-foo dot com>
+ * @date <2002-12-21T08:38:46-0500>
+ * @version 2.2.11
  * @class MutexImpl
  *
  * The MutexImpl template allows how waiter lists are sorted, and 
@@ -83,14 +83,23 @@ class MutexImpl : Behavior {
    * @exception Initialization_Exception thrown if resources could not be
    * properly allocated
    */
-  MutexImpl() : _owner(0) {
- 
-  }
+  MutexImpl() : _owner(0) { }
+  
+  ~MutexImpl() throw();
+
+  void acquire();
+  
+  void release();
+
+  bool tryAcquire(unsigned long timeout);
+
+};
 
   /**
    * Destroy this MutexImpl and release its resources
    */
-  ~MutexImpl() throw() {
+template<typename List, typename Behavior> 
+MutexImpl<List, Behavior>::~MutexImpl() throw() {
 
 #ifndef NDEBUG
 
@@ -124,8 +133,8 @@ class MutexImpl : Behavior {
    * @exception Interrupted_Exception thrown when the caller status is interrupted
    * @exception Synchronization_Exception thrown if there is some other error.
    */
-  void acquire() 
-    /* throw(Synchronization_Exception) */ {
+template<typename List, typename Behavior> 
+void MutexImpl<List, Behavior>::acquire() {
 
     ThreadImpl* self = ThreadImpl::current();
     Monitor& m = self->getMonitor();
@@ -209,8 +218,8 @@ class MutexImpl : Behavior {
    * @exception Interrupted_Exception thrown when the caller status is interrupted
    * @exception Synchronization_Exception thrown if there is some other error.
    */
-  bool tryAcquire(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */ {
+template<typename List, typename Behavior> 
+bool MutexImpl<List, Behavior>::tryAcquire(unsigned long timeout) {
   
     ThreadImpl* self = ThreadImpl::current();
     Monitor& m = self->getMonitor();
@@ -304,8 +313,8 @@ class MutexImpl : Behavior {
    * @exception InvalidOp_Exception - thrown if an attempt is made to 
    * release a mutex not owned by the calling thread.
    */
-  void release() 
-    throw (Synchronization_Exception) {
+template<typename List, typename Behavior> 
+void MutexImpl<List, Behavior>::release() {
 
     ThreadImpl* impl = ThreadImpl::current();
 
@@ -358,8 +367,6 @@ class MutexImpl : Behavior {
     }
   
   }
-
-};
 
 } // namespace ZThread
 

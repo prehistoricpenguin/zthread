@@ -1,5 +1,5 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
+ *  ZThreads, a platform-independant, multithreading and
  *  synchroniation library
  *
  *  Copyright (C) 2000-2002, Eric Crahen, See LGPL.TXT for details
@@ -27,12 +27,12 @@ namespace ZThread {
   //! Priorities
   typedef enum {
 
-    Low, 
-    Medium = Low + 1, 
+    Low,
+    Medium = Low + 1,
     High   = Low + 2
 
   } Priority;
 
-};
+}
 
 #endif // __ZTPRIORITY_H__
