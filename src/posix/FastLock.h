@@ -34,8 +34,8 @@ namespace ZThread {
  * @class FastLock
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-10T09:13:44-0400>
- * @version 2.1.6
+ * @date <2002-07-02T16:02:26-0400>
+ * @version 2.2.8
  *
  * This is the smallest and fastest synchronization object in the library.
  * It is an implementation of fast mutex, an all or nothing exclusive
@@ -56,7 +56,8 @@ class FastLock : private NonCopyable {
    */
   inline FastLock() {
 
-    pthread_mutex_init(&_mtx, 0);
+    if(pthread_mutex_init(&_mtx, 0) != 0)
+      throw Initialization_Exception();
 
   }
   
@@ -65,7 +66,9 @@ class FastLock : private NonCopyable {
    */
   inline ~FastLock() {
 
-    pthread_mutex_destroy(&_mtx);
+    if(pthread_mutex_destroy(&_mtx) != 0) {
+      assert(0);
+    }
 
   }
   
@@ -76,7 +79,8 @@ class FastLock : private NonCopyable {
    */
   inline void acquire() {
     
-    pthread_mutex_lock(&_mtx);
+    if(pthread_mutex_lock(&_mtx) != 0)
+      throw Synchronization_Exception();
 
   }
 
@@ -103,7 +107,8 @@ class FastLock : private NonCopyable {
    */
   inline void release() {
     
-    pthread_mutex_unlock(&_mtx);
+    if(pthread_mutex_unlock(&_mtx) != 0)
+      throw Synchronization_Exception();
 
   }
   
