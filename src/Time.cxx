@@ -9,9 +9,14 @@ Time::Time() {
   // System startup time
   static TimeStrategy firstHelper;
   TimeStrategy helper;
-  
-  _seconds = (helper.seconds() - firstHelper.seconds());
-  _milliseconds = (helper.milliseconds() - firstHelper.milliseconds());
+
+  Time then(firstHelper.seconds(), firstHelper.milliseconds());
+  Time now(helper.seconds(), helper.milliseconds());
+
+  now -= then;
+
+  _seconds = now.seconds(); 
+  _milliseconds = now.milliseconds();
 
 }
 

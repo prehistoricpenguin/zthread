@@ -183,23 +183,33 @@ class ZTHREAD_API Time {
     unsigned long millis = t.milliseconds();
     unsigned long secs = t.seconds();
 
-    if(_milliseconds > millis)
-      _milliseconds -= millis;
+    if(_seconds >= secs) {
+      
+      if(_milliseconds > millis) {
+	_milliseconds -= millis;
+	_seconds -= secs;
+	
+      } else {
+	
+	while(_seconds > 0 && _milliseconds < millis) {
+	  
+	  _milliseconds += 1000;    
+	  _seconds -= 1;
+	  
+	}
+	
+	_milliseconds = (_milliseconds < millis) ? 0 : (_milliseconds - millis);
+	_seconds = (_seconds < secs) ? 0 : (_seconds - secs);
+	
+      } 
     
-    else {
-
-      while(_seconds > 0 && _milliseconds < millis) {
-
-        _milliseconds += 1000;    
-        _seconds -= 1;
-
-      }
-
-      _milliseconds = (_milliseconds < millis) ? 0 : (_milliseconds - millis);
-      _seconds = (_seconds < secs) ? 0 : (_seconds - secs);
+    } else {
+      
+      _milliseconds = 0;
+      _seconds = 0;
 
     }
-
+	
     return *this;
 
   }
