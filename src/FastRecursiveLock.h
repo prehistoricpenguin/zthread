@@ -29,12 +29,15 @@
 #  include "config.h"
 #endif
 
+
 // Select the correct FastRecusriveLock implementation based on
 // what the compilation environment has defined
 
 #if defined(ZTHREAD_DUAL_LOCKS) 
 #  include "vanilla/DualMutexRecursiveLock.h"
 #else
+
+#  ifndef ZT_VANILLA 
 
 #  if defined(ZT_POSIX)
 
@@ -58,6 +61,8 @@
 // Use normal Mutex objects
 #  elif defined(ZT_WIN32) || defined(ZT_WIN9X)
 #    include "win32/FastRecursiveLock.h"
+#  endif
+
 #  endif
 
 #endif

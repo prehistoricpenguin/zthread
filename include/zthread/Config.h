@@ -60,6 +60,10 @@
 // Uncomment to select a MacOS based implementation
 // #define ZT_MACOS 1
 
+// (configure)
+// Uncomment to prefer vanilla implementations of primatives when possible
+// #define ZT_VANILLA 1
+
 // =====================================================================================
 // The following section can be customized to select the implementation that is compiled
 // Eventually, the configure program will be updated to define these symbols as well.
