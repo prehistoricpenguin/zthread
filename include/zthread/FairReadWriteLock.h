@@ -89,6 +89,9 @@ class FairReadWriteLock : public ReadWriteLock {
       Guard<Mutex> g(_rwlock._lock);
       --_rwlock._readers; 
 
+      if(_rwlock._readers == 0)
+	_rwlock._cond.signal();
+
     }
 
   };
