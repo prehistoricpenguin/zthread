@@ -25,6 +25,7 @@
 #ifndef __ZTFASTLOCK_H__
 #define __ZTFASTLOCK_H__
 
+#include "zthread/Exceptions.h"
 #include "zthread/NonCopyable.h"
 #include <pthread.h>
 
@@ -34,7 +35,7 @@ namespace ZThread {
  * @class FastLock
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-07-02T16:02:26-0400>
+ * @date <2002-07-02T16:10:51-0400>
  * @version 2.2.8
  *
  * This is the smallest and fastest synchronization object in the library.

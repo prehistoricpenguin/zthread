@@ -232,7 +232,7 @@ bool Monitor::isCanceled() {
   // Serialize access to the state
   _waitLock.acquire();
   
-  bool wasCanceled = Status::check2(CANCELED);
+  bool wasCanceled = Status::examine(CANCELED);
     
   if(_owner == MPCurrentTaskID())
     clear(INTERRUPTED);

@@ -1,4 +1,4 @@
-AC_REVISION($Revision: 1.2 $ZT_VERSION $)
+AC_REVISION($Revision: 1.3 $ZT_VERSION $)
 
 AC_INIT
 AC_CONFIG_SRCDIR([README])
@@ -123,6 +123,7 @@ AC_ARG_ENABLE(win9x,
      AC_MSG_ERROR(Select one implementation)
   fi
   ZT_TYPE="win9x"
+  COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_WIN9X"
 ])
 
 AC_ARG_ENABLE(win32, 
@@ -132,6 +133,7 @@ AC_ARG_ENABLE(win32,
      AC_MSG_ERROR(Select one implementation)
   fi
   ZT_TYPE="win32"
+  COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_WIN32"
 ])
 
 AC_ARG_ENABLE(posix, 
@@ -141,8 +143,18 @@ AC_ARG_ENABLE(posix,
      AC_MSG_ERROR(Select one implementation)
   fi
   ZT_TYPE="posix"
+  COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_POSIX"
 ])
 
+AC_ARG_ENABLE(macos, 
+[  --enable-macos          Select MacOS implementation [default=autodetect]],
+[
+  if test $ZT_TYPE != auto; then
+     AC_MSG_ERROR(Select one implementation)
+  fi
+  ZT_TYPE="macos"
+  COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_MACOS"
+])
 
 if test $ZT_TYPE = auto; then
   ZT_TYPE="compile-time guess"

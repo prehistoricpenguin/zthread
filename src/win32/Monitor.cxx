@@ -216,7 +216,7 @@ bool Monitor::isCanceled() {
   // Serialize access to the state
   _waitLock.acquire();
 
-  bool wasCanceled = check(CANCELED);
+  bool wasCanceled = examine(CANCELED);
     
   if(_owner == ::GetCurrentThreadId())
     clear(INTERRUPTED);

@@ -170,7 +170,7 @@ bool Monitor::isCanceled() {
   // Serialize access to the state
   pthread_mutex_lock(&_waitLock);
 
-  bool wasCanceled = check(CANCELED);
+  bool wasCanceled = examine(CANCELED);
     
   if(pthread_equal(_owner, pthread_self()))
     clear(INTERRUPTED);

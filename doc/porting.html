@@ -132,12 +132,12 @@ complete - but they are a helpful and good start.
 <a name="fastlock"></a>
 <h1>FastLock Concept</h1>
 The <i>FastLock</i> is the easier of the two synchronization primatives to implement. 
-A <i>FastLock</i> can simply be implemented using a spin lock, or by using whatever 
-locking primative your platform supports. This object encapsulates acquire
-(lock), tryAcquire (try lock) and release (unlock) operations. 
+A <i>FastLock</i> can simply be implemented using a spin lock (though its best to use 
+a more rocust mechanism), or by using whatever locking primative your platform supports. 
+This object encapsulates acquire (lock), tryAcquire (try lock) and release (unlock) operations. 
 <p>
-The library includes several strategies for implementing this primative on Win32 and on POSIX systems
-which may be helpful in finding an approach that will work for your system
+The library includes several strategies for implementing this primative on MacOs, POSIX 
+and Win32 systems which may be helpful in finding an approach that will work for your system
 
 <p>
 <table align="center" border="2" cellpadding="5" cellspacing="2" width="90%">
@@ -383,12 +383,14 @@ basic native thread operations.
 <b>Effect:</b>&nbsp;Provide access to a staitc const ThreadOps that has been created with the default constructor. <br> 
 <i>Post-Condition:</i>&nbsp;Can't be used for anything other than comparison.
 </tr>
+
 <tr>
 <td>(&t)->==(t);</td>
 <td>
 <b>Effect:</b>&nbsp;Provide const comparison (==) operator that compares a ThreadOps to a const ThreadOps&. <br> 
 <b>Return:</b>&nbsp;true if the two objects refer to the same native thread.
 </tr>
+
 <tr>
 <td>ThreadOps::self();</td>
 <td>

@@ -76,7 +76,7 @@ class Status {
    * @return true if the flag is set 
    * @pre access must be serial
    */
-  inline bool check(STATE state) {
+  inline bool examine(STATE state) {
     return (_pending & static_cast<unsigned short>(state)) != INVALID;
   }
 
