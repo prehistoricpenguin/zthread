@@ -58,7 +58,7 @@ public:
  * Initialize a new ThreadImpl object, giving it a default priority.
  */
 ThreadImpl::ThreadImpl() 
-  /* throw(Synchronization_Exception) */ : _joiner(0), _priority(Medium) {
+  : _joiner(0), _priority(Medium) {
 
   ZTDEBUG("Thread created.\n");
 
@@ -133,9 +133,15 @@ bool ThreadImpl::join(unsigned long timeout)
   
   // A task needs to have been started or completed in order for a join()
   // to succeed.
-  if(!(_state.isRunning() || _state.isComplete()))
+  if(!_state.isRunning() && !_state.isJoined())
     throw InvalidOp_Exception("Can not join this thread.");
-  
+
+  /*
+
+  TODO: Allow any number of joiners
+
+  */
+
   // If this thread is already being join()ed, throw an exception
   if(_joiner) 
     throw InvalidOp_Exception("Thread already being joined.");
@@ -150,12 +156,14 @@ bool ThreadImpl::join(unsigned long timeout)
   for(ThreadImpl joiner = current(); joiner->_joiner != 0; joiner = _joiner)
     if(joiner->_joiner == joiner || joiner->_joiner->isJoinCyclic())
       throw Deadlock_Exception("Cyclic join.");
+
   */
 
   _joiner = current();
-  
+
+  // FIXME: _joiner not sync'd correctly
   // If the task has not completed, wait for completion
-  if(!_state.isComplete()) {
+  if(!_state.isJoined()) {
     
     { // Move to the joining threads monitor
       
@@ -186,7 +194,6 @@ bool ThreadImpl::join(unsigned long timeout)
   }
 
   // Update the state.
-  _state.setJoined();
   _joiner = 0;
   
   _monitor.release();
@@ -238,50 +245,9 @@ void ThreadImpl::setPriority(Priority p) {
 bool ThreadImpl::isActive() throw() {
 
   Guard<Monitor> g(_monitor);
-  
-  // Daemon killed threads only reach the complete state
-  // and are only destroyed when the ThreadQueue is poll()d
-  if(_state.isDaemon())
-    return _state.isRunning();
-
-  // Regular threads are either unused or must reach the joined state
-  return _state.isComplete() || _state.isRunning();
-  
+  return _state.isRunning();
   
 }
-
-/**
- * Test the state Monitor of this thread to determine if the DAEMON
- * bit is set.
- *
- * @return bool indicating the status of the DAEMON bit when the method 
- * is called.
- */
-bool ThreadImpl::isDaemon() throw() {
-
-  Guard<Monitor> g(_monitor);
-  return _state.isDaemon();
-  
-}
-
-/**
- * Set the DAEMON status bit on the state Monitor for this Thread. A 
- * Thread must be in the IDLE state for this to be successful.
- */
-void ThreadImpl::setDaemon(bool flag)
-  /* throw(Synchronization_Exception) */ {
-  
-  Guard<Monitor> g(_monitor);
-
-  // Only allow threads that have not yet been started become
-  // daemons
-  if(!_state.isIdle())
-    throw InvalidOp_Exception();
-
-  _state.setDaemon(flag);
-
-}
-
 
 
 /**
@@ -443,13 +409,10 @@ void ThreadImpl::dispatch(ThreadImpl* parent, ThreadImpl* impl, const RunnableHa
 
   // Update the reference count on a ThreadImpl before the 'Thread' 
   // that owns it can go out of scope (by signaling the parent)
-  bool isDaemon = impl->_state.isDaemon();
-  if(isDaemon) {
+  impl->addReference();
 
-    impl->addReference();
-    ThreadQueue::instance()->poll();
-
-  }
+  // Join any threads that re still waiting 
+  ThreadQueue::instance()->poll();
 
   impl->_monitor.clear(Status::INTERRUPTED);
 
@@ -477,7 +440,7 @@ void ThreadImpl::dispatch(ThreadImpl* parent, ThreadImpl* impl, const RunnableHa
   { // Update the state of the thread
 
     Guard<Monitor> g(impl->_monitor);
-    impl->_state.setComplete();
+    impl->_state.setJoined();
 
     // Wake the joiner
     ThreadImpl* joiner = impl->_joiner;
@@ -492,8 +455,10 @@ void ThreadImpl::dispatch(ThreadImpl* parent, ThreadImpl* impl, const RunnableHa
   impl->_localValues.clear();
 
   // Add the thread to queue 
-  if(isDaemon)
-    ThreadQueue::instance()->insert(impl);
+  ThreadQueue::instance()->insert(impl);
+
+  // Update the reference count allowing it to be destroyed 
+  impl->delReference();
 
 }
 

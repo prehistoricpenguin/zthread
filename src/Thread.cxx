@@ -28,8 +28,8 @@ namespace ZThread {
 /**
  * @class Holder
  *
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T08:49:58-0500>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-29T21:22:12-0400>
  * @version 2.2.11
  *
  * Holders are used to create submit tasks to a thread without
@@ -189,24 +189,6 @@ bool Thread::isCanceled()
   /* throw(Synchronization_Exception) */ {
 
   return _impl->isCanceled();
-
-}
-
-bool Thread::isDaemon() throw() {
-
-  return _impl->isDaemon();
-
-}
-
-void Thread::setDaemon(bool flag)
-  /* throw(Synchronization_Exception) */ {
-
-  // Throw right away if a thread tries to set its own daemon
-  // status.
-  if(ThreadImpl::current() == _impl)
-    throw InvalidOp_Exception();
-
-  _impl->setDaemon(flag);
 
 }
 

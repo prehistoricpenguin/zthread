@@ -37,8 +37,8 @@ namespace ZThread {
 
 /**
  * @class ThreadImpl
- * @author Eric Crahen <crahen at code-foo dot com>
- * @date <2002-12-21T04:55:36-0500>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-29T21:23:27-0400>
  * @version 2.2.11
  */
 class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
@@ -102,13 +102,8 @@ class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
 
   bool isActive() throw();
 
-  bool isDaemon() throw();
-  
   //! Test for a reference thread 
   bool isReference() throw();
-
-  void setDaemon(bool) 
-    /* throw(Synchronization_Exception) */;
 
   static void sleep(unsigned long) 
     /* throw(Synchronization_Exception) */;

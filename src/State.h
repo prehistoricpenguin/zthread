@@ -29,8 +29,8 @@ namespace ZThread {
 
 /**
  * @class State 
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-02T07:09:33-0400>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-30T03:17:07-0400>
  * @version 2.2.1
  *
  * Class to encapsulte the current state of the threads life-cycle.
@@ -38,25 +38,33 @@ namespace ZThread {
 class State {
 
   //! Various states
-  typedef enum { REFERENCE, IDLE, RUNNING, COMPLETE, JOINED } STATE;
-  typedef enum { NONE, DAEMON } MODIFIER;
+  typedef enum { REFERENCE, IDLE, RUNNING, JOINED } STATE;
 
   //! Current state
   STATE _state;
-  unsigned short _modifiers;
 
  public:
 
   /**
    * Create State with the given flag set.
    */
-  State(STATE s=IDLE) : _state(s), _modifiers(NONE) {}
+  State(STATE s=IDLE) : _state(s) {}
 
   /**
    * Test for the IDLE state. No task has yet run.
    */
   bool isIdle() const {
     return _state == IDLE;
+  }
+
+  /**
+   * Test for the JOINED state. A task has completed and 
+   * the thread is join()ed.
+   *
+   * @return bool
+   */
+  bool isJoined() const {
+    return _state == JOINED;
   }
 
   /**
@@ -123,40 +131,6 @@ class State {
 
   }
 
-  /**
-   * Test for the COMPLETE state. A task has completed but 
-   * the thread is not yet join()ed.
-   *
-   * @return bool
-   */
-  bool isComplete() const {
-    return _state == COMPLETE;
-  }
-
-  /**
-   * Transition to the COMPLETE state.
-   *
-   * @return bool true if successful
-   */
-  bool setComplete() {
-
-    if(_state != RUNNING)
-      return false;
-
-    _state = COMPLETE;
-    return true;
-
-  }
-
-  /**
-   * Test for the JOINED state. A task has completed and 
-   * the thread is join()ed.
-   *
-   * @return bool
-   */
-  bool isJoined() const {
-    return _state == JOINED;
-  }
 
   /**
    * Transition to the JOINED state.
@@ -165,39 +139,8 @@ class State {
    */
   bool setJoined() {
 
-    if(_state != COMPLETE)
-      return false;
-
     _state = JOINED;
     return true;
-
-  }
-
-  /**
-   * Test for the DAEMON modifier. 
-   *
-   * @return bool
-   */
-  bool isDaemon() const {
-    return (_modifiers & DAEMON) != 0;
-  }
-
-
-  /**
-   * Toggle the DAEMON modifier.
-   *
-   * @param flag bool 
-   * @return bool previous state
-   */
-  bool setDaemon(bool flag) {
-
-    bool wasDaemon = isDaemon();
-
-    _modifiers &= ~DAEMON;
-    if(flag)
-      _modifiers |= DAEMON;
-
-    return wasDaemon;
 
   }
 

@@ -28,6 +28,7 @@
 #include "zthread/CountedPtr.h"
 #include "zthread/Singleton.h"
 #include "zthread/Thread.h"
+#include "zthread/Mutex.h"
 
 #include <assert.h>
 
@@ -36,8 +37,8 @@ namespace ZThread {
 /**
  * @class ConcurrentExecutor
  *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-19T08:46:14-0400>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-30T08:14:28-0400>
  * @version 2.2.2
  *
  * This is an Executor that will run submitted tasks in another 
@@ -48,8 +49,7 @@ namespace ZThread {
  * @see Executor
  */
 template <
-  class LockType, 
-  class FactoryType = DefaultThreadFactory,
+  class LockType = Mutex, 
   class QueueType = MonitoredQueue<RunnableHandle*, LockType>, 
   typename RefType = CountedPtr<QueueType> 
 >
@@ -57,9 +57,6 @@ class ConcurrentExecutor : public Executor {
 
   //! Reference to the Queue 
   RefType _queue;
-
-  //! Thread to dispatch the work to
-  Thread* _thread;
 
   //! Helper class
   class Worker : public Runnable {
@@ -110,23 +107,14 @@ class ConcurrentExecutor : public Executor {
 public:
 
   //! Create a new ConcurrentExecutor
-  ConcurrentExecutor()
-    /* throw(Synchronization_Exception) */ {
+  ConcurrentExecutor() {
 
-    _thread = Singleton<FactoryType>::instance()->create();
-    _thread->setDaemon(true);
-
-    // Assign the daemon thread ownership of a Worker task.
-    _thread->run( RunnablePtr(new Worker(_queue)) );
+    Thread t;
+    t.run( RunnablePtr(new Worker(_queue)) );
 
   }
 
-  //! Destroy a new ConcurrentExecutor
-  virtual ~ConcurrentExecutor() throw() { 
-
-    delete _thread;
-
-  }
+  virtual ~ConcurrentExecutor() throw() { }
 
   /**
    * Submit a light wieght task to an Executor. This will not
@@ -156,39 +144,35 @@ public:
    *
    * @see Executor::execute(const RunnableHandle&)
    */
-  void execute(Runnable* task)
-    /* throw(Synchronization_Exception) */ {
+  void execute(Runnable* task) {
 
     execute( RunnablePtr(task) );
-
+    
   }
 
 
   /**
    * @see Executor::cancel()
    */
-  virtual void cancel() 
-    /* throw(Synchronization_Exception) */ { 
+  virtual void cancel() {
       
-      _queue->cancel(); 
-
-    }
-
+    _queue->cancel(); 
+    
+  }
+  
   /**
    * @see Executor::isCancel()
    */
-  virtual bool isCanceled()
-    /* throw(Synchronization_Exception) */ { 
+  virtual bool isCanceled() {
 
-      return _queue->isCanceled(); 
-
-    }
+    return _queue->isCanceled(); 
+    
+  }
  
   /**
    * @see Executor::wait()
    */
-  virtual void wait() 
-    /* throw(Synchronization_Exception) */ { 
+  virtual void wait() {
       
     _queue->empty();
       
@@ -197,13 +181,12 @@ public:
   /**
    * @see Executor::wait(unsigned long)
    */
-  virtual bool wait(unsigned long timeout) 
-    /* throw(Synchronization_Exception) */ { 
-
-      return _queue->empty(timeout); 
-
-    }
-      
+  virtual bool wait(unsigned long timeout) {
+    
+    return _queue->empty(timeout); 
+    
+  }
+  
 };
 
 } // namespace ZThread

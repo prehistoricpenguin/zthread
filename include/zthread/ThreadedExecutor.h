@@ -26,6 +26,7 @@
 #include "zthread/Executor.h"
 #include "zthread/Guard.h"
 #include "zthread/Singleton.h"
+#include "zthread/Mutex.h"
 
 namespace ZThread {
 
@@ -33,8 +34,8 @@ namespace ZThread {
 /**
  * @class ThreadedExecutor
  *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-29T07:58:00-0700>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-30T08:13:27-0400>
  * @version 2.2.2
  *
  * A ThreadedExecutor runs each task in a different thread.
@@ -44,7 +45,9 @@ namespace ZThread {
  *
  * @see Executor.
  */
-template <class LockType, class FactoryType = DefaultThreadFactory>
+template <
+  class LockType = Mutex
+>
 class ThreadedExecutor : public Executor {
   
   //! Serialize access
@@ -86,12 +89,8 @@ class ThreadedExecutor : public Executor {
     if(_canceled) // Double check
       throw Cancellation_Exception();
 
-    Thread* t = Singleton<FactoryType>::instance()->create();
-    t->setDaemon(true);
-
-    t->run(task);
-
-    delete t;
+    Thread t;
+    t.run(task);
 
   }
   

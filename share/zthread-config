@@ -218,7 +218,7 @@ includes="-I/usr/local/include"
 libs="-L/usr/local/lib"
 
 af_cflags="$af_cflags $includes -DREENTRANT -DZT_POSIX"
-af_libs="$libs -l$LIB_NAME $af_libs   -lpthread -lrt "
+af_libs="$libs -l$LIB_NAME $af_libs  -lpthread "
 
 
 print_result

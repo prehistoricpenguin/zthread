@@ -15,7 +15,7 @@ public:
 
     try {
 
-      Thread::sleep(100);
+      Thread::sleep(3000);
 
     } catch(Interrupted_Exception&) {
       // Exit the task on error
@@ -38,10 +38,10 @@ public:
 
       // Start the non-daemon threads
       for(int i = 0; i < 10; i++) {
-        if(i % 2)
+        //if(i % 2)
 
         t[i].run(new DaemonSpawn);
-        cout << "t[" << i << "] = " << t[i].isDaemon() << endl;
+        //     cout << "t[" << i << "] = " << t[i].isDaemon() << endl;
       }
 
       // Non daemon threads must be joined or canceled
@@ -59,11 +59,8 @@ public:
 
 int main() {
 
-  Thread t[10];
-
-  for(int i = 0; i < 10; i++) {
-    t[i].setDaemon(true);
-    t[i].run(new DaemonTask);
-  }
+  Thread t;
+  t.run(new DaemonTask);
+    
 
 } ///:~

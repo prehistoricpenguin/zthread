@@ -34,8 +34,8 @@ class ThreadImpl;
 /**
  * @class Thread
  *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-07-13T10:10:33-0400>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-29T21:21:54-0400>
  * @version 2.2.11
  *
  * A Thread is a special kind of Runnable object that represents
@@ -425,26 +425,6 @@ class ZTHREAD_API Thread : public Cancelable, public Runnable, private NonCopyab
    */
   virtual void cancel()
     /* throw(Synchronization_Exception) */;
-
-  /**
-   * Tests if this thread is a daemon thread.
-   *
-   * @return bool - true if this thread is a daemon thread.
-   */
-  bool isDaemon() throw();
-
-  /**
-   * Change the status of this thread so that is now treated as a daemon
-   * thread. A daemon thread should not be joined, it will execute normally
-   * and its destructor can safely be invoked without first join()ing it.
-   * It will be join()ed by ZThreads when the program exits.
-   *
-   * @param bool - flag, set to daemon if true, otherwise set back to a
-   * normal user thread that can be joined.
-   *
-   * @exception InvalidOp_Exception thrown if the status cannot be changed.
-   */
-  void setDaemon(bool flag) /* throw(Synchronization_Exception) */;
 
   /**
    * Put the currently executing thread to sleep for a given amount of

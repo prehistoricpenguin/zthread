@@ -28,6 +28,7 @@
 #include "zthread/CountedPtr.h"
 #include "zthread/Singleton.h"
 #include "zthread/Thread.h"
+#include "zthread/Mutex.h"
 
 #include <assert.h>
 
@@ -36,8 +37,8 @@ namespace ZThread {
 /**
  * @class PoolExecutor
  *
- * @author Eric Crahen <zthread@code-foo.com>
- * @date <2002-06-29T07:57:47-0700>
+ * @author Eric Crahen <crahen@cse.buffalo.edu>
+ * @date <2003-06-30T08:14:12-0400>
  * @version 2.2.2
  *
  * This is an Executor that will run submitted tasks using a group 
@@ -49,8 +50,7 @@ namespace ZThread {
  * @see Executor
  */
 template <
-  class LockType, 
-  class FactoryType = DefaultThreadFactory,
+  class LockType = Mutex, 
   class QueueType = MonitoredQueue<RunnableHandle*, LockType>, 
   typename RefType = CountedPtr<QueueType> 
 >
@@ -322,7 +322,6 @@ private:
   void addWorker() {
 
     Thread* t = Singleton<FactoryType>::instance()->create();
-    t->setDaemon(true);
 
     // Assign the daemon thread ownership of a Worker task.
     t->run( RunnablePtr(new Worker(_queue)) );
