@@ -153,7 +153,7 @@ public:
     } else if(nr_waiting == 0 && nw_waiting > 0) {
 
       // Wake a writer
-      writer.post();
+      write.post();
 
       nw_active++;
       nw_waiting--;

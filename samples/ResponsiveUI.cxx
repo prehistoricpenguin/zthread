@@ -1,6 +1,7 @@
 //: c11:ResponsiveUI.cxx
 // Very simple Threading example.
 #include "zthread/ConcurrentExecutor.h"
+#include "zthread/Mutex.h"
 #include <fstream>
 #include <iostream>
 
@@ -34,7 +35,7 @@ public:
 
 int main() {
 
-  ConcurrentExecutor<> executor;
+  ConcurrentExecutor<Mutex> executor;
   string buf;
 
   cout << "Enter the EOF character to quit:" << endl;
@@ -45,9 +46,9 @@ int main() {
     string s;
     getline(cin, s);
   
-    s += '\n';
     buf += s;
-
+    buf += '\n';
+    
     // Whenever we hit a blank line, save in the background.
     if(s.size() < 1 || cin.eof())
       executor.execute(new SaveTask("output.txt", buf));

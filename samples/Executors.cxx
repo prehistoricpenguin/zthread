@@ -1,6 +1,7 @@
 //: c11:Executors.cxx
 // Demonstrate Executor use.
 #include "zthread/ConcurrentExecutor.h"
+#include "zthread/Mutex.h"
 #include <iostream>
 
 using namespace ZThread;
@@ -19,7 +20,7 @@ public:
   virtual void run() throw() {
 
     while(countDown--) 
-      cout << coutDown << endl;
+      cout << countDown << endl;
 
     cout << "Liftoff!" << endl;
 
@@ -29,12 +30,12 @@ public:
 
 int main() {
 
-  ConcurrentExecutor<> executor;
+  ConcurrentExecutor<Mutex> executor;
   
   try {
 
     for(int i = 0; i < 5; i++)
-      executor.run(new Task);
+      executor.execute( new Task(10) );
 
     executor.cancel();
 

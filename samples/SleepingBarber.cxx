@@ -242,19 +242,35 @@ int main() {
     Barber   b(shop);
     b.start();
 
-    Customer c[7] = {shop, shop, shop, shop, shop, shop, shop};
-
-    for(int i = 0; i < 7; i++)
-      c[i].start();
+    Customer c0(shop);
+    Customer c1(shop);
+    Customer c2(shop);
+    Customer c3(shop);    
+    Customer c4(shop);    
+    Customer c5(shop);    
+    Customer c6(shop);    
+    
+    c0.start();
+    c1.start();
+    c2.start();
+    c3.start();
+    c4.start();
+    c5.start();
+    c6.start();
 
     // Run for 10 seconds
     Thread::sleep(10000);
 
     b.stop();
 
-    for(int i = 0; i < 7; i++)
-      c[i].stop();
-
+    c0.stop();
+    c1.stop();
+    c2.stop();
+    c3.stop();
+    c4.stop();
+    c5.stop();
+    c6.stop();
+                        
   } catch(Synchronization_Exception& e) {
     cerr << e.what() << endl;
   }
