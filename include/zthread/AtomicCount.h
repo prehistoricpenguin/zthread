@@ -22,6 +22,7 @@
 #ifndef __ZTATOMICCOUNT_H__
 #define __ZTATOMICCOUNT_H__
 
+#include "zthread/Config.h"
 #include "zthread/NonCopyable.h"
 
 namespace ZThread {
@@ -29,7 +30,7 @@ namespace ZThread {
 /**
  * @class AtomicCount
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-10T09:09:41-0400> 
+ * @date <2002-08-09T05:27:26-0400> 
  * @version 2.2.5
  *
  * This class provides an inferance to a small integer whose value can be
@@ -37,7 +38,7 @@ namespace ZThread {
  * lightwieght as possible so that it can be used cheaply to create reference
  * counts.
  */
-class AtomicCount : private NonCopyable {
+class ZTHREAD_API AtomicCount : private NonCopyable {
   
   void* _value;
   

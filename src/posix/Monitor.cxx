@@ -107,10 +107,12 @@ Monitor::STATE Monitor::wait(unsigned long ms) {
   state = next();  
   _waiting = false;  
     
-  // Reaquire the external lock
-  _lock.acquire();
-
   pthread_mutex_unlock(&_waitLock);
+    
+  // Reaquire the external lock, keep from deadlocking threads calling 
+  // notify(), interrupt(), etc.
+
+  _lock.acquire();
 
   return state;
 

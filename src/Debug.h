@@ -21,27 +21,14 @@
  *  SUNY @ Buffalo, hereby disclaims all copyright interest in the
  *  ZThreads library written by Eric Crahen
  */
-/*
-#include <stdio.h>
-//#define ZTDEBUG printf
 
-#ifndef __ZTDEBUG_H__
-#define __ZTDEBUG_H__
+#ifndef ZTDEBUG
 
-// Install a simple debugging macro
 #ifndef NDEBUG
-
-
+#  include <stdio.h>
+#  define ZTDEBUG printf
 #else
-
-  inline void _ZNOTHING(...) {}
-
-//#error""
-//#define ZTDEBUG _ZNOTHING
-
+#  define ZTDEBUG
 #endif
 
 #endif
-*/
-#include <stdio.h>
-#define ZTDEBUG printf

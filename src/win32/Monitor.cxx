@@ -82,14 +82,15 @@ Monitor::STATE Monitor::wait(unsigned long ms) {
   // Get the next available STATE
   state = next();  
   _waiting = false;  
-    
-  // Reaquire the external lock
-  _lock.acquire();
 
   ::ResetEvent(_handle);
 
   // Acquire the internal lock & release the external lock
   _waitLock.release();
+    
+  // Reaquire the external lock, keep from deadlocking threads calling 
+  // notify(), interrupt(), etc.
+  _lock.acquire();
   
   return state;
 

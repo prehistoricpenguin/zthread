@@ -1,3 +1,11 @@
+
+VERSION 2.2.10:
+
+  Rolled up most of the small changes that were available in CVS.
+  BlockingQueue was out of date; there was some deadlock potential
+  in the Monitor classes that was removed, the AtomicCount needed 
+  the dll export decoration, and a few other miscellaneous updates.
+	
 VERSION 2.2.9:
 
   Updated ThreadQueue which mistakenly was not removing joined daemon
