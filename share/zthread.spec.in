@@ -8,7 +8,7 @@ Version: @VERSION@
 Release: %rel
 
 Summary: cross-platform c++ multi-threading framework
-Copyright: LGPL
+Copyright: MIT
 Group: Development/Libraries
 Vendor: Eric D. Crahen <zthread@code-foo.com>
 Packager: Bastiaan Bakker <bastiaan.bakker@lifeline.nl>
@@ -62,7 +62,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,755)
 %attr(755,root,root) %prefix/lib/lib*.so.*
-%doc AUTHORS COPYING INSTALL NEWS README THANK.YOU LGPL.TXT TODO ChangeLog
+%doc AUTHORS COPYING INSTALL NEWS README THANK.YOU MIT.TXT TODO ChangeLog
 
 %files devel
 %defattr(-,root,root,755)

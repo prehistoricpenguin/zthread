@@ -1,4 +1,23 @@
-AC_REVISION($Revision: 1.12 $ZT_VERSION $)
+dnl Copyright (c) 2005, Eric Crahen
+dnl
+dnl Permission is hereby granted, free of charge, to any person obtaining a copy
+dnl of this software and associated documentation files (the "Software"), to deal
+dnl in the Software without restriction, including without limitation the rights
+dnl to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+dnl copies of the Software, and to permit persons to whom the Software is furnished
+dnl to do so, subject to the following conditions:
+dnl 
+dnl The above copyright notice and this permission notice shall be included in all
+dnl copies or substantial portions of the Software.
+dnl 
+dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+dnl AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+dnl WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+dnl CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+AC_REVISION($Revision: 1.13 $ZT_VERSION $)
 
 AC_INIT
 AC_CONFIG_SRCDIR([README])
@@ -9,7 +28,7 @@ AC_CANONICAL_TARGET
 
 ZT_MAJOR_VERSION=2
 ZT_MINOR_VERSION=3
-ZT_MICRO_VERSION=1
+ZT_MICRO_VERSION=2
 ZT_INTERFACE_AGE=0
 ZT_BINARY_AGE=0
 ZT_VERSION=$ZT_MAJOR_VERSION.$ZT_MINOR_VERSION.${ZT_MICRO_VERSION}
@@ -160,6 +179,17 @@ AC_ARG_ENABLE(macos,
   ZT_TYPE="macos"
   COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_MACOS"
 ])
+
+AC_ARG_ENABLE(vanilla,
+[  --enable-vanilla        Select vanilla implementation [default=autodetect]],
+[
+  if test $ZT_TYPE != auto; then
+     AC_MSG_ERROR(Select one implementation)
+  fi
+  ZT_TYPE="vanilla"
+  COMPILER_OPTIONS="$COMPILER_OPTIONS -DZT_VANILLA"
+])
+
 
 if test $ZT_TYPE = auto; then
   ZT_TYPE="compile-time guess"
