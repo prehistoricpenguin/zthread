@@ -1,3 +1,11 @@
+07-01-2002:
+ 
+     Expand Handle & CountedPtr to be assignable
+     Removed io interruption from the monitor; going with the you don't pay for 
+     what you don't use philosiphy & will demonstrate how the same behavior can
+     be achieved by extendind Thread & using ThreadFactories
+
+
 06-19-2002:
 
      Update the Thread::current() method to return a more useful type. Want to
