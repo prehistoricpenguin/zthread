@@ -43,7 +43,7 @@ class DeferredInterruptionScope {
   template <class LockType>
   static void createScope(LockHolder<LockType>& l) {
 
-    l.getLock().interest(Monitor::ANYTHING);
+    l.getLock().interest(Monitor::SIGNALED);
 
   }
 

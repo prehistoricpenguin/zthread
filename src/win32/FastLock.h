@@ -113,7 +113,7 @@ class FastLock : private NonCopyable {
     
   bool tryAcquire(unsigned long timeout=0) {
 
-    switch(::WaitForSingleObject(_hMutex, 0)) {
+    switch(::WaitForSingleObject(_hMutex, timeout)) {
     case WAIT_OBJECT_0:
 
 #ifndef NDEBUG

@@ -28,6 +28,7 @@
 #include "zthread/Exceptions.h"
 #include "zthread/NonCopyable.h"
 #include <pthread.h>
+#include <assert.h>
 
 namespace ZThread {
 
