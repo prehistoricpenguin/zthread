@@ -1,6 +1,6 @@
-CXXFLAGS = @COMPILER_OPTIONS@
+AM_CXXFLAGS = @COMPILER_OPTIONS@
 INCLUDES = -I$(top_srcdir)/include
-LDADD = @LINKER_OPTIONS@ $(top_builddir)/src/.libs/libZThread.a 
+LDADD = @LINKER_OPTIONS@ $(top_builddir)/src/.libs/libZThread.a
 SUBDIRS=.
 
 MutexTests_SOURCES = MutexTests.cxx
@@ -33,4 +33,4 @@ DAEMONTHREAD_TESTS.dsp \
 THREAD_TESTS.dsp \
 THREADLOCAL_TESTS.dsp \
 MUTEX_TESTS.dsp \
-STATUS_TESTS.dsp 
+STATUS_TESTS.dsp

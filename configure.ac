@@ -1,4 +1,4 @@
-AC_REVISION($Revision: 1.9 $ZT_VERSION $)
+AC_REVISION($Revision: 1.10 $ZT_VERSION $)
 
 AC_INIT
 AC_CONFIG_SRCDIR([README])
@@ -170,18 +170,11 @@ AC_MSG_RESULT($ZT_TYPE)
 dnl Configure targets
 SUBDIRS="src"
 
-AC_ARG_ENABLE(examples,
-[  --enable-examples       Include examples in the project build. [default=yes]],,
-[
-  SUBDIRS="$SUBDIRS examples"
-])
-
-dnl Enable tests
-AC_ARG_ENABLE(examples,
-[  --enable-tests          Include test cases in the project build. [default=yes]],,
-[
-  SUBDIRS="$SUBDIRS tests"
-])
+dnl AC_ARG_ENABLE(examples,
+dnl [  --enable-examples       Include examples in the project build. [default=yes]],,
+dnl [
+dnl  SUBDIRS="$SUBDIRS examples"
+dnl ])
 
 dnl Enable priorities
 AC_ARG_ENABLE(priorities, [  --enable-priorities     Enable pthreads priorities [default=yes]], AC_DEFINE(ZTHREAD_DISABLE_PRIORITY,,[No OS priority support]))
@@ -222,5 +215,5 @@ AM_PROG_LIBTOOL
 AC_SUBST(SUBDIRS)
 
 
-AC_CONFIG_FILES([Makefile src/Makefile share/zthread-config share/zthread.spec tests/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile share/zthread-config share/zthread.spec])
 AC_OUTPUT

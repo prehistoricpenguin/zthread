@@ -1,4 +1,4 @@
-CXXFLAGS = @COMPILER_OPTIONS@ @EXTRA_COMPILER_OPTIONS@
+AM_CXXFLAGS = @COMPILER_OPTIONS@ @EXTRA_COMPILER_OPTIONS@
 INCLUDES = -I$(top_srcdir)/include
 SUBDIRS=.
 
@@ -6,7 +6,7 @@ libdir=$(prefix)/lib
 
 lib_LTLIBRARIES = libZThread.la
 
-libZThread_la_LIBADD=@LINKER_OPTIONS@ @EXTRA_LINKER_OPTIONS@ 
+libZThread_la_LIBADD=@LINKER_OPTIONS@ @EXTRA_LINKER_OPTIONS@
 libZThread_la_LDFLAGS= \
         -release $(LT_RELEASE)  \
         -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
