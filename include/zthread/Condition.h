@@ -80,7 +80,7 @@ class ZTHREAD_API Condition : public Waitable, private NonCopyable {
     /* throw(Synchronization_Exception) */;
 
   //! Destroy Condition object
-  ~Condition()
+  virtual ~Condition()
     throw(); 
   
   /**
