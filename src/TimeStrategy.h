@@ -36,8 +36,18 @@
 
 #  if defined(ZT_WIN32) || defined(ZT_WIN9X)
 
-#    ifndef HAVE_FTIME
-#    define HAVE_FTIME
+#    if !defined(__MWERKS__)
+
+#      ifndef HAVE_FTIME
+#      define HAVE_FTIME
+#      endif
+
+#    elif defined(__MWERKS__)
+
+#      ifndef HAVE_PERFORMANCECOUNTER
+#      define HAVE_PERFORMANCECOUNTER
+#      endif
+
 #    endif
 
 #  endif
@@ -53,6 +63,10 @@
 #if defined(ZT_MACOS)
 
 #  include "macos/UpTimeStrategy.h"
+
+#elif defined(HAVE_PERFORMANCECOUNTER)
+              
+#  include "win32/PerformanceCounterStrategy.h"
 
 #elif defined(HAVE_FTIME)
 
