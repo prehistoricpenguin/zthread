@@ -29,7 +29,7 @@ namespace ZThread {
  * @class Holder
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-03T17:21:01-0400>
+ * @date <2002-07-13T10:08:16-0400>
  * @version 2.2.2
  *
  * Holders are used to create submit tasks to a thread without
@@ -165,10 +165,10 @@ Priority Thread::getPriority()
 
 }
 
-void Thread::interrupt() 
+bool Thread::interrupt() 
   throw() {
 
-  _impl->interrupt();
+  return _impl->interrupt();
 
 }
   

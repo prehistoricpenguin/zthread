@@ -129,25 +129,20 @@ bool Monitor::interrupt() {
  
     // Update the state & wake the waiter if there is one
     push(INTERRUPTED);
+
+    wasInterruptable = false;
     
     if(hadWaiter) 
       pthread_cond_signal(&_waitCond);
     
+    else
+      wasInterruptable = !pthread_equal(_owner, pthread_self());
+
   }
 
   pthread_mutex_unlock(&_waitLock);
 
-  /*  
-#if !defined(ZTHREAD_DISABLE_INTERRUPT)
-  
-  // If a thread was not blocked, and the thread is not this thread,
-  // raise a signal.
-  if(!hadWaiter && !pthread_equal(_owner, pthread_self()))
-    pthread_kill(_owner, SIGALRM);
-  
-#endif
-  */
-
+  // Only returns true when an interrupted thread is not currently blocked
   return wasInterruptable;
 
 }

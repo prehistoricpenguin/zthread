@@ -38,7 +38,7 @@ namespace ZThread {
 /**
  * @class ThreadImpl
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-03T14:39:01-0400>
+ * @date <2002-07-13T09:55:47-0400>
  * @version 2.2.2
  */
 class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
@@ -81,8 +81,8 @@ class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
   }
 
   //! Set the INTERRUPTED status of the monitor
-  inline void interrupt() throw() { 
-    _monitor.interrupt(); 
+  inline bool interrupt() throw() { 
+    return _monitor.interrupt(); 
   }
 
   //! Check & clear the INTERRUPTED status of the monitor

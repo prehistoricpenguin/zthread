@@ -129,12 +129,15 @@ bool Monitor::interrupt() {
 
     push(INTERRUPTED);
     
+    wasInterruptable = false;
+
     if(_waiting && !_pending) {
 
       _pending = true;
       hasWaiter = true;
 
-    }
+    } else 
+      wasInterruptable = !(_owner == MPCurrentTaskID());
 
   }
 

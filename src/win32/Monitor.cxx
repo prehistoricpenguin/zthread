@@ -108,35 +108,24 @@ bool Monitor::interrupt() {
  
     // Update the state & wake the waiter if there is one
     push(INTERRUPTED);
-    
-    if(hadWaiter) 
+
+    wasInterruptable = false;
+
+    if(hadWaiter) {
+
+      // Blocked on a synchronization object
       if(::SetEvent(_handle) == NULL) {
         assert(0);
       }
-    
+
+    } else 
+      wasInterruptable = (!_owner == ::GetCurrentThreadId());
+            
   }
 
   _waitLock.release();
 
-/*
-#if !defined(ZTHREAD_DISABLE_INTERRUPT)
-  
-  // If a thread was not blocked, and the thread is not this thread,
-  // raise a signal.
-  if(!hadWaiter && !(_owner == ::GetCurrentThreadId())) {
-    
-    HANDLE hInterrupt = (HANDLE)Thread::interruptKey().get();
-
-    if(hInterrupt != 0x00) // Signal the interrupt
-      if(::SetEvent(hInterrupt) == NULL) {
-        assert(0);
-      }
-
-  }
-
-#endif
-*/  
-
+  // Only returns true when an interrupted thread is not currently blocked
   return wasInterruptable;
 
 }

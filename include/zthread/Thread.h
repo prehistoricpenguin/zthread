@@ -35,8 +35,8 @@ class ThreadImpl;
  * @class Thread
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-07-02T16:56:37-0400>
- * @version 2.2.6
+ * @date <2002-07-13T10:10:33-0400>
+ * @version 2.2.9
  *
  * A Thread is a special kind of Runnable object that represents 
  * a thread of execution in a program. It allows tasks to be
@@ -382,8 +382,13 @@ class ZTHREAD_API Thread : private NonCopyable, public Cancelable, public Runnab
    * Interrupting a thread that is no longer running will have no effect other 
    * than setting the interrupt status permanently. When a thread exits, that
    * status can no longer be cleared.
+   *
+   * @return bool true only if the Thread was interrupted successfully and it is not
+   * the current thread and it is not blocked on a synchronization object. This indicates
+   * it may be blocked by a system call, or not at all. A user can extend the Thread
+   * class to take advantage of this hint to implement i/o interruption for thier system.
    */
-  void interrupt() throw();
+  virtual bool interrupt() throw();
     
   /**
    * Tests whether the current Thread has been interrupt()ed, clearing
