@@ -117,24 +117,26 @@ bool Monitor::interrupt() {
   }
 
   _waitLock.release();
-  
+
+/*
 #if !defined(ZTHREAD_DISABLE_INTERRUPT)
   
   // If a thread was not blocked, and the thread is not this thread,
   // raise a signal.
   if(!hadWaiter && !(_owner == ::GetCurrentThreadId())) {
     
-/*    HANDLE hInterrupt = (HANDLE)Thread::interruptKey().get();
+    HANDLE hInterrupt = (HANDLE)Thread::interruptKey().get();
 
     if(hInterrupt != 0x00) // Signal the interrupt
       if(::SetEvent(hInterrupt) == NULL) {
         assert(0);
       }
-*/
+
   }
 
 #endif
-  
+*/  
+
   return wasInterruptable;
 
 }
