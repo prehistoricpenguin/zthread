@@ -1,5 +1,5 @@
 /*
- *  ZThreads, a platform-independant, multithreading and 
+ *  ZThreads, a platform-independant, multithreading and
  *  synchroniation library
  *
  *  Copyright (C) 2001 Eric Crahen, See LGPL.TXT for details
@@ -22,48 +22,47 @@
 #include "zthread/Mutex.h"
 #include "MutexImpl.h"
 
-#include <iostream>
 
 namespace ZThread {
 
 class FifoMutexImpl : public MutexImpl<fifo_list, NullBehavior> { };
 
 Mutex::Mutex() /* throw(Synchronization_Exception) */ {
-std::cout << "MTX!" << std::endl;  
+
   _impl = new FifoMutexImpl();
-  
+
 }
 
-Mutex::~Mutex() 
+Mutex::~Mutex()
  throw() {
 
-  if(_impl != 0) 
+  if(_impl != 0)
     delete _impl;
 
 }
 
 // P
-void Mutex::acquire() 
+void Mutex::acquire()
   /* throw(Synchronization_Exception) */ {
 
-  _impl->acquire(); 
+  _impl->acquire();
 
 }
 
 
 // P
-bool Mutex::tryAcquire(unsigned long ms) 
+bool Mutex::tryAcquire(unsigned long ms)
   /* throw(Synchronization_Exception) */ {
 
-  return _impl->tryAcquire(ms); 
+  return _impl->tryAcquire(ms);
 
 }
 
 // V
-void Mutex::release() 
+void Mutex::release()
   /* throw(Synchronization_Exception) */ {
 
-  _impl->release(); 
+  _impl->release();
 
 }
 

@@ -1,0 +1,6 @@
+#define ZT_WIN32
+#define ZTHREAD_STATIC
+
+
+#include <cstdlib>
+using std::size_t;

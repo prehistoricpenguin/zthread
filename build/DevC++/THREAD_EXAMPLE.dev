@@ -10,7 +10,6 @@ Libs=Debug
 PrivateResource=
 ResourceIncludes=
 MakeIncludes=
-Resources=
 Compiler=
 Linker=-lZThread
 IsCpp=1
@@ -21,19 +20,41 @@ OverrideOutput=0
 OverrideOutputName=THREAD_EXAMPLE.exe
 Folders=
 CommandLine=
-Focused=-1
-Order=
+CppCompiler=
+HostApplication=
+IncludeVersionInfo=0
+SupportXPThemes=0
+CompilerSet=0
+CompilerSettings=000000000000000100
+Resources=
 
 [Unit1]
 FileName=..\..\examples\ThreadExample.cxx
-Open=0
 Folder=
-Top=0
-CursorCol=10
-CursorRow=148
-TopLine=129
-LeftChar=1
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Views]
 ProjectView=1
+
+[VersionInfo]
+Major=0
+Minor=1
+Release=1
+Build=1
+LanguageID=1033
+CharsetID=1252
+CompanyName=
+FileVersion=0.1
+FileDescription=Developed using the Dev-C++ IDE
+InternalName=
+LegalCopyright=
+LegalTrademarks=
+OriginalFilename=THREAD_EXAMPLE.exe
+ProductName=THREAD_EXAMPLE
+ProductVersion=0.1
 

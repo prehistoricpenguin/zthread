@@ -10,7 +10,6 @@ Libs=
 PrivateResource=
 ResourceIncludes=
 MakeIncludes=
-Resources=
 Compiler=-DZT_WIN32 -DWIN32  -D_DEBUG -D_LIB -DZTHREAD_STATIC
 Linker=
 IsCpp=1
@@ -25,9 +24,9 @@ CommandLine=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=000000100100000000
-Focused=-1
-Order=
+CompilerSettings=000000100100000100
+CppCompiler=
+Resources=
 
 [Unit4]
 FileName=..\..\src\Condition.cxx
@@ -36,8 +35,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit6]
 FileName=..\..\src\FastMutex.cxx
@@ -46,8 +45,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit7]
 FileName=..\..\src\FastRecursiveMutex.cxx
@@ -56,8 +55,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit8]
 FileName=..\..\src\Monitor.cxx
@@ -66,8 +65,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit9]
 FileName=..\..\src\Mutex.cxx
@@ -76,8 +75,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit10]
 FileName=..\..\src\PriorityCondition.cxx
@@ -86,8 +85,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit11]
 FileName=..\..\src\PriorityInheritanceMutex.cxx
@@ -96,8 +95,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit12]
 FileName=..\..\src\PriorityMutex.cxx
@@ -106,8 +105,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit13]
 FileName=..\..\src\PrioritySemaphore.cxx
@@ -116,8 +115,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit14]
 FileName=..\..\src\RecursiveMutex.cxx
@@ -126,8 +125,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit15]
 FileName=..\..\src\RecursiveMutexImpl.cxx
@@ -136,8 +135,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit16]
 FileName=..\..\src\Semaphore.cxx
@@ -146,8 +145,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit17]
 FileName=..\..\src\Thread.cxx
@@ -156,8 +155,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit18]
 FileName=..\..\src\ThreadImpl.cxx
@@ -166,8 +165,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit19]
 FileName=..\..\src\ThreadLocalMap.cxx
@@ -176,8 +175,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit20]
 FileName=..\..\src\ThreadOps.cxx
@@ -186,8 +185,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit21]
 FileName=..\..\include\zthread\ZThread.h
@@ -196,8 +195,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit22]
 FileName=..\..\include\zthread\AbstractThreadLocal.h
@@ -206,8 +205,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit23]
 FileName=..\..\include\zthread\AtomicCount.h
@@ -216,8 +215,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit24]
 FileName=..\..\include\zthread\Barrier.h
@@ -226,8 +225,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit25]
 FileName=..\..\include\zthread\BiasedReadWriteLock.h
@@ -236,8 +235,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit26]
 FileName=..\..\include\zthread\BlockingQueue.h
@@ -246,8 +245,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit27]
 FileName=..\..\include\zthread\BoundedQueue.h
@@ -256,8 +255,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit28]
 FileName=..\..\include\zthread\Cancelable.h
@@ -266,8 +265,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit29]
 FileName=..\..\include\zthread\CancelableTask.h
@@ -276,8 +275,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit30]
 FileName=..\..\include\zthread\ClassLockable.h
@@ -286,8 +285,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit31]
 FileName=..\..\include\zthread\ConcurrentExecutor.h
@@ -296,8 +295,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit32]
 FileName=..\..\include\zthread\Condition.h
@@ -306,8 +305,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit33]
 FileName=..\..\include\zthread\Config.h
@@ -316,8 +315,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit34]
 FileName=..\..\include\zthread\CountedPtr.h
@@ -326,8 +325,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit35]
 FileName=..\..\include\zthread\CountingSemaphore.h
@@ -336,8 +335,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit36]
 FileName=..\..\include\zthread\DefaultThreadFactory.h
@@ -346,8 +345,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit37]
 FileName=..\..\include\zthread\Exceptions.h
@@ -356,8 +355,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit38]
 FileName=..\..\include\zthread\Executor.h
@@ -366,8 +365,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit39]
 FileName=..\..\include\zthread\FairReadWriteLock.h
@@ -376,8 +375,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit42]
 FileName=..\..\include\zthread\Future.h
@@ -386,8 +385,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit44]
 FileName=..\..\include\zthread\Handle.h
@@ -396,8 +395,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit46]
 FileName=..\..\include\zthread\IntrusivePtr.h
@@ -406,8 +405,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit47]
 FileName=..\..\include\zthread\Lockable.h
@@ -416,8 +415,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit48]
 FileName=..\..\include\zthread\LockedQueue.h
@@ -426,8 +425,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit49]
 FileName=..\..\include\zthread\MonitoredQueue.h
@@ -436,8 +435,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit50]
 FileName=..\..\include\zthread\Mutex.h
@@ -446,8 +445,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit51]
 FileName=..\..\include\zthread\NonCopyable.h
@@ -456,8 +455,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit52]
 FileName=..\..\include\zthread\NullLockable.h
@@ -466,8 +465,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [VersionInfo]
 Major=0
@@ -493,8 +492,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit5]
 FileName=..\..\src\CountingSemaphore.cxx
@@ -503,8 +502,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit41]
 FileName=..\..\include\zthread\FastRecursiveMutex.h
@@ -513,8 +512,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit45]
 FileName=..\..\include\zthread\InheritableThreadLocal.h
@@ -523,8 +522,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit40]
 FileName=..\..\include\zthread\FastMutex.h
@@ -533,8 +532,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit43]
 FileName=..\..\include\zthread\Guard.h
@@ -543,8 +542,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit1]
 FileName=..\..\src\Time.cxx
@@ -553,8 +552,8 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
+Link=1
+Priority=1000
 
 [Unit2]
 FileName=..\..\src\AbstractThreadLocal.cxx
@@ -563,133 +562,209 @@ Compile=1
 CompileCpp=1
 OverrideBuildCmd=0
 BuildCmd=
-Open=0
-Top=0
-CursorCol=1
-CursorRow=1
-TopLine=1
-LeftChar=1
+Link=1
+Priority=1000
 
 [Views]
 ProjectView=1
 
 [Unit53]
 FileName=..\..\include\zthread\PoolExecutor.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit54]
 FileName=..\..\include\zthread\Priority.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit55]
 FileName=..\..\include\zthread\PriorityCondition.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit56]
 FileName=..\..\include\zthread\PriorityInheritanceMutex.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit57]
 FileName=..\..\include\zthread\PriorityMutex.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit58]
 FileName=..\..\include\zthread\PrioritySemaphore.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit59]
 FileName=..\..\include\zthread\Queue.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit60]
 FileName=..\..\include\zthread\ReadWriteLock.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit61]
 FileName=..\..\include\zthread\RecursiveMutex.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit62]
 FileName=..\..\include\zthread\Runnable.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit63]
 FileName=..\..\include\zthread\Semaphore.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit64]
 FileName=..\..\include\zthread\Singleton.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit65]
 FileName=..\..\include\zthread\SynchronousExecutor.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit66]
 FileName=..\..\include\zthread\Thread.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit67]
 FileName=..\..\include\zthread\ThreadedExecutor.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit68]
 FileName=..\..\include\zthread\ThreadFactory.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit69]
 FileName=..\..\include\zthread\ThreadLocal.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit70]
 FileName=..\..\include\zthread\Throwable.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit71]
 FileName=..\..\include\zthread\Time.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
 [Unit72]
 FileName=..\..\include\zthread\Waitable.h
-Open=0
 Folder=
-Top=0
+CompileCpp=1
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 
