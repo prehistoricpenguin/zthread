@@ -205,7 +205,7 @@ if test "X$af_echo_exec_prefix" = "Xyes"; then
 fi
 
 if test "X$af_echo_version" = "Xyes"; then
-        echo 2.2.7
+        echo 2.2.11
         exit 0
 fi
 

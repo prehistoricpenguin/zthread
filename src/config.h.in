@@ -1,7 +1,10 @@
 /* src/config.h.in.  Generated from configure.ac by autoheader.  */
 
-/* Define to 1 if you have the <asm/atomic.h> header file. */
-#undef HAVE_ASM_ATOMIC_H
+/* Defined if <bits/atomicity.h> is usable */
+#undef HAVE_ATOMIC_GCC
+
+/* Defined if <asm/atomic.h> is usable */
+#undef HAVE_ATOMIC_LINUX
 
 /* _beginthreadex() */
 #undef HAVE_BEGINTHREADEX
@@ -17,9 +20,6 @@
 
 /* Define to 1 if you have the <errno.h> header file. */
 #undef HAVE_ERRNO_H
-
-/* ftime() */
-#undef HAVE_FTIME
 
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
@@ -72,9 +72,6 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
 
-/* MSVCRT _ftime() */
-#undef HAVE_WIN32_FTIME
-
 /* Name of package */
 #undef PACKAGE
 
@@ -95,6 +92,9 @@
 
 /* Define to 1 if you have the ANSI C header files. */
 #undef STDC_HEADERS
+
+/* Defined if ftime()/_ftime() is usable */
+#undef SYSTEM_FTIME
 
 /* Version number of package */
 #undef VERSION

@@ -1,12 +1,12 @@
 # Select a pthread library & setup some build variables
 # by Eric Crahen <crahen@cs.buffalo.edu>
 
-NO_PTHREAD_ERROR=<<EOT
+NO_PTHREAD_ERROR="
 Please install/update your POSIX threads (pthreads) library. Updates
 should be available from either your system vendor, or, for GNU/Linux
 systems, go to http://pauillac.inria.fr/~xleroy/linuxthreads/.
 GNU Pth can also be used if it was configured with --enable-pthread.
-EOT
+"
 
 ifdef(AM_WITH_PTHREAD,,[
 

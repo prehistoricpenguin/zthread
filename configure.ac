@@ -1,4 +1,4 @@
-AC_REVISION($Revision: 1.6 $ZT_VERSION $)
+AC_REVISION($Revision: 1.7 $ZT_VERSION $)
 
 AC_INIT
 AC_CONFIG_SRCDIR([README])
@@ -49,6 +49,11 @@ dnl Check for pthreads support
 AM_WITH_PTHREAD_INFO
 AM_WITH_DOXYGEN
 
+AM_ENABLE_ATOMIC_LINUX
+AM_ENABLE_ATOMIC_GCC
+AM_DETECT_FTIME
+
+
 dnl Setup compiler/linker options based on the target type
 case "$target" in
 *-*-mingw32*)
@@ -85,7 +90,7 @@ esac
 
 dnl Header checks
 AC_HEADER_STDC
-AC_CHECK_HEADERS(errno.h asm/atomic.h)
+AC_CHECK_HEADERS(errno.h)
 
 
 dnl Check for debug-mode
@@ -190,24 +195,6 @@ AC_TRY_LINK( [#include <setjmp.h>], [sigjmp_buf t; sigsetjmp(t, 0);],
 [AC_MSG_RESULT(yes)], 
 [AC_MSG_RESULT(no)
  AC_DEFINE(ZTHREAD_DISABLE_INTERRUPT,,[No interrupt() hooks])
-])
-
-dnl Check for _ftime
-AC_MSG_CHECKING(for _ftime())
-AC_TRY_LINK( [#include <sys/time.h>], [struct _timeb t; _ftime(&t);],
-[AC_MSG_RESULT(yes)
- AC_DEFINE(HAVE_WIN32_FTIME,,[MSVCRT _ftime()])
-], 
-[ AC_MSG_RESULT(no) 
-
-  dnl Check for ftime
-  AC_MSG_CHECKING(for ftime())
-  AC_TRY_LINK( [#include <sys/timeb.h>], [struct timeb t; ftime(&t);],
-  [AC_MSG_RESULT(yes)
-   AC_DEFINE(HAVE_FTIME,,[ftime()])
-  ], 
-  [ AC_MSG_RESULT(no) ])
-
 ])
 
 dnl Check for beginthreadex

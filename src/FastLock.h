@@ -36,7 +36,7 @@
 
 #  if defined(__linux__)
 
-#    if defined(HAVE_ASM_ATOMIC_H) && defined(ZTHREAD_USE_SPIN_LOCKS)
+#    if defined(HAVE_ATOMIC_LINUX) && defined(ZTHREAD_USE_SPIN_LOCKS)
 #      include "linux/AtomicFastLock.h"
 #    endif
 
@@ -44,7 +44,8 @@
 
 #  include "posix/FastLock.h"
 
-// Use spin locks
+// Use spi
+n locks
 #elif defined(ZTHREAD_USE_SPIN_LOCKS)
 
 #  if defined(ZT_WIN9X)

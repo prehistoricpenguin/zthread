@@ -7,9 +7,12 @@ VERSION 2.2.11:
 
   FairReadWriteLock should properly release waiters.
 
-  DeferredCancelationScope actually defers cancelation now
+  DeferredCancelationScope defers cancelation correctly now
   as it should.
 
+  Started updating the autoconf files, detects asm/atomic.h
+  and bits/atomicity.h correctly now.
+	
 VERSION 2.2.10:
 
   Rolled up most of the small changes that were available in CVS.

@@ -4,7 +4,7 @@
 %define lib_name zthread
 
 Name: ZThread
-Version: 2.2.7
+Version: 2.2.11
 Release: %rel
 
 Summary: cross-platform c++ multi-threading framework
