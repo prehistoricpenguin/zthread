@@ -190,6 +190,7 @@
 #  pragma warning(disable:4290) 
 #  pragma warning(disable:4786)
 #  pragma warning(disable:4251)
+#  pragma warning(disable:4355)
 #endif
 
 // Ensure that only one implementation is selected
