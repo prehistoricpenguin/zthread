@@ -22,13 +22,14 @@
 #include "zthread/Mutex.h"
 #include "MutexImpl.h"
 
+#include <iostream>
 
 namespace ZThread {
 
 class FifoMutexImpl : public MutexImpl<fifo_list, NullBehavior> { };
 
 Mutex::Mutex() /* throw(Synchronization_Exception) */ {
-  
+std::cout << "MTX!" << std::endl;  
   _impl = new FifoMutexImpl();
   
 }
