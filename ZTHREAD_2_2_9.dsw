@@ -12,10 +12,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8
+    Project_Dep_Name ZTHREAD_2_2_9
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -30,7 +30,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -45,10 +45,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8
+    Project_Dep_Name ZTHREAD_2_2_9
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -63,7 +63,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -78,7 +78,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -93,10 +93,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8
+    Project_Dep_Name ZTHREAD_2_2_9
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -111,10 +111,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8
+    Project_Dep_Name ZTHREAD_2_2_9
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -129,10 +129,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8
+    Project_Dep_Name ZTHREAD_2_2_9
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -159,7 +159,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -174,10 +174,10 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8
+    Project_Dep_Name ZTHREAD_2_2_9
     End Project Dependency
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -192,7 +192,7 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
@@ -207,13 +207,13 @@ Package=<5>
 Package=<4>
 {{{
     Begin Project Dependency
-    Project_Dep_Name ZTHREAD_2_2_8_static
+    Project_Dep_Name ZTHREAD_2_2_9_static
     End Project Dependency
 }}}
 
 ###############################################################################
 
-Project: "ZTHREAD_2_2_8_shared"=".\ZTHREAD_2_2_8_shared.dsp" - Package Owner=<4>
+Project: "ZTHREAD_2_2_9_shared"=".\ZTHREAD_2_2_9_shared.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -225,7 +225,7 @@ Package=<4>
 
 ###############################################################################
 
-Project: "ZTHREAD_2_2_8_static"=".\ZTHREAD_2_2_8_static.dsp" - Package Owner=<4>
+Project: "ZTHREAD_2_2_9_static"=".\ZTHREAD_2_2_9_static.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

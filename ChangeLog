@@ -1,3 +1,10 @@
+VERSION 2.2.9:
+
+  Updated ThreadQueue which mistakenly was not removing joined daemon
+  threads.
+
+  Updated Win32 SwitchToThread code.
+ 	 
 VERSION 2.2.8:
 
   Added MacOS support. This has been tested with MacOS X only

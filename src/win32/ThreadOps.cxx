@@ -21,6 +21,8 @@ public:
   YieldOps() : _fnYield(NULL) {
 
     OSVERSIONINFO v;
+    v.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
+
     if(::GetVersionEx(&v) && (v.dwPlatformId == VER_PLATFORM_WIN32_NT)) {
     
        // Uses GetModuleHandle() so the reference count on the dll is

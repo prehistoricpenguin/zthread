@@ -36,9 +36,9 @@ class ThreadImpl;
   
 /**
  * @class ThreadQueue
- * @version 2.2.0
+ * @version 2.2.9
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-29T08:01:50-0400>
+ * @date <2002-07-12T15:35:52-0400>
  *
  * A ThreadQueue accumulates references to daemon and reference threads.
  * These are threads that are running outside the scope of the Thread
@@ -80,13 +80,17 @@ class ThreadQueue : public Singleton<ThreadQueue> {
    */
   ~ThreadQueue() {
 
+    // Make sure the current thread is mapped. Not always the case at
+    // this point if threads were started by something other than ZThreads.
+    ThreadImpl* impl = ThreadImpl::current();
+
     bool threadsPending = false;
 
     { // Check the queue to for pending threads
 
       Guard<FastLock> g(_lock);
 
-      _waiter = ThreadImpl::current();
+      _waiter = impl;
       threadsPending = _pending != 0;
       
     }
@@ -173,7 +177,7 @@ class ThreadQueue : public Singleton<ThreadQueue> {
     Guard<FastLock> g(_lock);
 
     // Join the threads waiting in the queue
-    for(List::iterator i = _daemonThreads.begin(); i != _daemonThreads.end(); ++i) {
+    for(List::iterator i = _daemonThreads.begin(); i != _daemonThreads.end();) {
 
       ThreadImpl* impl = (ThreadImpl*)*i;
       ThreadOps::join(impl);
@@ -181,6 +185,7 @@ class ThreadQueue : public Singleton<ThreadQueue> {
       // Update the reference count
       impl->delReference();
       
+      i = _daemonThreads.erase(i);
 
     }
 
