@@ -41,6 +41,10 @@
 
 #include "win32/TSS.h"
 
+#elif defined(ZT_MACOS)
+
+#include "macos/TSS.h"
+
 #endif
 
 

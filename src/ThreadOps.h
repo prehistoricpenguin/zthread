@@ -53,6 +53,11 @@
 #  include "win32/ThreadOps.h"
 #  define ZT_THREADOPS_IMPLEMENTATION "win32/ThreadOps.cxx"
 
+#elif defined(ZT_MACOS)
+
+#  include "macos/ThreadOps.h"
+#  define ZT_THREADOPS_IMPLEMENTATION "macos/ThreadOps.cxx"
+
 #endif
 
 #ifndef __ZTTHREADOPS_H__

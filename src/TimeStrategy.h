@@ -50,11 +50,18 @@
 #  include <sys/types.h>
 #endif
 
+#if defined(ZT_MACOS)
 
-#if defined(HAVE_FTIME)
+#  include "macos/UpTimeStrategy.h"
+
+#elif defined(HAVE_FTIME)
+
 #  include "posix/FtimeStrategy.h"
+
 #else
+
 #  include "posix/GetTimeOfDayStrategy.h"
+
 #endif
 
 

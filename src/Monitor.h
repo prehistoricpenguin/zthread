@@ -46,6 +46,11 @@
 #  include "win32/Monitor.h"
 #  define ZT_MONITOR_IMPLEMENTATION "win32/Monitor.cxx"
 
+#elif defined(ZT_MACOS)
+
+#  include "macos/Monitor.h"
+#  define ZT_MONITOR_IMPLEMENTATION "macos/Monitor.cxx"
+
 #endif
 
 #ifndef __ZTMONITOR_H__

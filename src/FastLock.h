@@ -55,7 +55,13 @@
 
 // Use normal Mutex objects
 #elif defined(ZT_WIN9X) || defined(ZT_WIN32)
+
 #  include "win32/FastLock.h"
+
+#elif defined(ZT_MACOS)
+
+#  include "macos/FastLock.h"
+
 #endif
 
 #ifndef __ZTFASTLOCK_H__

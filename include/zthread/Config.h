@@ -55,6 +55,10 @@
 // supported by windows 98 and 95, but may not be comatible with 64 bit or alpha systems
 // #define ZT_WIN9X 1
 
+// (configure)
+// Uncomment to select a MacOS based implementation
+// #define ZT_MACOS 1
+
 // =====================================================================================
 // The following section can be customized to select the implementation that is compiled
 // Eventually, the configure program will be updated to define these symbols as well.
@@ -86,7 +90,7 @@
 // Select an implementation by checking out the environment, first looking for 
 // compilers, then by looking for other definitions that could be present
 
-#if !defined(ZT_POSIX) && !defined(ZT_WIN9X) && !defined(ZT_WIN32) 
+#if !defined(ZT_POSIX) && !defined(ZT_WIN9X) && !defined(ZT_WIN32) && !defined(ZT_MACOS)
 
 // Check for well known compilers
 #if defined(_MSC_VER) || defined(__BORLANDC__) || defined(__BCPLUSPLUS__) || defined(__MINGW32__)
@@ -115,8 +119,12 @@
 
 #  define ZT_WIN32
 
+#elif defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)
+
+#  define ZT_MACOS
+
 #else
-#  error "Could not select implementation, define ZT_WIN9X, ZT_WIN32 or ZT_POSIX"
+#  error "Could not select implementation, define ZT_WIN9X, ZT_WIN32, ZT_POSIX or ZT_MACOS"
 #endif
 
 #endif

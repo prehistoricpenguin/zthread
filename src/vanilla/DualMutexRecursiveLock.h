@@ -32,7 +32,7 @@ namespace ZThread {
  * @class FastRecursiveLock
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-05-28T09:12:51-0400>
+ * @date <2002-06-28T16:41:49-0700>
  * @version 2.2.0
  *
  * This is a vanilla FastRecursiveLock implementation for a
@@ -56,7 +56,7 @@ class FastRecursiveLock : private NonCopyable {
 
  public:
 
-  inline FastRecursiveLock() : _count(0) { }
+  inline FastRecursiveLock() : _owner(ThreadOps::INVALID), _count(0) { }
   
   inline ~FastRecursiveLock() {
 
