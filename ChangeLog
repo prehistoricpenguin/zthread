@@ -1,3 +1,14 @@
+VERSION 2.2.11:
+
+  Adjusted some of the include files that were missing #include's
+  that were left out (Barrier.h, ZThread.h, posix/FastMutex.h)
+
+  Fixed some of the Time class's math.
+
+  FairReadWriteLock should properly release waiters.
+
+  DeferredCancelationScope actually defers cancelation now
+  as it should.
 
 VERSION 2.2.10:
 
