@@ -49,7 +49,7 @@ distclean-local:
 
 
 ## include the doc & share directories in the distribution
-dist-hook: dist-hook-clean
+dist-hook: distclean-local
 	cp -pR $(top_srcdir)/doc     	$(distdir)
 	cp -pR $(top_srcdir)/share   	$(distdir)
 	cp -pR $(top_srcdir)/include   	$(distdir)

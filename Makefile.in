@@ -583,7 +583,7 @@ distclean-local:
 	-rm -rf $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
 	-rm -rf $(top_srcdir)/autom4te.cache
 
-dist-hook: dist-hook-clean
+dist-hook: distclean-local
 	cp -pR $(top_srcdir)/doc     	$(distdir)
 	cp -pR $(top_srcdir)/share   	$(distdir)
 	cp -pR $(top_srcdir)/include   	$(distdir)
