@@ -22,7 +22,7 @@ install-data-hook:
 	$(INSTALL_DATA) $(top_srcdir)/share/zthread.m4 $(datadir)/aclocal
 	$(INSTALL_DATA) $(top_srcdir)/share/pthread.m4 $(datadir)/aclocal
 	mkdir -p $(DESTDIR)$(includedir)/zthread
-	cp -dpR $(top_srcdir)/include/zthread $(DESTDIR)$(includedir)/
+	cp -pR $(top_srcdir)/include/zthread $(DESTDIR)$(includedir)/
 
 ## uninstall the config script & m4 macros
 uninstall-local:
@@ -31,17 +31,18 @@ uninstall-local:
 
 ## include the doc & share directories in the distribution
 dist-hook:
-	cp -dpR $(top_srcdir)/doc $(distdir)
-	cp -dpR $(top_srcdir)/share $(distdir)
-	cp -dpR $(top_srcdir)/contrib $(distdir)
-	cp -dpR $(top_srcdir)/include $(distdir)
-	cp -dpR $(top_srcdir)/src/*.h $(distdir)/src
-	cp -dpR $(top_srcdir)/src/posix $(distdir)/src
-	cp -dpR $(top_srcdir)/src/linux $(distdir)/src
-	cp -dpR $(top_srcdir)/src/solaris $(distdir)/src
-	cp -dpR $(top_srcdir)/src/win32 $(distdir)/src
-	cp -dpR $(top_srcdir)/src/win9x $(distdir)/src
-	cp -dpR $(top_srcdir)/src/vanilla $(distdir)/src
+	cp -pR $(top_srcdir)/doc $(distdir)
+	cp -pR $(top_srcdir)/share $(distdir)
+	cp -pR $(top_srcdir)/contrib $(distdir)
+	cp -pR $(top_srcdir)/include $(distdir)
+	cp -pR $(top_srcdir)/src/*.h $(distdir)/src
+	cp -pR $(top_srcdir)/src/posix $(distdir)/src
+	cp -pR $(top_srcdir)/src/linux $(distdir)/src
+	cp -pR $(top_srcdir)/src/macos $(distdir)/src
+	cp -pR $(top_srcdir)/src/solaris $(distdir)/src
+	cp -pR $(top_srcdir)/src/win32 $(distdir)/src
+	cp -pR $(top_srcdir)/src/win9x $(distdir)/src
+	cp -pR $(top_srcdir)/src/vanilla $(distdir)/src
 
 
 ## RPM from the distribution rule

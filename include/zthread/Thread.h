@@ -35,8 +35,8 @@ class ThreadImpl;
  * @class Thread
  *
  * @author Eric Crahen <crahen@cse.buffalo.edu>
- * @date <2002-06-10T06:58:29-0400>
- * @version 2.2.4
+ * @date <2002-07-02T16:56:37-0400>
+ * @version 2.2.6
  *
  * A Thread is a special kind of Runnable object that represents 
  * a thread of execution in a program. It allows tasks to be
