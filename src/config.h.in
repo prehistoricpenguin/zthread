@@ -24,6 +24,21 @@
 /* defined when pthreads is available */
 #undef HAVE_POSIX_THREADS
 
+/* Defined if pthread_keycreate() is available */
+#undef HAVE_PTHREADKEYCREATE
+
+/* Defined if pthread_key_create() is available */
+#undef HAVE_PTHREADKEY_CREATE
+
+/* Defined if pthread_yield() is available */
+#undef HAVE_PTHREAD_YIELD
+
+/* Defined if -lrt is needed for RT scheduling */
+#undef HAVE_SCHED_RT
+
+/* Defined if sched_yield() is available */
+#undef HAVE_SCHED_YIELD
+
 /* Define to 1 if you have the <stdint.h> header file. */
 #undef HAVE_STDINT_H
 

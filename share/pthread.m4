@@ -6,6 +6,7 @@ dnl --with-pthread
 dnl
 dnl If support is available, then HAVE_POSIX_THREADS 
 dnl will be set
+dnl TODO: update the checks to only use -lrt when needed
 dnl
 ifdef(AM_DETECT_PTHREAD,,[
 
@@ -92,8 +93,44 @@ pthread_explicit="no"
    ])
   ])
 
+  dnl Check for SunOS rt library
+  AC_CHECK_LIB(rt, sched_get_priority_max, 
+  [ AC_DEFINE(HAVE_SCHED_RT,,[Defined if -lrt is needed for RT scheduling])
+    PTHREAD_LIBS="$LIBS -lrt" ])
+
   AC_SUBST(PTHREAD_LIBS)
   AC_SUBST(PTHREAD_CXXFLAGS)
+
+  dnl Check for sched_yield
+  AC_MSG_CHECKING(for sched_yield);
+  AC_TRY_LINK([#include <sched.h>],
+    [ sched_yield(); ], 
+    [ AC_MSG_RESULT(yes)
+      AC_DEFINE(HAVE_SCHED_YIELD,,[Defined if sched_yield() is available]) ],  
+    [ AC_MSG_RESULT(no) ])
+
+  dnl Check for pthread_yield
+  AC_MSG_CHECKING(for pthread_yield);
+  AC_TRY_LINK([#include <pthread.h>],
+    [ pthread_yield(); ], 
+    [ AC_MSG_RESULT(yes)
+      AC_DEFINE(HAVE_PTHREAD_YIELD,,[Defined if pthread_yield() is available]) ],  
+    [ AC_MSG_RESULT(no) ])
+
+  dnl Check for pthread_key_create
+  AC_MSG_CHECKING(for pthread_key_create)
+  AC_TRY_LINK([#include <pthread.h>],
+  [ pthread_key_create(0, 0);],
+  [ AC_MSG_RESULT(yes) 
+    AC_DEFINE(HAVE_PTHREADKEY_CREATE,,[Defined if pthread_key_create() is available]) ],
+  [ AC_MSG_RESULT(no)
+    AC_MSG_CHECKING(for pthread_keycreate)
+    AC_TRY_LINK([#include <pthread.h>],
+    [ pthread_keycreate(0,0); ], 
+    [ AC_MSG_RESULT(yes)
+      AC_DEFINE(HAVE_PTHREADKEYCREATE,,[Defined if pthread_keycreate() is available]) 
+    ], AC_MSG_RESULT(no))
+  ])
 
   CXXFLAGS="$ac_save_CXXFLAGS"
   LIBS="$ac_save_LIBS"
