@@ -5,9 +5,9 @@ README.1ST \
 BUILDING \
 THANK.YOU \
 LGPL.TXT \
-ZTHREAD_2_2_9.dsw \
-ZTHREAD_2_2_9_shared.dsp \
-ZTHREAD_2_2_9_static.dsp \
+ZTHREAD_2_2_11.dsw \
+ZTHREAD_2_2_11_shared.dsp \
+ZTHREAD_2_2_11_static.dsp \
 depcomp
 
 
