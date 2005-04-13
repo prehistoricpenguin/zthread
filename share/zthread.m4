@@ -88,7 +88,7 @@ dnl
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "ZThread.h"
+#include "zthread/ZThread.h"
 
 int main (int argc, char *argv[]) {
 
