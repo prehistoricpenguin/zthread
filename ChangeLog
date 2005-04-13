@@ -1,3 +1,7 @@
+VERSION 2.3.3:
+
+	Reduced overhead when starting threads.
+
 VERSION 2.3.2:
 
   License changed to MIT

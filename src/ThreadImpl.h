@@ -113,7 +113,7 @@ class ThreadImpl : public IntrusivePtr<ThreadImpl, FastLock>, public ThreadOps {
   
   static ThreadImpl* current();
 
-  static void dispatch(ThreadImpl*, ThreadImpl*, Task);
+  void dispatch(Task);
 
 };
 

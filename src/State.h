@@ -37,7 +37,7 @@ class State {
  public:
 
   //! Various states
-  typedef enum { REFERENCE, IDLE, RUNNING, JOINED } STATE;
+  typedef enum { REFERENCE, IDLE, STARTING, RUNNING, JOINED } STATE;
 
   /**
    * Create State with the given flag set.
@@ -71,6 +71,15 @@ class State {
   }
 
   /**
+   * Test for the STARTING state. A task is in progress.
+   *
+   * @return bool
+   */
+  bool isStarting() const {
+    return _state == STARTING;
+  }
+
+  /**
    * Test for the REFERENCE state. A task is in progress but not
    * under control of this library.
    *
@@ -87,7 +96,7 @@ class State {
    */
   bool setIdle() {
 
-    if(_state != RUNNING)
+    if(!isRunning() || !isStarting())
       return false;
 
     _state = IDLE;
@@ -96,13 +105,28 @@ class State {
   }
 
   /**
+   * Transition to the STARTING state.
+   *
+   * @return bool true if successful
+   */
+  bool setStarting() {
+
+    if(!isIdle())
+      return false;
+
+    _state = STARTING;
+    return true;
+
+  }
+  
+  /**
    * Transition to the RUNNING state.
    *
    * @return bool true if successful
    */
   bool setRunning() {
 
-    if(_state != IDLE)
+    if(!isStarting())
       return false;
 
     _state = RUNNING;
@@ -117,7 +141,7 @@ class State {
    */
   bool setReference() {
 
-    if(_state != IDLE)
+    if(!isIdle())
       return false;
 
     _state = REFERENCE;

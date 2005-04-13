@@ -153,7 +153,7 @@ void MutexImpl<List, Behavior>::acquire() {
 
       _owner = self;
 
-      ownerAcquired(self);
+      Behavior::ownerAcquired(self);
       
     }
 
@@ -164,7 +164,7 @@ void MutexImpl<List, Behavior>::acquire() {
       _waiters.insert(self);
       m.acquire();
 
-      waiterArrived(self);
+      Behavior::waiterArrived(self);
 
       {        
       
@@ -173,7 +173,7 @@ void MutexImpl<List, Behavior>::acquire() {
       
       }
 
-      waiterDeparted(self);
+      Behavior::waiterDeparted(self);
 
       m.release();
         
@@ -192,7 +192,7 @@ void MutexImpl<List, Behavior>::acquire() {
           assert(_owner == 0);
           _owner = self;    
 
-          ownerAcquired(self);
+          Behavior::ownerAcquired(self);
 
           break;
         
@@ -236,7 +236,7 @@ bool MutexImpl<List, Behavior>::tryAcquire(unsigned long timeout) {
 
       _owner = self;
 
-      ownerAcquired(self);
+      Behavior::ownerAcquired(self);
       
     }
 
@@ -253,7 +253,7 @@ bool MutexImpl<List, Behavior>::tryAcquire(unsigned long timeout) {
       
         m.acquire();
 
-        waiterArrived(self);
+        Behavior::waiterArrived(self);
       
         {
         
@@ -262,7 +262,7 @@ bool MutexImpl<List, Behavior>::tryAcquire(unsigned long timeout) {
         
         }
 
-        waiterDeparted(self);
+        Behavior::waiterDeparted(self);
       
         m.release();
         
@@ -284,7 +284,7 @@ bool MutexImpl<List, Behavior>::tryAcquire(unsigned long timeout) {
           assert(0 == _owner);
           _owner = self;
 
-          ownerAcquired(self);
+          Behavior::ownerAcquired(self);
         
           break;
         
@@ -326,7 +326,7 @@ void MutexImpl<List, Behavior>::release() {
 
     _owner = 0;
 
-    ownerReleased(impl);
+    Behavior::ownerReleased(impl);
   
     // Try to find a waiter with a backoff & retry scheme
     for(;;) {

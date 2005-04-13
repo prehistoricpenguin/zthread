@@ -37,16 +37,16 @@ namespace ZThread {
   
     class Launcher : public Runnable {
       
-      ThreadImpl* x;
-      ThreadImpl* y;
-      Task z;
+      ThreadImpl* _impl;
+      Task _task;
       
     public:
       
-      Launcher(ThreadImpl* a, ThreadImpl* b, const Task& c) : x(a), y(b), z(c) {}
+      Launcher(ThreadImpl* impl, const Task& task) : _impl(impl), _task(task) {}
       
       void run() {      
-        y->dispatch(x,y,z);      
+        _impl->dispatch(_task);
+        delete this;
       }
             
     };
@@ -208,7 +208,7 @@ namespace ZThread {
     Guard<Monitor> g(_monitor);
     
     // Only set the native priority when the thread is running
-    if(_state.isRunning())
+    if(_state.isStarting() || _state.isRunning())
       ThreadOps::setPriority(this, p);
     
     _priority = p;
@@ -225,7 +225,7 @@ namespace ZThread {
   bool ThreadImpl::isActive() {
     
     Guard<Monitor> g(_monitor);
-    return _state.isRunning();
+    return _state.isStarting() || _state.isRunning(); 
     
   }
   
@@ -339,66 +339,71 @@ namespace ZThread {
     if(!_state.isIdle())
       throw InvalidOp_Exception("Thread is not idle.");
   
-    _state.setRunning();
+    _state.setStarting();
   
     // Spawn a new thread, blocking the parent (current) thread until
     // the child starts.
 
     ThreadImpl* parent = current();
-    Launcher launch(parent, this, task);
-
-    // Attempt to start the child thread
-    Guard<Monitor> g2(parent->_monitor);
-
-    if(!spawn(&launch)) {
-
-      // Return to the idle state & report the error if it doesn't work out.
-      _state.setIdle();    
-      throw Synchronization_Exception();    
-
-
-    }
-
-    // Wait, uninterruptably, for the child's signal. The parent thread
-    // still can be interrupted and killed; it just won't take effect 
-    // until the child has started.
-
-    Guard<Monitor, DeferredInterruptionScope> g3(parent->_monitor);
-
-    if(parent->_monitor.wait() != Monitor::SIGNALED) {
-      assert(0);
-    }
-  
-
-  }
-
-
-  void ThreadImpl::dispatch(ThreadImpl* parent, ThreadImpl* impl, Task task) {
-
-    // Map the implementation object onto the running thread.
-    _threadMap.set(impl);
-
-    // Update the reference count on a ThreadImpl before the 'Thread' 
-    // that owns it can go out of scope (by signaling the parent)
-    impl->addReference();
-
-    // Update the priority of the thread
-    if(parent->_state.isReference()) 
-      ThreadOps::setPriority(impl, 
-                             parent->_state.isReference() ? impl->_priority : parent->_priority);
+    Launcher* launcher = new Launcher(this, task);
 
     // Inherit ThreadLocal values from the parent
     typedef ThreadLocalMap::const_iterator It;
 
     for(It i = parent->getThreadLocalMap().begin(); i != parent->getThreadLocalMap().end(); ++i) 
       if( (i->second)->isInheritable() )
-        impl->getThreadLocalMap()[ i->first ] = (i->second)->clone();
+        getThreadLocalMap()[ i->first ] = (i->second)->clone();
+
+    if(!spawn(launcher)) {
+
+      // Return to the idle state & report the error if it doesn't work out.
+      delete launcher;
+      _state.setIdle();    
+
+      throw Synchronization_Exception("Could not spawn new thread");
+
+    }
+
+    // Update the priority of this thread
+    ThreadOps::setPriority(this, parent->_state.isReference() ? _priority : parent->_priority);
     
-    // Insert a user-thread mapping 
-    ThreadQueue::instance()->insertUserThread(impl);
+    // Insert a user-thread mapping if the launch is successful
+    this->addReference();
+    ThreadQueue::instance()->insertUserThread(this);
+
+  }
+
+  /**
+   * To create a child thread we need the following from the parent,
+   *
+   * Priority
+   * Inherited TSS values
+   *
+   * 
+   */
+  void ThreadImpl::dispatch(Task task) {
+
+    // Map the implementation object onto the running thread.
+    _threadMap.set(this);
+    
+
+/*
+    // Update the reference count on a ThreadImpl before the 'Thread' 
+    // that owns it can go out of scope (by signaling the parent)
+    impl->addReference();
+ */
+/*
+*/
+  
+    // Once the state is updated this thread will behave normally. There is a brief
+    // period of time between the parent thread spawning its child and this point where
+    // the state is STARTING. Child threads that are STARTING aren't quite ready yet.
+    _state.setRunning();
+
+/*
     // Wake the parent once the thread is setup
     parent->_monitor.notify();
-
+*/
     ZTDEBUG("Thread starting...\n");
 
     try {
@@ -416,11 +421,12 @@ namespace ZThread {
     
     { // Update the state of the thread
     
-      Guard<Monitor> g(impl->_monitor);
-      impl->_state.setJoined();
+      Guard<Monitor> g(_monitor);
+      _state.setJoined();
     
       // Wake the joiners that will be easy to join first
-      for(List::iterator i = impl->_joiners.begin(); i != impl->_joiners.end();) {
+      List::iterator i;
+      for(i = _joiners.begin(); i != _joiners.end();) {
       
         ThreadImpl* joiner = *i;
         Monitor& m = joiner->getMonitor();
@@ -430,7 +436,7 @@ namespace ZThread {
           m.notify();
           m.release();   
        
-          i = impl->_joiners.erase(i);
+          i = _joiners.erase(i);
 
         } else
           ++i;
@@ -438,7 +444,7 @@ namespace ZThread {
       } 
 
       // Wake the joiners that might take a while next
-      for(List::iterator i = impl->_joiners.begin(); i != impl->_joiners.end(); ++i) {
+      for(i = _joiners.begin(); i != _joiners.end(); ++i) {
       
         ThreadImpl* joiner = *i;
         Monitor& m = joiner->getMonitor();
@@ -454,13 +460,13 @@ namespace ZThread {
     ZTDEBUG("Thread exiting...\n"); 
 
     // Insert a pending-thread mapping, allowing the resources to be reclaimed 
-    ThreadQueue::instance()->insertPendingThread(impl);
+    ThreadQueue::instance()->insertPendingThread(this);
 
     // Cleanup ThreadLocal values
-    impl->getThreadLocalMap().clear();
+    getThreadLocalMap().clear();
 
     // Update the reference count allowing it to be destroyed 
-    impl->delReference();
+    delReference();
 
   }
 

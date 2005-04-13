@@ -491,7 +491,7 @@ Guard<LockType, LockingPolicy>::~Guard() throw() {
     
   try {
     
-    if(!isDisabled())
+    if(!LockHolder<LockType>::isDisabled())
       LockingPolicy::destroyScope(*this);
     
   } catch (...) { /* ignore */ }  

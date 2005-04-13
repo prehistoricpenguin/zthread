@@ -47,8 +47,8 @@ namespace ZThread {
   
   public:
   
-    //! Create a new AtomicCount, initialized to a value of 1
-    AtomicCount();
+    //! Create a new AtomicCount
+    AtomicCount(size_t count);
 
     //! Destroy a new AtomicCount
     ~AtomicCount();

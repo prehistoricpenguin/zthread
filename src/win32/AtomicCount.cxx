@@ -29,9 +29,9 @@
 namespace ZThread {
 
 
-AtomicCount::AtomicCount() {
+AtomicCount::AtomicCount(size_t count) {
 
-  _value = reinterpret_cast<void*>(new LONG(0));
+  _value = reinterpret_cast<void*>(new LONG(count));
   
 }
 

@@ -33,6 +33,17 @@ namespace ZThread {
 
     //! 
     class WaiterQueue {
+    
+    #ifdef __ghs
+    public:  // A. Scheurer - public access specifier necessary --- integrity compiler complains types below are otherwise inaccessible.
+             // I think this is actually correct, nested types are by default private and not accessible
+             // by an enclosing class state in same namespace. I'm surprises VC6 allows these types to be
+             // non-public.
+             // Compiler Errors...
+             // ThreadedExecutor.cxx", line 48: error: type "ZThread::<unnamed>::WaiterQueue::ThreadList" is inaccessible
+             // "ThreadedExecutor.cxx", line 67: error: type "ZThread::<unnamed>::WaiterQueue::Group" is inaccessible
+             // "ThreadedExecutor.cxx", line 76: error: type "ZThread::<unnamed>::WaiterQueue::Group" is inaccessible
+    #endif
 
       typedef std::deque<ThreadImpl*>  ThreadList;
       
@@ -41,6 +52,15 @@ namespace ZThread {
         size_t     count;
         ThreadList waiters;
         group_t(size_t n) : id(n), count(0) {}
+        
+        // A. Scheurer
+        // I created this copy constructor because w/o the ThreadedExecutor creates threads which suspend/hang.
+        // This copy constructor is needed for insertion of these objects into _list or std::deque
+        // The compiler supplied copy constructor was causing process to core, 
+        // ThreadList was probably being copied when it shouldn't have, since the List is that of 
+        // ThreadImpl's - having it in 2 containers could cause double deletion.
+        // push_back or insert into the std::deque causes a group object to be copied via this constructor.
+        group_t(const group_t& rhs) { id = rhs.id; count = rhs.count; /* waiters = rhs.waiters; ?? */ }
       } Group;
 
       typedef std::deque<Group>  GroupList;
@@ -71,7 +91,7 @@ namespace ZThread {
       
       WaiterQueue() : _id(0), _generation(0) {
         // At least one empty-group exists
-        _list.push_back( Group(_id++) );
+        _list.push_back(Group(_id++));
       }
 
       /**
@@ -244,13 +264,20 @@ namespace ZThread {
           
           // Ensure that an active group exists
           if(_list.empty())
-            _list.push_back( Group(++_id) );
+          {
+              // A. Scheurer - This particular executable statement later caused lockup
+              // I suspect there was failing in copy constructor for Group - see above, new copy constructor.
+              // _list is calling copy constructor and its causing thread to hang or suspend.
+              // The copy constructor for Group through std::queue that the compiler supplies isn't good enough.
+              // There are potential problems w/ sharing that 
+              _list.push_back(Group(++_id));
+
+          }
 
         }
 
         // At least one group exists
         assert(!_list.empty());
-        
       }
 
       /**

@@ -35,13 +35,13 @@ typedef struct atomic_count_t {
   FastLock lock;
   unsigned long count;
   
-  atomic_count_t() : count(0) {}
+  atomic_count_t(unsigned long c) : count(c) {}
 
 } ATOMIC_COUNT;
 
-AtomicCount::AtomicCount() {
+AtomicCount::AtomicCount(size_t count) {
 
-  ATOMIC_COUNT* c = new ATOMIC_COUNT;
+  ATOMIC_COUNT* c = new ATOMIC_COUNT(count);
   _value = reinterpret_cast<void*>(c);
   
 }
