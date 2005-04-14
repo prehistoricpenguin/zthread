@@ -23,6 +23,7 @@
 #ifndef __ZTBARRIER_H__
 #define __ZTBARRIER_H__
 
+#include "zthread/Task.h"
 #include "zthread/Condition.h"
 #include "zthread/Guard.h"
 #include "zthread/Waitable.h"
