@@ -6,10 +6,10 @@ dnl in the Software without restriction, including without limitation the rights
 dnl to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 dnl copies of the Software, and to permit persons to whom the Software is furnished
 dnl to do so, subject to the following conditions:
-dnl 
+dnl
 dnl The above copyright notice and this permission notice shall be included in all
 dnl copies or substantial portions of the Software.
-dnl 
+dnl
 dnl THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 dnl IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 dnl FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -25,12 +25,12 @@ dnl (eg before AC_LANG_CPLUSPLUS)
 dnl
 dnl --with-zthread-prefix : Skip detection, use this general path
 dnl --with-zthread-exec-prefix : Skip detecting the zthread-config tool
-dnl 
+dnl
 dnl Sets the following variables.
 dnl
 dnl ZTHREAD_CXXFLAGS
 dnl ZTHREAD_LIBS
-dnl 
+dnl
 AC_DEFUN(AM_PATH_ZTHREAD,
 [
 
@@ -100,7 +100,7 @@ int main (int argc, char *argv[]) {
 
   /* HP/UX 9 (%@#!) writes to sscanf strings */
   strcpy(tmp_version, "$min_zthread_version");
-  
+
   if (sscanf(tmp_version, "%d.%d.%d", &major, &minor, &micro) != 3) {
 
     printf("%s, bad version string\n", "$min_zthread_version");
@@ -110,7 +110,7 @@ int main (int argc, char *argv[]) {
 
   if (($zthread_major_version > major) ||
      (($zthread_major_version == major) && ($zthread_minor_version > minor)) ||
-     (($zthread_major_version == major) && ($zthread_minor_version == minor) && 
+     (($zthread_major_version == major) && ($zthread_minor_version == minor) &&
      ($zthread_micro_version >= micro))) {
       return 0;
   } else {
@@ -128,7 +128,7 @@ int main (int argc, char *argv[]) {
 }
 
 ],, no_zthread=yes,[echo $ac_n "cross compiling; assumed OK... $ac_c"])
-       
+
     CXXFLAGS="$ac_save_CXXFLAGS"
     LIBS="$ac_save_LIBS"
     fi
@@ -137,7 +137,7 @@ int main (int argc, char *argv[]) {
   if test "x$no_zthread" = x ; then
 
      AC_MSG_RESULT(yes)
-     ifelse([$2], , :, [$2])     
+     ifelse([$2], , :, [$2])
 
   else
 
@@ -161,7 +161,7 @@ int main (int argc, char *argv[]) {
 
           echo $LIBS;
 
-          AC_TRY_LINK([#include "ZThread.h"], 
+          AC_TRY_LINK([#include "ZThread.h"],
                       [ return 0; ], [
           echo "*** The test program compiled, but did not run. This usually means"
           echo "*** that the run-time linker is not finding ZThread or finding the wrong"

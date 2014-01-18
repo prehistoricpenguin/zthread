@@ -6,10 +6,10 @@
 ## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 ## copies of the Software, and to permit persons to whom the Software is furnished
 ## to do so, subject to the following conditions:
-## 
+##
 ## The above copyright notice and this permission notice shall be included in all
 ## copies or substantial portions of the Software.
-## 
+##
 ## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 ## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,7 +43,7 @@ uninstall-local:
 	-rm -rf $(datadir)/aclocal/pthread.m4
 	-rm -rf $(datadir)/aclocal/zthread.m4
 
-distclean-local: 
+distclean-local:
 	-rm -rf $(top_srcdir)/$(PACKAGE)-$(VERSION).tar.gz
 	-rm -rf $(top_srcdir)/autom4te.cache
 
@@ -54,7 +54,7 @@ dist-hook: distclean-local
 	cp -pR $(top_srcdir)/share   	$(distdir)
 	cp -pR $(top_srcdir)/include   	$(distdir)
 	(find src -type d -name '[a-z,A-Z,0-9]*' -print0) | xargs -0 mkdir -p
-	(find src -type f -name \*h -print0 -o -name \*cxx -print0) | xargs -0 tar cf - | tar Cx $(distdir) 
+	(find src -type f -name \*h -print0 -o -name \*cxx -print0) | xargs -0 tar cf - | tar Cx $(distdir)
 	find $(distdir)/doc     -type f -exec chmod --reference=README {} \;
 	find $(distdir)/include -type f -exec chmod --reference=README {} \;
 	find $(distdir)/src     -type f -exec chmod --reference=README {} \;
@@ -74,7 +74,7 @@ rpm: dist
 	mv -f /usr/src/redhat/RPMS/*/$(PACKAGE)-doc-$(VERSION)-*.rpm .
 
 ## Build the documentation
-docs: 
+docs:
 	if test x$(DOXYGEN) != x; then\
 	-rm -f $(top_srcdir)/doc/html/*; \
 	$(DOXYGEN) $(top_srcdir)/doc/zthread.doxygen; \
@@ -88,6 +88,7 @@ docs:
 	echo "obtain a copy. If you already have Doxygen and it was not detected"; \
 	echo "you should try the --with-doxygen option."; \
 	echo; \
-	fi; 
+	fi;
 
 
+ACLOCAL_AMFLAGS = -I m4
